@@ -77,7 +77,7 @@ K = [
     "middle", "marginal",
     "far",
     "very_far", "safe",
-    "short", "long", "medium", "opening", "imminent",  "starboard", "large", "port", "small", "opening"
+    "short", "long", "medium", "opening", "imminent",  "starboard", "large", "port", "small", "opening", "dcpa_safe"
 ]
 
 
@@ -542,7 +542,7 @@ def learn_rules(facts, examples, bk_path):
         Train_P = {i:j for i,j in P1.items()}
         Train_N = {i:j for i,j in N1.items()}
 
-        model_1 = pygol.pygol_learn(Train_P, Train_N,  constant_set = K,  max_literals=5,  exact_literals=True, distinct=False, 
+        model_1 = pygol.pygol_learn(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, 
                             key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True)
         
         #print("Learned Hypothesis:", model_1.hypothesis)
