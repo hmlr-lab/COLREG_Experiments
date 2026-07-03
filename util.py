@@ -1,14 +1,14 @@
 import re
-import PyGol as pygol
+import PyGol_Final_20240718 as pygol
 from janus_test import *
 from bc_pruner import *
 
 
 mode_declarations = [
     # Heads
-    "modeb(*, applies(A,B,R)).",
-    "modeb(*, role(A,B,R)).",
-    "modeb(*, priority(A,B,R1,R2,W)).",
+    #"modeb(*, applies(A,B,R)).",
+    #"modeb(*, role(A,B,R)).",
+    #"modeb(*, priority(A,B,R1,R2,W)).",
 
     # Primitive facts
     "modeb(*, sector(A,B,S)).",
@@ -38,16 +38,19 @@ mode_declarations = [
     "modeb(*, dcpa_safe(A,B)).",
     "modeb(*, tcpa_closing(A,B)).",
     "modeb(*, range_actionable(A,B)).",
-    "modeb(*, timeliness(A,B,T)).",
+   
     "modeb(*, risk_collision(A,B)).",
     "modeb(*, close_quarters(A,B)).",
     "modeb(*, close_quarters_developing(A,B)).",
 
     # Recursive predicates
-    "modeb(*, applies(A,B,R)).",
-    "modeb(*, applies(A,R)).",
-    "modeb(*, role(A,B,R)).",
-    "modeb(*, priority(A,B,R1,R2,W))."
+    "modeb(*, encounter(A,B,R)).",
+    "modeb(*, encounter_and_duty(A,B,R,D)).",
+    "modeb(*, conduct(A,B,R,D)).",
+
+    "modeb(*, time_ample(A,B)).",
+    #"modeb(*, role(A,B,R)).",
+    #"modeb(*, priority(A,B,R1,R2,W))."
 ]
 
 K = [
@@ -82,7 +85,7 @@ constraints={
         "starboard_forward": ["starboard", "forward",],  
         "port_forward":      ["port", "forward", ],     
         "range_actionable":["range"],
-        "applies":["sector", "aft", "forward", "ahead", "forward"],
+        "encounter_and_duty":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
 
     }
 
@@ -549,3 +552,114 @@ def learn_rules(facts, examples, bk_path):
             Hypothesis.append(i)
         #print("-----------------------------")
     return Hypothesis
+
+
+
+def parse_predicate(s):
+    name = s[:s.index("(")]
+    args = s[s.index("(")+1:-1].split(",")
+    return name, args
+
+def unify_predicates(predicates):
+    parsed = [parse_predicate(p) for p in predicates]
+
+    names = [p[0] for p in parsed]
+    if len(set(names)) != 1:
+        raise ValueError("Predicates have different names")
+
+    args_list = [p[1] for p in parsed]
+
+    if len(set(len(args) for args in args_list)) != 1:
+        raise ValueError("Predicates have different arity")
+
+    unified_args = []
+    var_count = 1
+
+    for col in zip(*args_list):
+        if len(set(col)) == 1:
+            unified_args.append(col[0])
+        else:
+            unified_args.append(f"X{var_count}")
+            var_count += 1
+
+    return f"{names[0]}({','.join(unified_args)})"
+
+
+
+
+def generate_hypo(head,args):
+    start=""
+    for i in args:
+        start=start+i+","
+    body=start[0:-1]
+    clause=head+":-"+body
+    return clause
+
+
+def merge_duplicate_body_hypotheses(Hypothesis):
+    """
+    Find hypotheses with identical body clauses and unify their heads.
+
+    If two or more hypotheses have the same body, this function:
+    1. Collects their heads
+    2. Unifies the heads
+    3. Generates a new hypothesis using the unified head and shared body
+
+    Parameters
+    ----------
+    Hypothesis : list
+        List of hypothesis clauses.
+
+    Returns
+    -------
+    merged_rules : list
+        List of newly generated merged hypotheses.
+    """
+
+    body_clauses = []
+
+    # Extract body clauses from each hypothesis
+    for hypo in Hypothesis:
+        body = pygol.Meta(hypo).get_body_clauses()
+        body_clauses.append(body)
+
+    # Store positions of hypotheses with the same body
+    positions = {}
+
+    for index, body in enumerate(body_clauses):
+        # Sorting makes comparison independent of literal order
+        key = tuple(sorted(body))
+        positions.setdefault(key, []).append(index)
+
+    # Keep only bodies that appear more than once
+    duplicates = {
+        body_key: indices
+        for body_key, indices in positions.items()
+        if len(indices) > 1
+    }
+
+    merged_rules = []
+
+    # Process each group of duplicate bodies
+    for body_key, indices in duplicates.items():
+
+        heads_to_unify = []
+
+        # Use the body from any one hypothesis in the duplicate group
+        reference_index = indices[0]
+        shared_body = pygol.Meta(Hypothesis[reference_index]).get_body_clauses()
+
+        # Collect heads from all hypotheses with the same body
+        for index in indices:
+            head = pygol.Meta(Hypothesis[index]).head
+            heads_to_unify.append(head)
+
+        # Unify heads into a single generalised head
+        unified_head = unify_predicates(heads_to_unify)
+
+        # Generate new hypothesis using unified head and shared body
+        merged_rule = generate_hypo(unified_head, shared_body)
+
+        merged_rules.append(merged_rule)
+
+    return merged_rules
