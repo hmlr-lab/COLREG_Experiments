@@ -80,8 +80,8 @@ range_actionable(X,Y) :- \+ range(X,Y,very_far).
 %  time_ample  (Rule 8(a))
 
 time_ample(X,Y)    :- tcpa(X,Y,medium).
-time_ample(X,Y,ample)    :- tcpa(X,Y,long).
-time_ample(X,Y,ample)    :- tcpa(X,Y,very_long).
+time_ample(X,Y)    :- tcpa(X,Y,long).
+time_ample(X,Y)    :- tcpa(X,Y,very_long).
 
 
 
