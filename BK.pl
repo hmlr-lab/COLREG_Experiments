@@ -24,7 +24,7 @@
 :- dynamic dcpa_safe/2.
 :- dynamic tcpa_closing/2.
 :- dynamic range_actionable/2.
-:- dynamic timeliness/3.
+:- dynamic time_ample/3.
 :- dynamic risk_collision/2.
 :- dynamic close_quarters_developing/2.
 :- dynamic close_quarters/2.
@@ -77,13 +77,12 @@ tcpa_closing(X,Y) :- \+ tcpa(X,Y,opening).
 range_actionable(X,Y) :- \+ range(X,Y,very_far).
 
 
-%  TIMELINESS  (Rule 8(a))
+%  time_ample  (Rule 8(a))
 
-timeliness(X,Y,ample)    :- tcpa(X,Y,medium).
-timeliness(X,Y,ample)    :- tcpa(X,Y,long).
-timeliness(X,Y,ample)    :- tcpa(X,Y,very_long).
-timeliness(X,Y,late)     :- tcpa(X,Y,short).
-timeliness(X,Y,extremis) :- tcpa(X,Y,imminent).
+time_ample(X,Y)    :- tcpa(X,Y,medium).
+time_ample(X,Y,ample)    :- tcpa(X,Y,long).
+time_ample(X,Y,ample)    :- tcpa(X,Y,very_long).
+
 
 
 %  RISK OF COLLISION (Rule 7)
@@ -116,7 +115,7 @@ encounter(X,Y,rule14_head_on) :-
 encounter(X,Y,rule15_crossing) :-
     risk_collision(X,Y),
     not(encounter(X,Y,rule13_overtaking)),
-    not(encounter(Y,X,rule13_overtaking)),  
+    not(encounter(Y,X,rule13_overtaking)),
     not(encounter(X,Y,rule14_head_on)).
 
 
@@ -129,16 +128,16 @@ encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15
 encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), port(X,Y).
 
 
-%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by timeliness
+%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by time_ample
 
-conduct(X,Y,rule17_standon,maintain) :- encounter_and_duty(X,Y,_,rule17_standon), timeliness(X,Y,ample).
-conduct(X,Y,rule17_standon,may_act)  :- encounter_and_duty(X,Y,_,rule17_standon), timeliness(X,Y,late).
-conduct(X,Y,rule17_standon,must_act) :- encounter_and_duty(X,Y,_,rule17_standon), timeliness(X,Y,extremis).
+conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), time_ample(X,Y).
+conduct(X,Y,rule17_standon_may_act)  :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,short).
+conduct(X,Y,rule17_standon_must_act) :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,imminent).
 
 
 %  EMERGENCY  - in extremis, departure from any rule; encounter-agnostic (Rule 2(b))
 
 rule2_extremis(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,imminent).
-
+%might be a cleaner way to do this
 
 
