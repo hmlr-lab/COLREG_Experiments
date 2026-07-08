@@ -1,4 +1,5 @@
 from util import *
+from PyGol import merge_duplicate_body_hypotheses, evaluate_rule
 
 bk_path = "BK.pl"
 hypothesis_files = "rules.txt"
@@ -12,15 +13,28 @@ file_path_log = ["260605_examples/log_0.txt",
                  ]
 
 # Generate stage 1 BK files from log files
-facts, examples =  generate_bk_from_log(file_path_log, verbose=True)
+facts, examples =  generate_bk_from_log(file_path_log, verbose=False)
+
+# Save the generated Prolog knowledge base (facts and rules) for evaluation.
+write_prolog_file(facts,"facts.pl")
+
+# Combine generated facts with the background knowledge for evaluation.
+merge_prolog_files("facts.pl", "BK.pl", "combined_BK.pl")
 
 # Learn Rules
+H, HS = learn_rules(facts, examples, bk_path, print_hs=False, print_h=False)
 
-H = learn_rules(facts, examples, bk_path)
+# Merge duplicate hypotheses through post-processing.
+all_HS, updated_rules, sub_hypotheses = merge_duplicate_body_hypotheses(H)
+for rule in all_HS:
+    pretty_print_prolog(rule)
+    pos, neg = evaluate_rule([rule], "combined_BK.pl", examples,[])
+    print(f"--- TP: {pos}, TN: {neg}")
 
-# Write rules into a file
-with open(hypothesis_files, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
+# Write the final hypotheses to a file.
+with open("rules.txt", "w") as f:
+    for rule in all_HS:
+        
         f.write(rule + ".\n")
+
 print("Rules written to rules.txt")

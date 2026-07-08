@@ -1,5 +1,4 @@
-add_waypoint(A,B,safe,short,safe,short,port,aft,small):-applies(A,B,rule13_overtaking),applies(A,B,rule16_giveway),close_quarters(A,B),range_actionable(A,B),timeliness(A,B,ample).
-add_waypoint(A,B,safe,short,safe,short,starboard,aft,small):-applies(A,B,rule13_overtaking),applies(A,B,rule16_giveway),close_quarters(A,B),range_actionable(A,B),timeliness(A,B,ample).
-add_waypoint(A,B,safe,medium,safe,imminent,port,forward,medium):-applies(A,B,rule14_headon),applies(A,B,rule16_giveway),close_quarters_developing(A,B),range_actionable(A,B),timeliness(A,B,ample).
-add_waypoint(A,B,safe,medium,safe,imminent,port,aft,medium):-applies(A,B,rule15_crossing),applies(A,B,rule16_giveway),close_quarters_developing(A,B),range_actionable(A,B),timeliness(A,B,ample).
-add_waypoint(A,B,marginal,medium,marginal,imminent,port,forward,large):-applies(A,B,rule15_crossing),applies(A,B,rule17a2_standon_may_act),close_quarters(A,B),port_forward(A,B),range_actionable(A,B).
+add_waypoint(A,B,safe,medium,safe,imminent,port,forward,medium):-close_quarters_developing(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule14_head_on,rule16_giveway),time_ample(A,B).
+add_waypoint(A,B,safe,medium,safe,imminent,port,aft,medium):-range_actionable(A,B),starboard_forward(A,B),time_ample(A,B),encounter_and_duty(A,B,rule15_crossing,rule16_giveway).
+add_waypoint(A,B,marginal,medium,marginal,imminent,port,forward,large):-close_quarters(A,B),port_forward(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule15_crossing,rule17_standon).
+add_waypoint(A,B,safe,short,safe,short,X1,aft,small):-member(X1, [port, starboard]),close_quarters(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule13_overtaking,rule16_giveway),time_ample(A,B).

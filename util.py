@@ -1,5 +1,5 @@
 import re
-import PyGol_Final_20240718 as pygol
+import PyGol as pygol
 from janus_test import *
 from bc_pruner import *
 
@@ -498,8 +498,9 @@ def read_modes(file_path, strip_empty=True):
         
 
 
-def learn_rules(facts, examples, bk_path):
+def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True):
     Hypothesis = []
+    Hypothesis_space = []
     for i, pos in enumerate(examples):
         neg = []
         for j, item in enumerate(examples):
@@ -542,16 +543,35 @@ def learn_rules(facts, examples, bk_path):
         Train_P = {i:j for i,j in P1.items()}
         Train_N = {i:j for i,j in N1.items()}
 
-        model_1 = pygol.pygol_learn(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, 
-                            key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True)
+        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=42)
+
         
-        #print("Learned Hypothesis:", model_1.hypothesis)
-        #write a funtcion to print model_1.hypothesis in a readable format like prolog rules
-        for i in model_1.hypothesis:
-            #pretty_print_prolog(i)
-            Hypothesis.append(i)
-        #print("-----------------------------")
-    return Hypothesis
+
+        if print_hs:
+            print("\n" + "=" * 80)
+            print(f"HYPOTHESIS SPACE ({len(HS)} hypotheses)")
+            print("=" * 80)
+
+            for idx, h in enumerate(HS, start=1):
+                print(f"[{idx}]")
+                pretty_print_prolog(h)
+
+            print("=" * 80)
+        if print_h:
+            print("\n" + "=" * 80)
+            print("HYPOTHESIS")
+            print("=" * 80)
+            for i in H:
+                pretty_print_prolog(i)
+                Hypothesis.append(i)
+                Hypothesis_space.append(HS)
+            print("\n" + "=" * 80)
+
+        else:
+            for i in H:
+                Hypothesis.append(i)
+                Hypothesis_space.append(HS)
+    return Hypothesis, Hypothesis_space
 
 
 
@@ -587,79 +607,119 @@ def unify_predicates(predicates):
 
 
 
-def generate_hypo(head,args):
-    start=""
-    for i in args:
-        start=start+i+","
-    body=start[0:-1]
-    clause=head+":-"+body
-    return clause
+# def generate_hypo(head,args):
+#     start=""
+#     for i in args:
+#         start=start+i+","
+#     body=start[0:-1]
+#     clause=head+":-"+body
+#     return clause
 
 
-def merge_duplicate_body_hypotheses(Hypothesis):
+# def merge_duplicate_body_hypotheses(Hypothesis):
+#     """
+#     Find hypotheses with identical body clauses and unify their heads.
+
+#     If two or more hypotheses have the same body, this function:
+#     1. Collects their heads
+#     2. Unifies the heads
+#     3. Generates a new hypothesis using the unified head and shared body
+
+#     Parameters
+#     ----------
+#     Hypothesis : list
+#         List of hypothesis clauses.
+
+#     Returns
+#     -------
+#     merged_rules : list
+#         List of newly generated merged hypotheses.
+#     """
+
+#     body_clauses = []
+
+#     # Extract body clauses from each hypothesis
+#     for hypo in Hypothesis:
+#         body = pygol.Meta(hypo).get_body_clauses()
+#         body_clauses.append(body)
+
+#     # Store positions of hypotheses with the same body
+#     positions = {}
+
+#     for index, body in enumerate(body_clauses):
+#         # Sorting makes comparison independent of literal order
+#         key = tuple(sorted(body))
+#         positions.setdefault(key, []).append(index)
+
+#     # Keep only bodies that appear more than once
+#     duplicates = {
+#         body_key: indices
+#         for body_key, indices in positions.items()
+#         if len(indices) > 1
+#     }
+
+#     merged_rules = []
+
+#     # Process each group of duplicate bodies
+#     for body_key, indices in duplicates.items():
+
+#         heads_to_unify = []
+
+#         # Use the body from any one hypothesis in the duplicate group
+#         reference_index = indices[0]
+#         shared_body = pygol.Meta(Hypothesis[reference_index]).get_body_clauses()
+
+#         # Collect heads from all hypotheses with the same body
+#         for index in indices:
+#             head = pygol.Meta(Hypothesis[index]).head
+#             heads_to_unify.append(head)
+
+#         # Unify heads into a single generalised head
+#         unified_head = unify_predicates(heads_to_unify)
+
+#         # Generate new hypothesis using unified head and shared body
+#         merged_rule = generate_hypo(unified_head, shared_body)
+
+#         merged_rules.append(merged_rule)
+
+#     return merged_rules
+
+
+
+def write_prolog_file(prolog_list, filename):
     """
-    Find hypotheses with identical body clauses and unify their heads.
-
-    If two or more hypotheses have the same body, this function:
-    1. Collects their heads
-    2. Unifies the heads
-    3. Generates a new hypothesis using the unified head and shared body
+    Write a list of Prolog facts/rules to a file.
 
     Parameters
     ----------
-    Hypothesis : list
-        List of hypothesis clauses.
-
-    Returns
-    -------
-    merged_rules : list
-        List of newly generated merged hypotheses.
+    prolog_list : list
+        List of Prolog facts/rules.
+    filename : str
+        Output .pl filename.
     """
 
-    body_clauses = []
+    with open(filename, "w") as f:
+        for clause in prolog_list:
+            clause = str(clause).strip()
 
-    # Extract body clauses from each hypothesis
-    for hypo in Hypothesis:
-        body = pygol.Meta(hypo).get_body_clauses()
-        body_clauses.append(body)
+            # Ensure each clause ends with '.'
+            if not clause.endswith("."):
+                clause += "."
 
-    # Store positions of hypotheses with the same body
-    positions = {}
+            f.write(clause + "\n")
 
-    for index, body in enumerate(body_clauses):
-        # Sorting makes comparison independent of literal order
-        key = tuple(sorted(body))
-        positions.setdefault(key, []).append(index)
 
-    # Keep only bodies that appear more than once
-    duplicates = {
-        body_key: indices
-        for body_key, indices in positions.items()
-        if len(indices) > 1
-    }
+def merge_prolog_files(file1, file2, output_file):
+    """
+    Merge two Prolog files into one.
+    """
 
-    merged_rules = []
+    with open(output_file, "w") as out:
 
-    # Process each group of duplicate bodies
-    for body_key, indices in duplicates.items():
+        with open(file1, "r") as f1:
+            out.write(f1.read())
 
-        heads_to_unify = []
+        out.write("\n\n")
 
-        # Use the body from any one hypothesis in the duplicate group
-        reference_index = indices[0]
-        shared_body = pygol.Meta(Hypothesis[reference_index]).get_body_clauses()
-
-        # Collect heads from all hypotheses with the same body
-        for index in indices:
-            head = pygol.Meta(Hypothesis[index]).head
-            heads_to_unify.append(head)
-
-        # Unify heads into a single generalised head
-        unified_head = unify_predicates(heads_to_unify)
-
-        # Generate new hypothesis using unified head and shared body
-        merged_rule = generate_hypo(unified_head, shared_body)
-
-        merged_rules.append(merged_rule)
-
-    return merged_rules
+        with open(file2, "r") as f2:
+            out.write(f2.read())
