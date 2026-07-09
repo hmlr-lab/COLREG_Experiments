@@ -84,17 +84,69 @@ aft(X,Y)       :- starboard_aft(X,Y).
 aft(X,Y)       :- sector(X,Y,astern).
 
 
+% ORDERINGS
+
+range_nearer(X,Z) :- range_nearer_adjacent(X,Y), range_nearer(Y,Z). % Recursion
+range_nearer(X,Y) :- range_nearer_adjacent(X,Y). % Base case
+range_nearer_similar(X,Y) :- range_nearer(X,Y). % Inclusive of boundary
+range_nearer_similar(X,X).
+range_farther(X,Y) :- range_nearer(Y,X). % Inverse
+range_farther_similar(X,Y) :- range_farther(X,Y). % Inclusive of boundary
+range_farther_similar(X,X).
+range_nearer(far,very_far).
+range_nearer(middle,far).
+range_nearer(near,middle).
+range_nearer(very_near,near).
+
+dcpa_closer(X,Z) :- dcpa_closer_adjacent(X,Y), dcpa_closer(Y,Z). % Recursion
+dcpa_closer(X,Y) :- dcpa_closer_adjacent(X,Y). % Base case
+dcpa_closer_similar(X,Y) :- dcpa_closer(X,Y). % Inclusive of boundary
+dcpa_closer_similar(X,X).
+dcpa_safer(X,Y) :- dcpa_closer(Y,X). % Inverse
+dcpa_safer_similar(X,Y) :- dcpa_safer(X,Y).
+dcpa_safer_similar(X,X).
+dcpa_closer(marginal,safe).
+dcpa_closer(close,marginal).
+dcpa_closer(very_close,close).
+dcpa_closer(critical,very_close).
+
+tcpa_sooner(X,Z) :- tcpa_sooner_adjacent(X,Y), tcpa_sooner(Y,Z). % Recursion
+tcpa_sooner(X,Y) :- tcpa_sooner_adjacent(X,Y). % Base case
+tcpa_sooner_similar(X,Y) :- tcpa_sooner(X,Y). % Inclusive of boundary
+tcpa_sooner_similar(X,X).
+tcpa_later(X,Y) :- tcpa_sooner(Y,X). % Inverse
+tcpa_later_similar(X,Y) :- tcpa_later(X,Y).
+tcpa_later_similar(X,X).
+tcpa_sooner(long,very_long).
+tcpa_sooner(medium,long).
+tcpa_sooner(short,medium).
+tcpa_sooner(immediate,short).
+% Opening does not belong here
+
+turn_smaller(X,Z) :- turn_smaller_adjacent(X,Y), turn_smaller(Y,Z). % Recursion
+turn_smaller(X,Y) :- turn_smaller_adjacent(X,Y). % Base case
+turn_smaller_similar(X,Y) :- turn_smaller(X,Y). % Inclusive of boundary
+turn_smaller_similar(X,X).
+turn_larger(X,Y) :- turn_smaller(Y,X). % Inverse
+turn_larger_similar(X,Y) :- turn_larger(X,Y).
+turn_larger_similar(X,X).
+turn_smaller(long,very_long).
+turn_smaller(medium,long).
+turn_smaller(short,medium).
+turn_smaller(immediate,short).
+
+
 %  CONCEPTUAL GROUPINGS
 
-dcpa_unsafe(X,Y) :- dcpa(X,Y,very_close).
-dcpa_unsafe(X,Y) :- dcpa(X,Y,close).
-dcpa_unsafe(X,Y) :- dcpa(X,Y,near).
-dcpa_safe(X,Y) :- dcpa(X,Y,marginal).
-dcpa_safe(X,Y) :- dcpa(X,Y,safe).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,critical).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,very_close).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,close).
+dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
+dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
 
-tcpa_closing(X,Y) :- \+ tcpa(X,Y,opening).
+tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
 
-range_actionable(X,Y) :- \+ range(X,Y,very_far).
+range_actionable(X,Y) :- not(range(X,Y,very_far)).
 
 
 %  time_ample  (Rule 8(a))
@@ -114,10 +166,10 @@ risk_collision(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,medium).
 
 %  CLOSE-QUARTERS SITUATION (Rule 8)
 
-close_quarters_developing(X,Y) :- dcpa_unsafe(X,Y), tcpa_closing(X,Y), range(X,Y,middle).
-close_quarters_developing(X,Y) :- dcpa_unsafe(X,Y), tcpa_closing(X,Y), range(X,Y,far).
-close_quarters(X,Y)            :- dcpa_unsafe(X,Y), tcpa_closing(X,Y), range(X,Y,close).
-close_quarters(X,Y)            :- dcpa_unsafe(X,Y), tcpa_closing(X,Y), range(X,Y,very_close).
+close_quarters_developing(X,Y) :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,far).
+close_quarters_developing(X,Y) :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,middle).
+close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,near).
+close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,very_near).
 
 
 %  ENCOUNTER  (three types, one per pair) - the finding of fact
@@ -157,7 +209,5 @@ conduct(X,Y,rule17_standon_must_act) :- encounter_and_duty(X,Y,_,rule17_standon)
 
 %  EMERGENCY  - in extremis, departure from any rule; encounter-agnostic (Rule 2(b))
 
-rule2_extremis(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,imminent).
+rule2_extremis(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
 %might be a cleaner way to do this
-
-
