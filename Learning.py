@@ -22,7 +22,7 @@ write_prolog_file(facts,"facts.pl")
 merge_prolog_files("facts.pl", "BK.pl", "combined_BK.pl")
 
 # Learn Rules
-H, HS = learn_rules(facts, examples, bk_path, print_hs=False, print_h=False)
+H, HS = learn_rules(facts, examples, bk_path, print_hs=False, print_h=False, seed_value=10)
 
 # Merge duplicate hypotheses through post-processing.
 all_HS, updated_rules, sub_hypotheses = merge_duplicate_body_hypotheses(H)

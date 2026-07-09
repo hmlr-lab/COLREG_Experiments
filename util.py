@@ -498,7 +498,7 @@ def read_modes(file_path, strip_empty=True):
         
 
 
-def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True):
+def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_value=42):
     Hypothesis = []
     Hypothesis_space = []
     for i, pos in enumerate(examples):
@@ -543,7 +543,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True):
         Train_P = {i:j for i,j in P1.items()}
         Train_N = {i:j for i,j in N1.items()}
 
-        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=42)
+        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=seed_value)
 
         
 
