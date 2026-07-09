@@ -1,4 +1,13 @@
 import re
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+PYGOL_DIR = ROOT / "PyGol_Files"
+
+sys.path.insert(0, str(PYGOL_DIR))
+
 import PyGol as pygol
 from janus_test import *
 from bc_pruner import *

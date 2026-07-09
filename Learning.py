@@ -1,5 +1,15 @@
 from util import *
-from PyGol import merge_duplicate_body_hypotheses, evaluate_rule
+
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent
+PYGOL_DIR = ROOT / "PyGol_Files"
+
+sys.path.insert(0, str(PYGOL_DIR))
+
+from PyGol import *
+
 
 bk_path = "BK.pl"
 hypothesis_files = "rules.txt"
