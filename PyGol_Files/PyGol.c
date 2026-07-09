@@ -1,26 +1,4 @@
-#project PyGol
-#------
-"""
-PyGol is novel Inductive Logic Programming(ILP) system based on Meta Inverse Entailment(MIE). MIE is similar to Mode-Directed Inverse Entailment (MDIE) but does not require mode declarations.
-"""
 
-Aleph is freely available for academic purposes.                        
-If you intend to use it for commercial purposes then                    
-please contact Dany Varghese. 
-
-for updated please visit https://github.com/danyvarghese/PyGol
-
-#Support
-#-------
-"""
-Authors         :   Dany Varghese 
-Affiliation     :   Department of Computer Science
-                    University of Surrey, guildford, UK
-Contact         :   dany.varghese@surrey.ac.uk or dany.incito@gmail.com
-"""
-
-
-*/
 
 
 
