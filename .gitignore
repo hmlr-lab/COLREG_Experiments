@@ -14,3 +14,6 @@ venv/
 PyGol_Files/*.so
 __pycache__/*
 PyGol_Files/build/*
+examples.pl
+facts.pl
+combined_BK.pl
