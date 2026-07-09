@@ -1,0 +1,49 @@
+{
+    "config": {
+        "max_depth": 10,
+        "max_clause": 4,
+        "max_pred": 1,
+        "debug": true
+    },
+    "examples": {
+        "pos": "../examples.pl",
+        "neg": []
+    },
+    "body_predicates": [
+        "sector/3",
+        "range/3",
+        "dcpa/3",
+        "tcpa/3",
+        "bearing/3",
+        "distance/3",
+        "arc_overtaking/2",
+        "status/2",
+        "waterway/2",
+        "constraint_draught/1",
+        "clock/1",
+        "port_forward/2",
+        "port_aft/2",
+        "starboard_forward/2",
+        "starboard_aft/2",
+        "port/2",
+        "starboard/2",
+        "forward/2",
+        "aft/2",
+        "dcpa_unsafe/2",
+        "dcpa_safe/2",
+        "tcpa_closing/2",
+        "range_actionable/2",
+        "time_ample/3",
+        "risk_collision/2",
+        "close_quarters_developing/2",
+        "close_quarters/2",
+        "encounter/3",
+        "encounter_and_duty/4",
+        "conduct/4",
+        "extremis_override/2",
+        "cites/2"
+    ],
+    "files": [
+        "../BK.pl", "../facts.pl"
+    ]
+}
