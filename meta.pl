@@ -4,8 +4,8 @@
 
 comparitor(X):-
     member(X, [less_than,less_or_equal, greater_than, greater_or_equal]).
-% Instantiate self
-X(X),{X}. 
+% % Instantiate self
+% X(X),{X}. 
 % Single Condition
 P(X):-
     comparitor(Q),
@@ -24,23 +24,23 @@ P(X):-
 % --------------------------------------------------------
 % ------------------ Head Meta Rules ---------------------
 % --------------------------------------------------------
-waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Magnitude),
+waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    P(Turn),
     Q(A,B),
     {P,Q},
-    [Avoid,Resume,Side1,Side2].
-waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Magnitude),
+    [Avoid,Resume,Side,End].
+waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    P(Turn),
     Q(A,B),
     {P,Q},
-    [Avoid,Resume,Side2].
-waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Magnitude),
+    [Avoid,Resume,End].
+waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    P(Turn),
     Q(A,B),
     {P,Q},
-    [Avoid,Resume,Side1].
-waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Magnitude),
+    [Avoid,Resume,Side].
+waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    P(Turn),
     Q(A,B),
     {P,Q},
     [Avoid,Resume].
@@ -48,9 +48,6 @@ waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):-
 % --------------------------------------------------------
 % ---------------- Condition Chaining --------------------
 % --------------------------------------------------------
-P(X,Y):-
-    Q(X,Y),
-    {P,Q}.
 P(X,Y):-
     Q(X,Y,A),
     {P,Q,A}.
@@ -70,3 +67,9 @@ P(X,Y):-
     Q(X,Y,A,B),
     R(X,Y),
     {P,Q,R,A,B}.
+
+insubstantial(insubstantial).
+small(small).
+moderate(moderate).
+large(large).
+very_large(very_large).
