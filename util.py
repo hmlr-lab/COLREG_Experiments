@@ -57,7 +57,7 @@ mode_declarations =  [
     "modeb(*, range(A,B,R)).",
     "modeb(*, dcpa(A,B,D)).",
     "modeb(*, tcpa(A,B,T)).",
-    "modeb(*, arc_overtaking(A,B)).",
+    #"modeb(*, arc_overtaking(A,B)).",
 ]
 
 # mode_declarations = [
@@ -166,6 +166,9 @@ def return_substring(string):
     
     if pred in ["add_waypoint_bin"]:
         return "add_waypoint_bin"
+    
+    if pred in ["waypoint"]:
+        return "waypoint"
  
     
     return None   # explicit
@@ -208,8 +211,8 @@ def ground_facts_log_file(file_path, not_allowed=[]):
             for eachi in parts[1:]:
                 substring = return_substring(eachi)
                 #print(substring)
-                if  substring == "add_waypoint" :
-                    #print("I am here", substring, parts[0])
+                if  substring == "waypoint" :
+                    print("I am here", substring, parts[0])
                     time = int(re.findall(r"\d+", parts[0])[0])
                     keys.append(time)
                     last_value.append(eachi)
@@ -217,21 +220,13 @@ def ground_facts_log_file(file_path, not_allowed=[]):
                     #print("Replacing", substring, "with", eachi)
                     last_value = replace_starting_with(last_value, substring, eachi)
 
-
-
-            if contains_substring(last_value, "add_waypoint")  and  not(contains_substring(parts[1:], "add_waypoint")) :
+            if contains_substring(last_value, "waypoint")  and  not(contains_substring(parts[1:], "waypoint")) :
+               
                 #print("Removing add_waypoint_seg from last_value")
-                lst = [item for item in last_value if not item.startswith(tuple(["add_waypoint"]))]
-            
-            
+                lst = [item for item in last_value if not item.startswith(tuple(["waypoint"]))]
                 dict[key] = lst
             else:
-                dict[key] = last_value
-
-
-            
-           
-                
+                dict[key] = last_value    
     return dict, keys
 
 
@@ -267,7 +262,7 @@ def generate_facts_examples(state_list_pos1, keys, ex=1, print_facts=False, skip
             #print("\t", fact)
             
 
-            if "add_waypoint" in fact: #or "add_waypoint" in fact or "add_waypoint_bin" in fact:
+            if "waypoint" in fact: #or "add_waypoint" in fact or "add_waypoint_bin" in fact:
                 
                 positive_examples.append(fact)
             else:
@@ -288,6 +283,7 @@ def generate_bk_from_log(path, verbose=False):
     examples = []
     for count, eachpath in enumerate(path):
         state_list_pos_1, key_1 = ground_facts_log_file(eachpath)
+        
         facts_new_1, examples_1 = generate_facts_examples(state_list_pos_1, key_1, ex=count+1, print_facts=verbose, skip_prefixes=[])
 
         facts = facts+facts_new_1
@@ -599,7 +595,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         bottom_clause_dict=P,
         mode_declarations=mode_declarations,
         debug=False
-    )
+        )
         
         # Included BK
         # print(P_inter)
