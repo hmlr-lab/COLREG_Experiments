@@ -1,4 +1,4 @@
 add_waypoint(A,B,dcpa_safe,dcpa_safe,port,aft,small):-range_actionable(A,B),starboard_forward(A,B),time_ample(A,B),encounter_and_duty(A,B,rule15_crossing,rule16_giveway).
-add_waypoint(A,B,dcpa_safe,dcpa_safe,port,forward,large):-close_quarters(A,B),port_forward(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule15_crossing,rule17_standon).
-add_waypoint(A,B,dcpa_safe,dcpa_safe,port,forward,medium):-close_quarters_developing(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule14_head_on,rule16_giveway),time_ample(A,B).
-add_waypoint(A,B,dcpa_safe,dcpa_safe,X1,aft,small):-member(X1, [starboard, port]),close_quarters(A,B),range_actionable(A,B),encounter_and_duty(A,B,rule13_overtaking,rule16_giveway),time_ample(A,B).
+add_waypoint(A,B,dcpa_safe,dcpa_safe,port,forward,large):-port_forward(A,B),range_actionable(A,B),tcpa_closing(A,B),conduct(A,B,rule17_standon_may_act).
+add_waypoint(A,B,dcpa_safe,dcpa_safe,port,forward,medium):-close_quarters_developing(A,B),range_actionable(A,B),time_ample(A,B),encounter_and_duty(A,B,rule14_head_on,rule16_giveway).
+add_waypoint(A,B,dcpa_safe,dcpa_safe,X1,aft,small):-member(X1, [starboard, port]),range_actionable(A,B),tcpa_closing(A,B),time_ample(A,B),encounter_and_duty(A,B,rule13_overtaking,rule16_giveway).

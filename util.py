@@ -12,27 +12,7 @@ import PyGol as pygol
 from janus_test import *
 from bc_pruner import *
 
-
-mode_declarations = [
-    # Heads
-    #"modeb(*, applies(A,B,R)).",
-    #"modeb(*, role(A,B,R)).",
-    #"modeb(*, priority(A,B,R1,R2,W)).",
-
-    # Primitive facts
-    "modeb(*, sector(A,B,S)).",
-    "modeb(*, range(A,B,R)).",
-    "modeb(*, dcpa(A,B,D)).",
-    "modeb(*, tcpa(A,B,T)).",
-    "modeb(*, bearing(A,B,V)).",
-    "modeb(*, distance(A,B,V)).",
-    "modeb(*, status(A,S)).",
-    "modeb(*, waterway(A,W)).",
-    "modeb(*, constraint_draught(A)).",
-    "modeb(*, clock(C)).",
-
-    # Geometric abstractions
-    "modeb(*, arc_overtaking(A,B)).",
+mode_declarations =  [
     "modeb(*, port_forward(A,B)).",
     "modeb(*, port_aft(A,B)).",
     "modeb(*, starboard_forward(A,B)).",
@@ -42,25 +22,96 @@ mode_declarations = [
     "modeb(*, forward(A,B)).",
     "modeb(*, aft(A,B)).",
 
-    # Derived concepts
-    "modeb(*, dcpa_unsafe(A,B)).",
-    "modeb(*, dcpa_safe(A,B)).",
+    "modeb(*, less_than(R1,R2)).",
+    "modeb(*, less_or_equal(R1,R2)).",
+    "modeb(*, greater_than(R1,R2)).",
+    "modeb(*, greater_or_equal(R1,R2)).",
+
+    
+
+    
+
+    
+
+    "modeb(*, dcpa_unacceptable(A,B)).",
+    "modeb(*, dcpa_acceptable(A,B)).",
+
     "modeb(*, tcpa_closing(A,B)).",
     "modeb(*, range_actionable(A,B)).",
-   
-    "modeb(*, risk_collision(A,B)).",
-    "modeb(*, close_quarters(A,B)).",
-    "modeb(*, close_quarters_developing(A,B)).",
-
-    # Recursive predicates
-    "modeb(*, encounter(A,B,R)).",
-    "modeb(*, encounter_and_duty(A,B,R,D)).",
-    "modeb(*, conduct(A,B,R,D)).",
 
     "modeb(*, time_ample(A,B)).",
-    #"modeb(*, role(A,B,R)).",
-    #"modeb(*, priority(A,B,R1,R2,W))."
+
+    "modeb(*, risk_collision(A,B)).",
+
+    "modeb(*, close_quarters_developing(A,B)).",
+    "modeb(*, close_quarters(A,B)).",
+
+    "modeb(*, encounter(A,B,R)).",
+    "modeb(*, encounter_and_duty(A,B,R,D)).",
+
+    "modeb(*, conduct(A,B,R)).",
+
+    "modeb(*, rule2_extremis(A,B)).",
+
+    "modeb(*, sector(A,B,S)).",
+    "modeb(*, range(A,B,R)).",
+    "modeb(*, dcpa(A,B,D)).",
+    "modeb(*, tcpa(A,B,T)).",
+    "modeb(*, arc_overtaking(A,B)).",
 ]
+
+# mode_declarations = [
+#     # Heads
+#     #"modeb(*, applies(A,B,R)).",
+#     #"modeb(*, role(A,B,R)).",
+#     #"modeb(*, priority(A,B,R1,R2,W)).",
+
+#     # Primitive facts
+#     "modeb(*, sector(A,B,S)).",
+#     "modeb(*, range(A,B,R)).",
+#     "modeb(*, dcpa(A,B,D)).",
+#     "modeb(*, tcpa(A,B,T)).",
+#     "modeb(*, bearing(A,B,V)).",
+#     "modeb(*, distance(A,B,V)).",
+#     "modeb(*, status(A,S)).",
+#     "modeb(*, waterway(A,W)).",
+#     "modeb(*, constraint_draught(A)).",
+#     "modeb(*, clock(C)).",
+
+#     # Geometric abstractions
+#     "modeb(*, arc_overtaking(A,B)).",
+#     "modeb(*, port_forward(A,B)).",
+#     "modeb(*, port_aft(A,B)).",
+#     "modeb(*, starboard_forward(A,B)).",
+#     "modeb(*, starboard_aft(A,B)).",
+#     "modeb(*, port(A,B)).",
+#     "modeb(*, starboard(A,B)).",
+#     "modeb(*, forward(A,B)).",
+#     "modeb(*, aft(A,B)).",
+
+#     # Derived concepts
+#     "modeb(*, dcpa_unsafe(A,B)).",
+#     "modeb(*, dcpa_safe(A,B)).",
+#     "modeb(*, tcpa_closing(A,B)).",
+#     "modeb(*, range_actionable(A,B)).",
+   
+#     "modeb(*, risk_collision(A,B)).",
+#     "modeb(*, close_quarters(A,B)).",
+#     "modeb(*, close_quarters_developing(A,B)).",
+
+#     # Recursive predicates
+#     "modeb(*, encounter(A,B,R)).",
+#     "modeb(*, encounter_and_duty(A,B,R,D)).",
+#     "modeb(*, conduct(A,B,R,D)).",
+
+#     "modeb(*, time_ample(A,B)).",
+#     #"modeb(*, role(A,B,R)).",
+#     #"modeb(*, priority(A,B,R1,R2,W))."
+#     "range_nearer(*, time_ample(A,B)).",
+#     "range_nearer_similar(*, time_ample(A,B)).",
+#     "range_farther(*, time_ample(A,B)).",
+#     "range_farther_similar(*, time_ample(A,B)).",
+#     ]
 
 K = [
  'ahead',
@@ -511,6 +562,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
     Hypothesis = []
     Hypothesis_space = []
     for i, pos in enumerate(examples):
+        print(pos)
         neg = []
         for j, item in enumerate(examples):
             if i != j:
@@ -530,6 +582,9 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         debug=False
     )
         
+        print(P_inter)
+        print()
+        
         N_inter = modify_bcrl_janus_from_bk(
         bk_path=bk_path,
         bottom_clause_dict=N,
@@ -543,6 +598,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
         )
 
+        #print(P1)
         N1 = prune_bottom_clauses_from_file(
         bk_file=bk_path,
         bottom_clauses=N_inter,
