@@ -4,7 +4,11 @@ dcpa(agent_1_1,cruiseliner_1_1,critical).
 tcpa(agent_1_1,cruiseliner_1_1,medium).
 sector(cruiseliner_1_1,agent_1_1,starboard_bow_broad).
 sector(agent_2_1,cruiseliner_2_1,starboard_bow_broad).
+<<<<<<< HEAD
 range(agent_2_1,cruiseliner_2_1,near).
+=======
+range(agent_2_1,cruiseliner_2_1,middle).
+>>>>>>> be9ea606ec89d1326c4bf6c0e83fd9fe1f86d483
 dcpa(agent_2_1,cruiseliner_2_1,critical).
 tcpa(agent_2_1,cruiseliner_2_1,short).
 sector(cruiseliner_2_1,agent_2_1,port_bow_broad).
