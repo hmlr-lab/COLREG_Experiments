@@ -21,6 +21,14 @@
 :- abolish(encounter_and_duty/4).
 :- abolish(conduct/3).
 :- abolish(rule2_extremis/2).
+:- abolish(less_and_adjacent/2).
+:- abolish(less_than/2).
+:- abolish(less_or_equal/2).
+:- abolish(greater_than/2).
+:- abolish(greater_or_equal/2).
+:- abolish(dcpa_acceptable/2).
+:- abolish(dcpa_unacceptable/2).
+
 :- dynamic sector/3.
 :- dynamic range/3.
 :- dynamic dcpa/3.
@@ -53,6 +61,12 @@
 :- dynamic conduct/4.
 :- dynamic extremis_override/2.
 :- dynamic cites/2.
+:- dynamic less_and_adjacent/2.
+:- dynamic less_than/2.
+:- dynamic less_or_equal/2.
+:- dynamic greater_than/2.
+:- dynamic greater_or_equal/2.
+:- dynamic cpa_acceptable/2.
 
 
 %  GEOMETRIC ABSTRACTION
@@ -86,54 +100,161 @@ aft(X,Y)       :- sector(X,Y,astern).
 
 % ORDERINGS
 
-range_nearer(X,Z) :- range_nearer_adjacent(X,Y), range_nearer(Y,Z). % Recursion
-range_nearer(X,Y) :- range_nearer_adjacent(X,Y). % Base case
-range_nearer_similar(X,Y) :- range_nearer(X,Y). % Inclusive of boundary
-range_nearer_similar(X,X).
-range_farther(X,Y) :- range_nearer(Y,X). % Inverse
-range_farther_similar(X,Y) :- range_farther(X,Y). % Inclusive of boundary
-range_farther_similar(X,X).
-range_nearer(far,very_far).
-range_nearer(middle,far).
-range_nearer(near,middle).
-range_nearer(very_near,near).
+% range
+less_and_adjacent(far,very_far).
+less_and_adjacent(middle,far).
+less_and_adjacent(near,middle).
+less_and_adjacent(very_near,near).
 
-dcpa_closer(X,Z) :- dcpa_closer_adjacent(X,Y), dcpa_closer(Y,Z). % Recursion
-dcpa_closer(X,Y) :- dcpa_closer_adjacent(X,Y). % Base case
-dcpa_closer_similar(X,Y) :- dcpa_closer(X,Y). % Inclusive of boundary
-dcpa_closer_similar(X,X).
-dcpa_safer(X,Y) :- dcpa_closer(Y,X). % Inverse
-dcpa_safer_similar(X,Y) :- dcpa_safer(X,Y).
-dcpa_safer_similar(X,X).
-dcpa_closer(marginal,safe).
-dcpa_closer(close,marginal).
-dcpa_closer(very_close,close).
-dcpa_closer(critical,very_close).
+less_than(X,Z) :- 
+    range(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
 
-tcpa_sooner(X,Z) :- tcpa_sooner_adjacent(X,Y), tcpa_sooner(Y,Z). % Recursion
-tcpa_sooner(X,Y) :- tcpa_sooner_adjacent(X,Y). % Base case
-tcpa_sooner_similar(X,Y) :- tcpa_sooner(X,Y). % Inclusive of boundary
-tcpa_sooner_similar(X,X).
-tcpa_later(X,Y) :- tcpa_sooner(Y,X). % Inverse
-tcpa_later_similar(X,Y) :- tcpa_later(X,Y).
-tcpa_later_similar(X,X).
-tcpa_sooner(long,very_long).
-tcpa_sooner(medium,long).
-tcpa_sooner(short,medium).
-tcpa_sooner(immediate,short).
-% Opening does not belong here
+less_than(X,Y) :-
+    range(_,_,X),
+    less_and_adjacent(X,Y).
 
-turn_smaller(X,Z) :- turn_smaller_adjacent(X,Y), turn_smaller(Y,Z). % Recursion
-turn_smaller(X,Y) :- turn_smaller_adjacent(X,Y). % Base case
-turn_smaller_similar(X,Y) :- turn_smaller(X,Y). % Inclusive of boundary
-turn_smaller_similar(X,X).
-turn_larger(X,Y) :- turn_smaller(Y,X). % Inverse
-turn_larger_similar(X,Y) :- turn_larger(X,Y).
-turn_larger_similar(X,X).
-turn_smaller(long,very_long).
-turn_smaller(medium,long).
-turn_smaller(short,medium).
-turn_smaller(immediate,short).
+less_or_equal(X,Y) :- 
+    range(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    range(_,_,X).
+
+greater_than(X,Y) :- 
+    range(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    range(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    range(_,_,X).
+
+% dcpa
+less_and_adjacent(marginal,safe).
+less_and_adjacent(close,marginal).
+less_and_adjacent(very_close,close).
+less_and_adjacent(critical,very_close).
+
+
+less_than(X,Z) :- 
+    dcpa(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
+
+less_than(X,Y) :-
+    dcpa(_,_,X),
+    less_and_adjacent(X,Y).
+
+less_or_equal(X,Y) :- 
+    dcpa(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    dcpa(_,_,X).
+
+greater_than(X,Y) :- 
+    dcpa(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    dcpa(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    dcpa(_,_,X).
+
+
+% tcpa
+less_and_adjacent(long,very_long).
+less_and_adjacent(medium,long).
+less_and_adjacent(short,medium).
+less_and_adjacent(immediate,short).
+
+
+less_than(X,Z) :- 
+    tcpa(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
+
+less_than(X,Y) :-
+    tcpa(_,_,X),
+    less_and_adjacent(X,Y).
+
+less_or_equal(X,Y) :- 
+    tcpa(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    tcpa(_,_,X).
+
+greater_than(X,Y) :- 
+    tcpa(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    tcpa(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    tcpa(_,_,X).
+
+
+
+
+
+% turn magnitude
+less_and_adjacent(large,very_large).
+less_and_adjacent(moderate,large).
+less_and_adjacent(small,moderate).
+less_and_adjacent(insubstantial,small).
+
+%less_than(X,Z) :- 
+%   tcpa(_,_,X),
+%   less_and_adjacent(X,Y), 
+%   less_than(Y,Z).
+
+%less_than(X,Y) :-
+%    tcpa(_,_,X),
+%    less_and_adjacent(X,Y).
+
+%less_or_equal(X,Y) :- 
+%    tcpa(_,_,X),
+%    less_and_adjacent(Y,X).
+
+%less_or_equal(X,X) :- 
+%   tcpa(_,_,X).
+
+%greater_than(X,Y) :- 
+%    tcpa(_,_,X),
+%    less_than(Y,X).
+
+%greater_or_equal(X,Y) :- 
+%    tcpa(_,_,X),
+%    greater_than(X,Y).
+
+%greater_or_equal(X,X) :- 
+%    tcpa(_,_,X).
+
+
+
+
+
+
+%turn_smaller(X,Z) :- turn_smaller_adjacent(X,Y), turn_smaller(Y,Z). % Recursion
+%turn_smaller(X,Y) :- turn_smaller_adjacent(X,Y). % Base case
+%turn_smaller_similar(X,Y) :- turn_smaller(X,Y). % Inclusive of boundary
+%turn_smaller_similar(X,X).
+%turn_larger(X,Y) :- turn_smaller(Y,X). % Inverse
+%turn_larger_similar(X,Y) :- turn_larger(X,Y).
+%turn_larger_similar(X,X).
+%turn_smaller_adjacent(large,very_large).
+%turn_smaller_adjacent(moderate,large).
+%turn_smaller_adjacent(small,moderate).
+%turn_smaller_adjacent(insubstantial,small).
 
 
 %  CONCEPTUAL GROUPINGS
@@ -159,9 +280,9 @@ time_ample(X,Y)    :- tcpa(X,Y,very_long).
 
 %  RISK OF COLLISION (Rule 7)
 
-risk_collision(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,imminent).
-risk_collision(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,short).
-risk_collision(X,Y) :- dcpa_unsafe(X,Y), tcpa(X,Y,medium).
+risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
+risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
+risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
 
 
 %  CLOSE-QUARTERS SITUATION (Rule 8)
