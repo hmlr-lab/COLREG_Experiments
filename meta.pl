@@ -24,23 +24,23 @@ P(X):-
 % --------------------------------------------------------
 % ------------------ Head Meta Rules ---------------------
 % --------------------------------------------------------
-add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Avoid),
+waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
+    P(Magnitude),
     Q(A,B),
     {P,Q},
     [Avoid,Resume,Side1,Side2].
-add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Avoid),
+waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
+    P(Magnitude),
     Q(A,B),
     {P,Q},
-    [Side2].
-add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Avoid),
+    [Avoid,Resume,Side2].
+waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
+    P(Magnitude),
     Q(A,B),
     {P,Q},
     [Avoid,Resume,Side1].
-add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
-    P(Avoid),
+waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
+    P(Magnitude),
     Q(A,B),
     {P,Q},
     [Avoid,Resume].

@@ -1,8 +1,8 @@
 {
     "config": {
-        "max_depth": 10,
+        "max_depth": 12,
         "max_clause": 4,
-        "max_pred": 1,
+        "max_pred": 2,
         "debug": true
     },
     "examples": {
@@ -51,5 +51,6 @@
     ],
     "files": [
         "../BK.pl", "../facts.pl", "../meta.pl"
-    ]
+    ],
+    "top_prog": false
 }
