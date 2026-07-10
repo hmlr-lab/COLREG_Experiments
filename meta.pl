@@ -2,7 +2,7 @@
 % --------------- Instantiate Argument? ------------------
 % --------------------------------------------------------
 % Instantiate self
-X(X),[X]. 
+X(X),{X}. 
 % Single Condition
 P(X):-
     Q(X,A),
@@ -18,33 +18,33 @@ P(X):-
 % --------------------------------------------------------
 % ------------------ Head Meta Rules ---------------------
 % --------------------------------------------------------
-add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitutde):- 
+add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitude):- 
     P(DCPA1),
     Q(DCPA2),
     R(Magnitude),
     S(A,B),
-    {P,Q,R,AddWaypoint},
+    {P,Q,R,S},
     [Side1,Side2].
-add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitutde):- 
+add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitude):- 
     P(DCPA1),
     Q(DCPA2),
     R(Magnitude),
     S(A,B),
-    {P,Q,R,AddWaypoint},
+    {P,Q,R,S},
     [Side2].
-add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitutde):- 
+add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitude):- 
     P(DCPA1),
     Q(DCPA2),
     R(Magnitude),
     S(A,B),
-    {P,Q,R,AddWaypoint},
+    {P,Q,R,S},
     [Side1].
-add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitutde):- 
+add_waypoint(A,B,DCPA1,DCPA2,Side1,Side2,Magnitude):- 
     P(DCPA1),
     Q(DCPA2),
     R(Magnitude),
     S(A,B),
-    {P,Q,R,AddWaypoint}.
+    {P,Q,R,S}.
 
 % --------------------------------------------------------
 % ---------------- Condition Chaining --------------------

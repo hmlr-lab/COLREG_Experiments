@@ -1,11 +1,11 @@
 from util import *
 
 # Example log files
-file_path_log = ["260630_examples/log_0.txt",
-                 "260630_examples/log_1.txt",
-                "260630_examples/log_2.txt",
-                "260630_examples/log_3.txt",
-                "260630_examples/log_4.txt",
+file_path_log = ["260709_examples/log_0.txt",
+                 "260709_examples/log_1.txt",
+                "260709_examples/log_2.txt",
+                "260709_examples/log_3.txt",
+                "260709_examples/log_4.txt",
                  ]
 
 # Generate stage 1 BK files from log files

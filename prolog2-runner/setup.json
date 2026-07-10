@@ -41,9 +41,15 @@
         "encounter_and_duty/4",
         "conduct/4",
         "extremis_override/2",
-        "cites/2"
+        "cites/2",
+        "less_and_adjacent/2",
+        "less_than/2",
+        "less_or_equal/2",
+        "greater_than/2",
+        "greater_or_equal/2",
+        "cpa_acceptable/2"
     ],
     "files": [
-        "../BK.pl", "../facts.pl"
+        "../BK.pl", "../facts.pl", "../meta.pl"
     ]
 }
