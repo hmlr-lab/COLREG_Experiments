@@ -20,3 +20,5 @@ combined_BK.pl
 
 prolog2-runner/target/
 PyGol_Files/build/
+prolog2-runner/target/
+*.o

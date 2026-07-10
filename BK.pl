@@ -1,5 +1,4 @@
 %  GEOMETRIC ABSTRACTION
-
 port_forward(X,Y)      :- sector(X,Y,port_bow_forward).
 port_forward(X,Y)      :- sector(X,Y,port_bow_broad).
 port_forward(X,Y)      :- sector(X,Y,port_beam_forward).
@@ -68,7 +67,6 @@ less_and_adjacent(close,marginal).
 less_and_adjacent(very_close,close).
 less_and_adjacent(critical,very_close).
 
-
 less_than(X,Z) :- 
     dcpa(_,_,X),
     less_and_adjacent(X,Y), 
@@ -103,6 +101,10 @@ less_and_adjacent(medium,long).
 less_and_adjacent(short,medium).
 less_and_adjacent(immediate,short).
 
+
+is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]) 
+is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]) 
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]) 
 
 less_than(X,Z) :- 
     tcpa(_,_,X),
