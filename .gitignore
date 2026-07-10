@@ -14,3 +14,4 @@ examples.pl
 facts.pl
 combined_BK.pl
 prolog2-runner/target/
+*/__pycache__

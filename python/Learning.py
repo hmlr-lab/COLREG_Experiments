@@ -1,4 +1,4 @@
-from python.util import *
+from util import *
 
 import sys
 from pathlib import Path
