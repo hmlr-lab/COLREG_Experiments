@@ -1,0 +1,8 @@
+clock(1), sector(agent,cruiseliner1,port_bow_broad), range(agent,cruiseliner1,very_far), dcpa(agent,cruiseliner1,critical), tcpa(agent,cruiseliner1,long), sector(cruiseliner1,agent,starboard_bow_broad).
+clock(17), dcpa(agent,cruiseliner1,critical), tcpa(agent,cruiseliner1,long).
+clock(65), range(agent,cruiseliner1,far).
+clock(136), tcpa(agent,cruiseliner1,medium).
+clock(159), waypoint(agent,cruiseliner1,no_risk,no_risk,port,forward,insubstantial).
+clock(172), dcpa(agent,cruiseliner1,marginal), tcpa(agent,cruiseliner1,long).
+clock(238), tcpa(agent,cruiseliner1,medium).
+clock(432), dcpa(agent,cruiseliner1,marginal), tcpa(agent,cruiseliner1,medium).
