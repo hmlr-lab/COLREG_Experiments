@@ -1,0 +1,4 @@
+waypoint(A,B,no_risk,no_risk,port,aft,moderate):-conduct(A,B,rule17_standon_maintain),dcpa(A,B,C),range(A,B,D),tcpa(A,B,E).
+waypoint(A,B,no_risk,no_risk,port,forward,large):-dcpa(A,B,C),range(A,B,D),tcpa(A,B,E),less_than(E,medium).
+waypoint(A,B,no_risk,no_risk,port,forward,small):-dcpa(A,B,C),encounter(A,B,rule14_head_on),range(A,B,D),tcpa(A,B,E).
+waypoint(A,B,no_risk,no_risk,X1,aft,small):-member(X1, [port, starboard]),dcpa(A,B,C),range(A,B,D),tcpa(A,B,E),less_than(D,middle).

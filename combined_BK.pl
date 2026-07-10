@@ -27,6 +27,15 @@ sector(cruiseliner_5_1,agent_5_1,astern).
 arc_overtaking(agent_5_1,cruiseliner_5_1).
 
 
+
+:- ['Directives.pl'].
+
+:- discontiguous less_and_adjacent/2.
+:- discontiguous greater_or_equal/2.
+:- discontiguous greater_than/2.
+:- discontiguous less_than/2.
+:- discontiguous less_or_equal/2. 
+
 %  GEOMETRIC ABSTRACTION
 port_forward(X,Y)      :- sector(X,Y,port_bow_forward).
 port_forward(X,Y)      :- sector(X,Y,port_bow_broad).
@@ -133,7 +142,7 @@ less_and_adjacent(immediate,short).
 
 is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
 is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
-is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate])..
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
 
 less_than(X,Z) :- 
     tcpa(_,_,X),

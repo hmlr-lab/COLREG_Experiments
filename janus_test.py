@@ -125,11 +125,61 @@ def consult_bk_once(bk_path, debug=False):
     _LOADED_BK_FILES.add(bk_path)
 
 
+# def assert_bottom_facts(bottom_facts, debug=False):
+#     for fact in bottom_facts:
+#         fact = fact.strip().rstrip(".")
+
+#         if not fact:
+#             continue
+        
+        
+#         query = f"assertz(({fact}))"
+
+#         if debug:
+#             print("ASSERT:", query)
+        
+#         janus.query_once(query)
+
+
+def contains_prolog_variable(term):
+    """
+    Return True when a Prolog term contains an unbound variable.
+
+    Examples
+    --------
+    range(agent_1,ship_1,far)       -> False
+    less_than(R,far)                -> True
+    encounter(agent_1,ship_1,R)     -> True
+    tcpa(agent_1,ship_1,short)      -> False
+    """
+
+    term = term.strip().rstrip(".")
+
+    # Prolog variables begin with an uppercase letter or underscore.
+    variable_pattern = r"(?<![A-Za-z0-9_])(?:[A-Z][A-Za-z0-9_]*|_[A-Za-z0-9_]*)\b"
+
+    return re.search(variable_pattern, term) is not None
+
+
 def assert_bottom_facts(bottom_facts, debug=False):
+    """
+    Assert only fully ground bottom-clause literals.
+
+    Literals containing variables are query templates and must not be
+    inserted as Prolog facts.
+    """
+
+    asserted_facts = []
+
     for fact in bottom_facts:
         fact = fact.strip().rstrip(".")
 
         if not fact:
+            continue
+
+        if contains_prolog_variable(fact):
+            if debug:
+                print("SKIP NON-GROUND:", fact)
             continue
 
         query = f"assertz(({fact}))"
@@ -137,7 +187,17 @@ def assert_bottom_facts(bottom_facts, debug=False):
         if debug:
             print("ASSERT:", query)
 
-        janus.query_once(query)
+        try:
+            janus.query_once(query)
+            asserted_facts.append(fact)
+
+        except Exception as exc:
+            print("\nFAILED TO ASSERT:", fact)
+            print("PROLOG QUERY:", query)
+            print("ERROR:", exc)
+            raise
+
+    return asserted_facts
 
 
 def clear_bottom_facts(bottom_facts, debug=False):
@@ -201,7 +261,7 @@ def modify_bcrl_janus_from_bk(
         for q in query_literals:
 
             grounded_q = bind_query_with_example(q, binding)
-
+            #print(grounded_q)
             if debug:
                 print("\nQUERY:", grounded_q)
 

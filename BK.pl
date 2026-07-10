@@ -1,3 +1,12 @@
+
+:- ['Directives.pl'].
+
+:- discontiguous less_and_adjacent/2.
+:- discontiguous greater_or_equal/2.
+:- discontiguous greater_than/2.
+:- discontiguous less_than/2.
+:- discontiguous less_or_equal/2. 
+
 %  GEOMETRIC ABSTRACTION
 port_forward(X,Y)      :- sector(X,Y,port_bow_forward).
 port_forward(X,Y)      :- sector(X,Y,port_bow_broad).
