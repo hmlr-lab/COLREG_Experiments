@@ -1,4 +1,4 @@
-from util import *
+from python.util import *
 
 # Example log files
 file_path_log = ["260709_examples/log_0.txt",
@@ -12,6 +12,6 @@ file_path_log = ["260709_examples/log_0.txt",
 facts, examples =  generate_bk_from_log(file_path_log, verbose=False)
 
 # Save the examples
-write_prolog_file(examples, "examples.pl")
+write_prolog_file(examples, PROLOG_GENERATED / "examples.pl")
 # Save the generated Prolog knowledge base (facts and rules) for evaluation.
-write_prolog_file(facts,"facts.pl")
+write_prolog_file(facts, PROLOG_GENERATED / "facts.pl")

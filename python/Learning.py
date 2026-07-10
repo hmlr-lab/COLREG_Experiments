@@ -1,4 +1,4 @@
-from util import *
+from python.util import *
 
 import sys
 from pathlib import Path
@@ -26,12 +26,12 @@ file_path_log = ["260709_examples/log_0.txt",
 facts, examples =  generate_bk_from_log(file_path_log, verbose=False)
 
 # Save the examples
-write_prolog_file(examples, "examples.pl")
+write_prolog_file(examples, PROLOG_GENERATED / "examples.pl")
 # Save the generated Prolog knowledge base (facts and rules) for evaluation.
-write_prolog_file(facts,"facts.pl")
+write_prolog_file(facts, PROLOG_GENERATED / "facts.pl")
 
 # Combine generated facts with the background knowledge for evaluation.
-merge_prolog_files("facts.pl", "BK.pl", "combined_BK.pl")
+merge_prolog_files(PROLOG_GENERATED / "facts.pl", PROLOG / "BK.pl", PROLOG_GENERATED /  "combined_BK.pl")
 
 # Learn Rules
 H, HS = learn_rules(facts, examples, bk_path, print_hs=False, print_h=False, seed_value=10)
