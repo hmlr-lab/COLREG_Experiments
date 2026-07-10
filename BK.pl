@@ -1,6 +1,6 @@
 :- style_check(-discontiguous).
 :- set_prolog_flag(verbose, silent).
-
+ 
 :- abolish(port_forward/2).
 :- abolish(port_aft/2).
 :- abolish(starboard_forward/2).
