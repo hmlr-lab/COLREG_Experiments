@@ -27,12 +27,6 @@ mode_declarations =  [
     "modeb(*, greater_than(R1,R2)).",
     "modeb(*, greater_or_equal(R1,R2)).",
 
-    
-
-    
-
-    
-
     "modeb(*, dcpa_unacceptable(A,B)).",
     "modeb(*, dcpa_acceptable(A,B)).",
 
@@ -57,7 +51,7 @@ mode_declarations =  [
     "modeb(*, range(A,B,R)).",
     "modeb(*, dcpa(A,B,D)).",
     "modeb(*, tcpa(A,B,T)).",
-    #"modeb(*, arc_overtaking(A,B)).",
+    "modeb(*, arc_overtaking(A,B)).",
 ]
 
 # mode_declarations = [
@@ -132,12 +126,8 @@ K = [
  'starboard_bow_forward',
  "aft", "forward",
  'n', 'nne', 'ne', 'ene', 'e', 'ese', 'se', 'sse', 's', 'ssw', 'sw', 'wsw', 'w', 'wnw', 'nw', 'nnw',
- "very_close",
-    "close",
-    "middle", "marginal",
-    "far",
-    "very_far", "safe",
-    "short", "long", "medium", "opening", "imminent",  "starboard", "large", "port", "small", "opening", "dcpa_safe"
+ "far","very_far", "middle","far", "near","middle",  "very_near","near", "long", "very_long", "medium", "short", "immediate", "large", "very_large", "moderate", "small", "insubstantial", 
+ "no_risk", "port", "starboard"
 ]
 
 
@@ -145,6 +135,7 @@ constraints={
         "starboard_forward": ["starboard", "forward",],  
         "port_forward":      ["port", "forward", ],     
         #"range_actionable":["range"],
+        "collision_risk" : ["dcpa_unacceptable"],
         "encounter_and_duty":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
 
     }
@@ -212,7 +203,7 @@ def ground_facts_log_file(file_path, not_allowed=[]):
                 substring = return_substring(eachi)
                 #print(substring)
                 if  substring == "waypoint" :
-                    print("I am here", substring, parts[0])
+                    #print("I am here", substring, parts[0])
                     time = int(re.findall(r"\d+", parts[0])[0])
                     keys.append(time)
                     last_value.append(eachi)
@@ -557,7 +548,8 @@ def read_modes(file_path, strip_empty=True):
 def simplify(file_name = "BK.pl", strings =[]):
     #strings = P_inter[pos]
     prefixes = ["range(", "tcpa(", "dcpa("]
-    remove_list = ["less_than(", "less_or_equal(", "greater_than(", "greater_or_equal("] 
+    remove_list = ["less_than(", "less_or_equal(", "greater_than(", "greater_or_equal(", "sector(",
+                   "port_forward", "port", "forward", "starboard"] 
     result_1 = [s for s in strings if s.startswith(tuple(prefixes))]
     result = add_comparisons_from_bk(
     literals=result_1,
@@ -566,10 +558,15 @@ def simplify(file_name = "BK.pl", strings =[]):
     )
     result_2 = [
     x for x in strings
-    if not any(x.startswith(prefix) for prefix in remove_list)
+    if not any(x.startswith(prefix) for prefix in remove_list+prefixes)
     ]
-
+    # print("---R2")
+    # print(result_2)
+    # print("---Res")
+    # print(result)
     new_strings = result_2 + result
+
+    #print(new_strings)
     return new_strings
 
 
@@ -598,7 +595,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         )
         
         # Included BK
-        # print(P_inter)
+        #print(P_inter)
         # print()
         
         N_inter = modify_bcrl_janus_from_bk(
@@ -649,7 +646,7 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         # print("---", result)
 
         
-        new_list = simplify(file_name="BK.pl", strings=P_inter[pos])
+        #new_list = simplify(file_name="BK.pl", strings=P_inter[pos])
         #print("--new ", new_list)
         
         #print(new_list)
@@ -658,15 +655,20 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
 
         Train_P = {i:simplify(file_name="BK.pl", strings=P_inter[i]) for i,j in P1.items()}
         Train_N = {i:simplify(file_name="BK.pl", strings=N_inter[i]) for i,j in N1.items()}
-
+        #print("pos")
         print(Train_P)
         
 
         #print("---", Train_N)
 
-        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=6,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 5, verbose=True, seed_value=seed_value)
+        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=seed_value)
         
-        
+        print("\n" + "=" * 80)
+        print(len(HS))
+        for i in HS[0:10]:
+            print(i)
+        print("\n" + "=" * 80)
+
 
         if print_hs:
             print("\n" + "=" * 80)

@@ -67,5 +67,8 @@
 :- dynamic greater_than/2.
 :- dynamic greater_or_equal/2.
 :- dynamic cpa_acceptable/2.
+:- dynamic greater_than/2.
+:- dynamic greater_or_equal/2.
+:- dynamic less_and_adjacent/2. 
 
-:- ['BK.pl'].
+%:- ['BK.pl'].
