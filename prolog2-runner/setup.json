@@ -58,7 +58,7 @@
         "very_large/1"
     ],
     "files": [
-        "../BK.pl", "../facts.pl", "../meta.pl"
+        "../prolog/BK2.pl", "../prolog/generated/facts.pl", "../prolog/meta.pl"
     ],
     "top_prog": true,
     "reduce": true
