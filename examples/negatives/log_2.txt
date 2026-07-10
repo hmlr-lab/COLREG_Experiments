@@ -1,0 +1,45 @@
+clock(1), sector(agent,cruiseliner1,starboard_bow_broad), range(agent,cruiseliner1,very_far), dcpa(agent,cruiseliner1,critical), tcpa(agent,cruiseliner1,long), sector(cruiseliner1,agent,port_bow_broad).
+clock(17), dcpa(agent,cruiseliner1,critical), tcpa(agent,cruiseliner1,long).
+clock(65), range(agent,cruiseliner1,far).
+clock(136), tcpa(agent,cruiseliner1,medium).
+clock(496), tcpa(agent,cruiseliner1,short).
+clock(525), range(agent,cruiseliner1,middle).
+clock(636), waypoint(agent,cruiseliner1,no_risk,no_risk,starboard,aft,moderate).
+clock(641), sector(agent,cruiseliner1,starboard_bow_forward).
+clock(663), sector(agent,cruiseliner1,ahead).
+clock(677), dcpa(agent,cruiseliner1,marginal), tcpa(agent,cruiseliner1,short).
+clock(743), range(agent,cruiseliner1,near).
+clock(814), sector(agent,cruiseliner1,port_bow_forward).
+clock(887), sector(cruiseliner1,agent,port_beam_forward).
+clock(909), tcpa(agent,cruiseliner1,imminent).
+clock(967), sector(agent,cruiseliner1,port_bow_broad).
+clock(982), range(agent,cruiseliner1,very_near).
+clock(1000), sector(cruiseliner1,agent,port_beam).
+clock(1046), sector(agent,cruiseliner1,port_beam_forward).
+clock(1069), sector(cruiseliner1,agent,port_beam_aft).
+clock(1075), dcpa(agent,cruiseliner1,marginal), tcpa(agent,cruiseliner1,imminent).
+clock(1088), tcpa(agent,cruiseliner1,opening).
+clock(1100), arc_overtaking(agent,cruiseliner1).
+clock(1106), sector(agent,cruiseliner1,port_beam).
+clock(1132), sector(cruiseliner1,agent,port_quarter_broad).
+clock(1175), sector(agent,cruiseliner1,port_beam_aft).
+clock(1194), range(agent,cruiseliner1,near).
+clock(1211), sector(cruiseliner1,agent,port_quarter_aft).
+clock(1221), arc_overtaking(cruiseliner1,agent).
+clock(1286), sector(agent,cruiseliner1,port_quarter_broad).
+clock(1365), resume(agent).
+clock(1368), sector(cruiseliner1,agent,astern).
+clock(1374), sector(agent,cruiseliner1,port_beam_aft).
+clock(1387), not(arc_overtaking(cruiseliner1,agent)).
+clock(1400), sector(agent,cruiseliner1,port_beam).
+clock(1425), sector(agent,cruiseliner1,port_beam_forward).
+clock(1426), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(1429), sector(agent,cruiseliner1,port_beam).
+clock(1472), range(agent,cruiseliner1,middle).
+clock(1674), sector(cruiseliner1,agent,starboard_quarter_aft).
+clock(1810), sector(agent,cruiseliner1,port_beam_aft).
+clock(1818), range(agent,cruiseliner1,far).
+clock(2274), arc_overtaking(cruiseliner1,agent).
+clock(2403), range(agent,cruiseliner1,very_far).
+clock(2511), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(2742), sector(cruiseliner1,agent,starboard_quarter_broad).
