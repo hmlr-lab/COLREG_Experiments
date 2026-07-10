@@ -1,8 +1,4 @@
 .DS_Store
-__pycache__/
-*.pyc
-*.pyo
-*.so
 .ipynb_checkpoints/
 venv/
 .venv/
@@ -12,11 +8,10 @@ venv/
 *.log
 *.c
 PyGol_Files/*.so
+PyGol_Files/build/
 __pycache__/*
-PyGol_Files/build/*
 examples.pl
 facts.pl
 combined_BK.pl
-
 prolog2-runner/target/
-*.o
+*/__pycache__

@@ -1,0 +1,65 @@
+{
+    "config": {
+        "max_depth": 12,
+        "max_clause": 3,
+        "max_pred": 2,
+        "debug": false
+    },
+    "examples": {
+        "pos": "../examples.pl",
+        "neg": [
+            "waypoint(cruiseliner_5_1,agent_5_1,A,B,C,D,F)",
+            "waypoint(cruiseliner_4_1,agent_4_1,A,B,C,D,F)"
+        ]
+    },
+    "body_predicates": [
+        "sector/3",
+        "range/3",
+        "dcpa/3",
+        "tcpa/3",
+        "bearing/3",
+        "distance/3",
+        "arc_overtaking/2",
+        "status/2",
+        "waterway/2",
+        "constraint_draught/1",
+        "clock/1",
+        "port_forward/2",
+        "port_aft/2",
+        "starboard_forward/2",
+        "starboard_aft/2",
+        "port/2",
+        "starboard/2",
+        "forward/2",
+        "aft/2",
+        "dcpa_unsafe/2",
+        "dcpa_safe/2",
+        "tcpa_closing/2",
+        "range_actionable/2",
+        "time_ample/3",
+        "risk_collision/2",
+        "close_quarters_developing/2",
+        "close_quarters/2",
+        "encounter/3",
+        "encounter_and_duty/4",
+        "conduct/4",
+        "extremis_override/2",
+        "cites/2",
+        "less_and_adjacent/2",
+        "less_than/2",
+        "less_or_equal/2",
+        "greater_than/2",
+        "greater_or_equal/2",
+        "cpa_acceptable/2",
+        "insubstantial/1",
+        "small/1",
+        "moderate/1",
+        "large/1",
+        "very_large/1"
+    ],
+    "files": [
+        "../prolog/BK2.pl", "../prolog/generated/facts.pl", "../prolog/meta.pl"
+    ],
+    "top_prog": true,
+    "reduce": true
+}

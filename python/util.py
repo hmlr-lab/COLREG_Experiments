@@ -5,12 +5,15 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
 PYGOL_DIR = ROOT / "PyGol_Files"
+PROLOG = ROOT / "prolog"
+PROLOG_GENERATED = ROOT / "prolog/generated"
+EXAMPLES = ROOT / "examples"
 
 sys.path.insert(0, str(PYGOL_DIR))
 
 import PyGol as pygol
-from janus_test import *
-from bc_pruner import *
+from python.janus_test import *
+from python.bc_pruner import *
 
 mode_declarations =  [
     "modeb(*, port_forward(A,B)).",

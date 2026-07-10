@@ -1,0 +1,5 @@
+clock(1), sector(agent,cruiseliner1,ahead), range(agent,cruiseliner1,far), dcpa(agent,cruiseliner1,critical), tcpa(agent,cruiseliner1,very_long), sector(cruiseliner1,agent,astern), arc_overtaking(agent,cruiseliner1).
+clock(114), waypoint(agent,cruiseliner1,no_risk,no_risk,starboard,aft,insubstantial).
+clock(117), dcpa(agent,cruiseliner1,marginal), tcpa(agent,cruiseliner1,very_long).
+clock(121), range(agent,cruiseliner1,middle).
+clock(185), tcpa(agent,cruiseliner1,long).
