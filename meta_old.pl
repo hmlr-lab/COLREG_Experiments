@@ -3,7 +3,7 @@
 % --------------------------------------------------------
 
 comparitor(X):-
-    member(X, [less_than,less_or_equal, greater_than, greater_or_equal]).
+    member(X, [less_than,less_or_equal, greater_than, greater_or_equal])
 % Instantiate self
 X(X),{X}. 
 % Single Condition
@@ -26,24 +26,31 @@ P(X):-
 % --------------------------------------------------------
 add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
     P(Avoid),
-    Q(A,B),
-    {P,Q},
-    [Avoid,Resume,Side1,Side2].
+    Q(Resume),
+    R(Magnitude),
+    S(A,B),
+    {P,Q,R,S},
+    [Side1,Side2].
 add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
     P(Avoid),
-    Q(A,B),
-    {P,Q},
+    Q(Resume),
+    R(Magnitude),
+    S(A,B),
+    {P,Q,R,S},
     [Side2].
 add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
     P(Avoid),
-    Q(A,B),
-    {P,Q},
-    [Avoid,Resume,Side1].
+    Q(Resume),
+    R(Magnitude),
+    S(A,B),
+    {P,Q,R,S},
+    [Side1].
 add_waypoint(A,B,Avoid,Resume,Side1,Side2,Magnitude):- 
     P(Avoid),
-    Q(A,B),
-    {P,Q},
-    [Avoid,Resume].
+    Q(Resume),
+    R(Magnitude),
+    S(A,B),
+    {P,Q,R,S}.
 
 % --------------------------------------------------------
 % ---------------- Condition Chaining --------------------
