@@ -37,11 +37,11 @@ mode_declarations =  [
     "modeb(*, dcpa_acceptable(A,B)).",
 
     "modeb(*, tcpa_closing(A,B)).",
-    "modeb(*, range_actionable(A,B)).",
+    "modeb(*, actionable_range(A,B)).",
 
-    "modeb(*, time_ample(A,B)).",
+    "modeb(*, ample_time(A,B)).",
 
-    "modeb(*, risk_collision(A,B)).",
+    "modeb(*, collision_risk(A,B)).",
 
     "modeb(*, close_quarters_developing(A,B)).",
     "modeb(*, close_quarters(A,B)).",
@@ -144,7 +144,7 @@ K = [
 constraints={
         "starboard_forward": ["starboard", "forward",],  
         "port_forward":      ["port", "forward", ],     
-        "range_actionable":["range"],
+        #"range_actionable":["range"],
         "encounter_and_duty":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
 
     }
@@ -558,11 +558,30 @@ def read_modes(file_path, strip_empty=True):
         
 
 
+def simplify(file_name = "BK.pl", strings =[]):
+    #strings = P_inter[pos]
+    prefixes = ["range(", "tcpa(", "dcpa("]
+    remove_list = ["less_than(", "less_or_equal(", "greater_than(", "greater_or_equal("] 
+    result_1 = [s for s in strings if s.startswith(tuple(prefixes))]
+    result = add_comparisons_from_bk(
+    literals=result_1,
+    bk_path=file_name,
+    include_original=True,
+    )
+    result_2 = [
+    x for x in strings
+    if not any(x.startswith(prefix) for prefix in remove_list)
+    ]
+
+    new_strings = result_2 + result
+    return new_strings
+
+
 def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_value=42):
     Hypothesis = []
     Hypothesis_space = []
     for i, pos in enumerate(examples):
-        print(pos)
+        #print(pos)
         neg = []
         for j, item in enumerate(examples):
             if i != j:
@@ -582,8 +601,9 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         debug=False
     )
         
-        print(P_inter)
-        print()
+        # Included BK
+        # print(P_inter)
+        # print()
         
         N_inter = modify_bcrl_janus_from_bk(
         bk_path=bk_path,
@@ -597,19 +617,59 @@ def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_valu
         bottom_clauses=P_inter,
         verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
         )
+        # print("Pruning")
+        # print("===============")
+        # print(P1)
+        # print("===============")
 
-        #print(P1)
+
+
         N1 = prune_bottom_clauses_from_file(
         bk_file=bk_path,
         bottom_clauses=N_inter,
         verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
         )
 
-        Train_P = {i:j for i,j in P1.items()}
-        Train_N = {i:j for i,j in N1.items()}
 
-        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=seed_value)
 
+
+        # strings = P_inter[pos]
+        # prefixes = ["range(", "tcpa(", "dcpa("]
+        # remove_list = ["less_than(", "less_or_equal(", "greater_than(", "greater_or_equal("] 
+        # result_1 = [s for s in strings if s.startswith(tuple(prefixes))]
+        # result = add_comparisons_from_bk(
+        # literals=result_1,
+        # bk_path="BK.pl",
+        # include_original=True,
+        # )
+        # result_2 = [
+        # x for x in strings
+        # if not any(x.startswith(prefix) for prefix in remove_list)
+        # ]
+
+        
+        # print("----", result_1)
+
+        # print("---", result)
+
+        
+        new_list = simplify(file_name="BK.pl", strings=P_inter[pos])
+        #print("--new ", new_list)
+        
+        #print(new_list)
+
+        
+
+        Train_P = {i:simplify(file_name="BK.pl", strings=P_inter[i]) for i,j in P1.items()}
+        Train_N = {i:simplify(file_name="BK.pl", strings=N_inter[i]) for i,j in N1.items()}
+
+        print(Train_P)
+        
+
+        #print("---", Train_N)
+
+        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=6,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 5, verbose=True, seed_value=seed_value)
+        
         
 
         if print_hs:
@@ -788,3 +848,597 @@ def merge_prolog_files(file1, file2, output_file):
 
         with open(file2, "r") as f2:
             out.write(f2.read())
+
+
+import re
+from pathlib import Path
+from typing import Dict, List, Optional, Set, Tuple
+
+import janus_swi as janus
+
+
+# ---------------------------------------------------------------------
+# Configuration
+# ---------------------------------------------------------------------
+
+# Source predicate -> variable used for its ordered third argument
+ORDERED_PREDICATES = {
+    "range": "R",
+    "dcpa": "D",
+    "tcpa": "T",
+}
+
+COMPARISON_PREDICATES = [
+    "less_than",
+    "less_or_equal",
+    "greater_than",
+    "greater_or_equal",
+]
+
+
+# ---------------------------------------------------------------------
+# BK loading
+# ---------------------------------------------------------------------
+
+def consult_bk(bk_path: str) -> None:
+    """
+    Consult the Prolog background-knowledge file.
+    """
+
+    path = Path(bk_path).expanduser().resolve()
+
+    if not path.exists():
+        raise FileNotFoundError(f"BK file not found: {path}")
+
+    prolog_path = (
+        str(path)
+        .replace("\\", "/")
+        .replace("'", "\\'")
+    )
+
+    janus.query_once(f"consult('{prolog_path}')")
+
+
+# ---------------------------------------------------------------------
+# Prolog literal parsing
+# ---------------------------------------------------------------------
+
+def parse_prolog_literal(
+    literal: str,
+) -> Tuple[Optional[str], List[str]]:
+    """
+    Parse a simple Prolog literal.
+
+    Example
+    -------
+    range(A,B,far)
+
+    Returns
+    -------
+    ("range", ["A", "B", "far"])
+    """
+
+    literal = literal.strip().rstrip(".")
+
+    match = re.fullmatch(
+        r"([a-zA-Z_]\w*)\((.*)\)",
+        literal,
+    )
+
+    if not match:
+        return None, []
+
+    predicate = match.group(1)
+
+    arguments = [
+        argument.strip()
+        for argument in match.group(2).split(",")
+    ]
+
+    return predicate, arguments
+
+
+def make_prolog_literal(
+    predicate: str,
+    arguments: List[str],
+) -> str:
+    """
+    Construct a Prolog literal from a predicate and argument list.
+    """
+
+    return f"{predicate}({','.join(arguments)})"
+
+
+# ---------------------------------------------------------------------
+# Read ordering from BK
+# ---------------------------------------------------------------------
+
+def get_adjacency_edges() -> List[Tuple[str, str]]:
+    """
+    Read all less_and_adjacent(Smaller,Larger) relations from the BK.
+
+    Example:
+        less_and_adjacent(very_near,near)
+
+    means:
+        very_near < near
+    """
+
+    edges = []
+
+    for solution in janus.query(
+        "less_and_adjacent(Smaller,Larger)"
+    ):
+        smaller = str(solution["Smaller"])
+        larger = str(solution["Larger"])
+
+        edge = (smaller, larger)
+
+        if edge not in edges:
+            edges.append(edge)
+
+    return edges
+
+
+def find_connected_component(
+    source_value: str,
+    edges: List[Tuple[str, str]],
+) -> Set[str]:
+    """
+    Find the ordered scale containing source_value.
+
+    This prevents range, DCPA, and TCPA values from being mixed.
+    """
+
+    graph: Dict[str, Set[str]] = {}
+
+    for smaller, larger in edges:
+        graph.setdefault(smaller, set()).add(larger)
+        graph.setdefault(larger, set()).add(smaller)
+
+    if source_value not in graph:
+        return {source_value}
+
+    component: Set[str] = set()
+    stack = [source_value]
+
+    while stack:
+        current = stack.pop()
+
+        if current in component:
+            continue
+
+        component.add(current)
+
+        for neighbour in graph.get(current, set()):
+            if neighbour not in component:
+                stack.append(neighbour)
+
+    return component
+
+
+def build_ordered_scale(
+    source_value: str,
+    edges: List[Tuple[str, str]],
+) -> List[str]:
+    """
+    Build the complete ordered scale from smallest to largest.
+
+    Examples
+    --------
+    range:
+        very_near < near < middle < far < very_far
+
+    dcpa:
+        critical < very_close < close < marginal < safe
+
+    tcpa:
+        immediate < short < medium < long < very_long
+    """
+
+    component = find_connected_component(
+        source_value=source_value,
+        edges=edges,
+    )
+
+    next_value: Dict[str, str] = {}
+
+    incoming_count: Dict[str, int] = {
+        value: 0
+        for value in component
+    }
+
+    for smaller, larger in edges:
+        if smaller in component and larger in component:
+            next_value[smaller] = larger
+            incoming_count[larger] += 1
+
+    starts = [
+        value
+        for value in component
+        if incoming_count[value] == 0
+    ]
+
+    if not starts:
+        return []
+
+    current = starts[0]
+    ordered_scale = []
+
+    while current not in ordered_scale:
+        ordered_scale.append(current)
+
+        if current not in next_value:
+            break
+
+        current = next_value[current]
+
+    return ordered_scale
+
+
+# ---------------------------------------------------------------------
+# Generalise original source literals
+# ---------------------------------------------------------------------
+
+def generalise_source_literal(
+    literal: str,
+) -> str:
+    """
+    Replace the concrete third argument with its corresponding variable.
+
+    Examples
+    --------
+    range(A,B,far)
+        -> range(A,B,R)
+
+    dcpa(A,B,very_close)
+        -> dcpa(A,B,D)
+
+    tcpa(A,B,medium)
+        -> tcpa(A,B,T)
+    """
+
+    predicate, arguments = parse_prolog_literal(literal)
+
+    if predicate not in ORDERED_PREDICATES:
+        return literal.strip().rstrip(".")
+
+    if len(arguments) != 3:
+        return literal.strip().rstrip(".")
+
+    arguments[2] = ORDERED_PREDICATES[predicate]
+
+    return make_prolog_literal(
+        predicate=predicate,
+        arguments=arguments,
+    )
+
+
+def generalise_source_literals(
+    literals: List[str],
+) -> List[str]:
+    """
+    Generalise every supported source literal.
+    """
+
+    output = []
+
+    for literal in literals:
+        generalised = generalise_source_literal(literal)
+
+        if generalised not in output:
+            output.append(generalised)
+
+    return output
+
+
+# ---------------------------------------------------------------------
+# Generate comparison literals
+# ---------------------------------------------------------------------
+
+def generate_less_than_literals(
+    source_value: str,
+    variable: str,
+    ordered_scale: List[str],
+) -> List[str]:
+    """
+    Generate strict less_than literals.
+
+    For source_value='far' and variable='R':
+
+        less_than(very_near,R)
+        less_than(near,R)
+        less_than(middle,R)
+        less_than(R,very_far)
+    """
+
+    if source_value not in ordered_scale:
+        return []
+
+    index = ordered_scale.index(source_value)
+
+    smaller_values = ordered_scale[:index]
+    larger_values = ordered_scale[index + 1:]
+
+    output = []
+
+    for smaller in smaller_values:
+        output.append(
+            f"less_than({smaller},{variable})"
+        )
+
+    for larger in larger_values:
+        output.append(
+            f"less_than({variable},{larger})"
+        )
+
+    return output
+
+
+def generate_less_or_equal_literals(
+    source_value: str,
+    variable: str,
+    ordered_scale: List[str],
+) -> List[str]:
+    """
+    Generate less_or_equal literals following the orientation
+    used in your current BK.
+
+    For source_value='far' and variable='R':
+
+        less_or_equal(R,middle)
+        less_or_equal(R,near)
+        less_or_equal(R,very_near)
+        less_or_equal(very_far,R)
+    """
+
+    if source_value not in ordered_scale:
+        return []
+
+    index = ordered_scale.index(source_value)
+
+    smaller_values = ordered_scale[:index]
+    larger_values = ordered_scale[index + 1:]
+
+    output = []
+
+    # Observed value is on the left
+    for smaller in reversed(smaller_values):
+        output.append(
+            f"less_or_equal({variable},{smaller})"
+        )
+
+    # Observed value is on the right
+    for larger in larger_values:
+        output.append(
+            f"less_or_equal({larger},{variable})"
+        )
+
+    return output
+
+
+def generate_greater_than_literals(
+    source_value: str,
+    variable: str,
+    ordered_scale: List[str],
+) -> List[str]:
+    """
+    Generate strict greater_than literals.
+
+    For source_value='far' and variable='R':
+
+        greater_than(R,middle)
+        greater_than(R,near)
+        greater_than(R,very_near)
+        greater_than(very_far,R)
+    """
+
+    if source_value not in ordered_scale:
+        return []
+
+    index = ordered_scale.index(source_value)
+
+    smaller_values = ordered_scale[:index]
+    larger_values = ordered_scale[index + 1:]
+
+    output = []
+
+    for smaller in reversed(smaller_values):
+        output.append(
+            f"greater_than({variable},{smaller})"
+        )
+
+    for larger in larger_values:
+        output.append(
+            f"greater_than({larger},{variable})"
+        )
+
+    return output
+
+
+def generate_greater_or_equal_literals(
+    source_value: str,
+    variable: str,
+    ordered_scale: List[str],
+) -> List[str]:
+    """
+    Generate greater_or_equal literals.
+
+    For source_value='far' and variable='R':
+
+        greater_or_equal(R,middle)
+        greater_or_equal(R,near)
+        greater_or_equal(R,very_near)
+        greater_or_equal(very_far,R)
+    """
+
+    if source_value not in ordered_scale:
+        return []
+
+    index = ordered_scale.index(source_value)
+
+    smaller_values = ordered_scale[:index]
+    larger_values = ordered_scale[index + 1:]
+
+    output = []
+
+    for smaller in reversed(smaller_values):
+        output.append(
+            f"greater_or_equal({variable},{smaller})"
+        )
+
+    for larger in larger_values:
+        output.append(
+            f"greater_or_equal({larger},{variable})"
+        )
+
+    return output
+
+
+def generate_comparisons_for_value(
+    source_value: str,
+    variable: str,
+    edges: List[Tuple[str, str]],
+) -> List[str]:
+    """
+    Generate all comparison literals for one source value.
+    """
+
+    ordered_scale = build_ordered_scale(
+        source_value=source_value,
+        edges=edges,
+    )
+
+    if not ordered_scale:
+        print(
+            f"No ordered scale found for value: "
+            f"{source_value}"
+        )
+        return []
+
+    output = []
+
+    groups = [
+        generate_less_than_literals(
+            source_value=source_value,
+            variable=variable,
+            ordered_scale=ordered_scale,
+        ),
+        generate_less_or_equal_literals(
+            source_value=source_value,
+            variable=variable,
+            ordered_scale=ordered_scale,
+        ),
+        generate_greater_than_literals(
+            source_value=source_value,
+            variable=variable,
+            ordered_scale=ordered_scale,
+        ),
+        generate_greater_or_equal_literals(
+            source_value=source_value,
+            variable=variable,
+            ordered_scale=ordered_scale,
+        ),
+    ]
+
+    for group in groups:
+        for literal in group:
+            if literal not in output:
+                output.append(literal)
+
+    return output
+
+
+# ---------------------------------------------------------------------
+# Main function
+# ---------------------------------------------------------------------
+
+def add_comparisons_from_bk(
+    literals: List[str],
+    bk_path: str,
+    include_original: bool = True,
+) -> List[str]:
+    """
+    Consult the BK, generalise range/dcpa/tcpa literals, and generate
+    complete comparison literals.
+
+    Input example
+    -------------
+    [
+        "range(A,B,far)",
+        "dcpa(A,B,very_close)",
+        "tcpa(A,B,medium)"
+    ]
+
+    Output starts with
+    ------------------
+    [
+        "range(A,B,R)",
+        "dcpa(A,B,D)",
+        "tcpa(A,B,T)",
+        ...
+    ]
+    """
+
+    consult_bk(bk_path)
+
+    edges = get_adjacency_edges()
+
+    if include_original:
+        output = generalise_source_literals(literals)
+    else:
+        output = []
+
+    for literal in literals:
+        source_predicate, arguments = parse_prolog_literal(
+            literal
+        )
+
+        if source_predicate not in ORDERED_PREDICATES:
+            continue
+
+        if len(arguments) != 3:
+            continue
+
+        source_value = arguments[2]
+        variable = ORDERED_PREDICATES[source_predicate]
+
+        generated_literals = generate_comparisons_for_value(
+            source_value=source_value,
+            variable=variable,
+            edges=edges,
+        )
+
+        for generated_literal in generated_literals:
+            if generated_literal not in output:
+                output.append(generated_literal)
+
+    return output
+
+
+# ---------------------------------------------------------------------
+# Example
+# ---------------------------------------------------------------------
+
+#if __name__ == "__main__":
+
+    # input_literals = [
+    #     "range(A,B,far)",
+    #     "dcpa(A,B,very_close)",
+    #     "tcpa(A,B,medium)",
+    # ]
+
+    # result = add_comparisons_from_bk(
+    #     literals=input_literals,
+    #     bk_path="BK.pl",
+    #     include_original=True,
+    # )
+
+    # print("\nGenerated literals")
+    # print("=" * 80)
+
+    # for literal in result:
+    #     print(literal)
+
+    # print("=" * 80)
+    # print(f"Total literals: {len(result)}")

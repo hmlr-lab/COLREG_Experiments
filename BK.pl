@@ -102,9 +102,9 @@ less_and_adjacent(short,medium).
 less_and_adjacent(immediate,short).
 
 
-is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]) 
-is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]) 
-is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]) 
+is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
+is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate])..
 
 less_than(X,Z) :- 
     tcpa(_,_,X),

@@ -27,79 +27,7 @@ sector(cruiseliner_5_1,agent_5_1,astern).
 arc_overtaking(agent_5_1,cruiseliner_5_1).
 
 
-:- style_check(-discontiguous).
-:- set_prolog_flag(verbose, silent).
-
-:- abolish(port_forward/2).
-:- abolish(port_aft/2).
-:- abolish(starboard_forward/2).
-:- abolish(starboard_aft/2).
-:- abolish(port/2).
-:- abolish(starboard/2).
-:- abolish(forward/2).
-:- abolish(aft/2).
-:- abolish(dcpa_unsafe/2).
-:- abolish(dcpa_safe/2).
-:- abolish(tcpa_closing/2).
-:- abolish(range_actionable/2).
-:- abolish(time_ample/2).
-:- abolish(risk_collision/2).
-:- abolish(close_quarters_developing/2).
-:- abolish(close_quarters/2).
-:- abolish(encounter/3).
-:- abolish(encounter_and_duty/4).
-:- abolish(conduct/3).
-:- abolish(rule2_extremis/2).
-:- abolish(less_and_adjacent/2).
-:- abolish(less_than/2).
-:- abolish(less_or_equal/2).
-:- abolish(greater_than/2).
-:- abolish(greater_or_equal/2).
-:- abolish(dcpa_acceptable/2).
-:- abolish(dcpa_unacceptable/2).
-
-:- dynamic sector/3.
-:- dynamic range/3.
-:- dynamic dcpa/3.
-:- dynamic tcpa/3.
-:- dynamic bearing/3.
-:- dynamic distance/3.
-:- dynamic arc_overtaking/2.
-:- dynamic status/2.
-:- dynamic waterway/2.
-:- dynamic constraint_draught/1.
-:- dynamic clock/1.
-:- dynamic port_forward/2.
-:- dynamic port_aft/2.
-:- dynamic starboard_forward/2.
-:- dynamic starboard_aft/2.
-:- dynamic port/2.
-:- dynamic starboard/2.
-:- dynamic forward/2.
-:- dynamic aft/2.
-:- dynamic dcpa_unsafe/2.
-:- dynamic dcpa_safe/2.
-:- dynamic tcpa_closing/2.
-:- dynamic range_actionable/2.
-:- dynamic time_ample/3.
-:- dynamic risk_collision/2.
-:- dynamic close_quarters_developing/2.
-:- dynamic close_quarters/2.
-:- dynamic encounter/3.
-:- dynamic encounter_and_duty/4.
-:- dynamic conduct/4.
-:- dynamic extremis_override/2.
-:- dynamic cites/2.
-:- dynamic less_and_adjacent/2.
-:- dynamic less_than/2.
-:- dynamic less_or_equal/2.
-:- dynamic greater_than/2.
-:- dynamic greater_or_equal/2.
-:- dynamic cpa_acceptable/2.
-
-
 %  GEOMETRIC ABSTRACTION
-
 port_forward(X,Y)      :- sector(X,Y,port_bow_forward).
 port_forward(X,Y)      :- sector(X,Y,port_bow_broad).
 port_forward(X,Y)      :- sector(X,Y,port_beam_forward).
@@ -168,7 +96,6 @@ less_and_adjacent(close,marginal).
 less_and_adjacent(very_close,close).
 less_and_adjacent(critical,very_close).
 
-
 less_than(X,Z) :- 
     dcpa(_,_,X),
     less_and_adjacent(X,Y), 
@@ -203,6 +130,10 @@ less_and_adjacent(medium,long).
 less_and_adjacent(short,medium).
 less_and_adjacent(immediate,short).
 
+
+is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
+is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
 
 less_than(X,Z) :- 
     tcpa(_,_,X),
@@ -288,30 +219,28 @@ less_and_adjacent(insubstantial,small).
 
 %  CONCEPTUAL GROUPINGS
 
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,critical).
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,very_close).
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,close).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
+dcpa_unacceptable(X,Y) :- not(dcpa_acceptable(X,Y)).
 
 tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
 
-range_actionable(X,Y) :- not(range(X,Y,very_far)).
+actionable_range(X,Y) :- not(range(X,Y,very_far)).
 
 
-%  time_ample  (Rule 8(a))
+%  ample_time  (Rule 8(a))
 
-time_ample(X,Y)    :- tcpa(X,Y,medium).
-time_ample(X,Y)    :- tcpa(X,Y,long).
-time_ample(X,Y)    :- tcpa(X,Y,very_long).
+ample_time(X,Y)    :- tcpa(X,Y,medium).
+ample_time(X,Y)    :- tcpa(X,Y,long).
+ample_time(X,Y)    :- tcpa(X,Y,very_long).
 
 
 
 %  RISK OF COLLISION (Rule 7)
 
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
 
 
 %  CLOSE-QUARTERS SITUATION (Rule 8)
@@ -325,17 +254,17 @@ close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), ran
 %  ENCOUNTER  (three types, one per pair) - the finding of fact
 
 encounter(X,Y,rule13_overtaking) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     arc_overtaking(X,Y).
 
 encounter(X,Y,rule14_head_on) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     sector(X,Y,ahead), sector(Y,X,ahead),
     not(encounter(X,Y,rule13_overtaking)),
     not(encounter(Y,X,rule13_overtaking)).
 
 encounter(X,Y,rule15_crossing) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     not(encounter(X,Y,rule13_overtaking)),
     not(encounter(Y,X,rule13_overtaking)),
     not(encounter(X,Y,rule14_head_on)).
@@ -350,9 +279,9 @@ encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15
 encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), port(X,Y).
 
 
-%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by time_ample
+%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by ample_time
 
-conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), time_ample(X,Y).
+conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), ample_time(X,Y).
 conduct(X,Y,rule17_standon_may_act)  :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,short).
 conduct(X,Y,rule17_standon_must_act) :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,imminent).
 
