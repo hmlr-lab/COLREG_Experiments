@@ -3,35 +3,39 @@ clock(121), range(agent,cruiseliner1,middle).
 clock(224), tcpa(agent,cruiseliner1,long).
 clock(584), tcpa(agent,cruiseliner1,medium).
 clock(635), range(agent,cruiseliner1,near).
-clock(770), add_waypoint(agent,cruiseliner1,dcpa_acceptable,dcpa_acceptable,port,aft,small).
-clock(777), sector(agent,cruiseliner1,port_bow_forward).
-clock(784), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,short).
-clock(953), sector(cruiseliner1,agent,starboard_quarter_aft).
-clock(994), sector(agent,cruiseliner1,port_bow_broad).
-clock(1190), tcpa(agent,cruiseliner1,imminent).
-clock(1216), sector(cruiseliner1,agent,starboard_quarter_broad).
-clock(1243), sector(agent,cruiseliner1,port_beam_forward).
-clock(1370), tcpa(agent,cruiseliner1,opening).
-clock(1421), sector(cruiseliner1,agent,starboard_beam_aft).
-clock(1447), sector(agent,cruiseliner1,port_beam).
-clock(1475), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(754), waypoint(agent,cruiseliner1,no_risk,no_risk,port,aft,small).
+clock(761), sector(agent,cruiseliner1,port_bow_forward).
+clock(773), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,short).
+clock(845), sector(agent,cruiseliner1,port_bow_broad).
+clock(905), sector(cruiseliner1,agent,starboard_quarter_aft).
+clock(1020), tcpa(agent,cruiseliner1,imminent).
+clock(1108), sector(agent,cruiseliner1,port_beam_forward).
+clock(1155), sector(cruiseliner1,agent,starboard_quarter_broad).
+clock(1200), tcpa(agent,cruiseliner1,opening).
+clock(1340), sector(agent,cruiseliner1,port_beam).
+clock(1389), sector(cruiseliner1,agent,starboard_beam_aft).
 clock(1526), not(arc_overtaking(agent,cruiseliner1)).
-clock(1645), sector(cruiseliner1,agent,starboard_beam).
-clock(1661), sector(agent,cruiseliner1,port_beam_aft).
-clock(1775), resume(agent).
-clock(1780), sector(agent,cruiseliner1,port_beam).
-clock(1797), sector(agent,cruiseliner1,port_beam_forward).
-clock(1799), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,short).
-clock(1836), sector(agent,cruiseliner1,port_beam).
-clock(1940), sector(cruiseliner1,agent,starboard_beam_forward).
-clock(1962), tcpa(agent,cruiseliner1,imminent).
-clock(2100), sector(agent,cruiseliner1,port_beam_aft).
-clock(2142), tcpa(agent,cruiseliner1,opening).
-clock(2190), sector(cruiseliner1,agent,starboard_bow_broad).
-clock(2222), arc_overtaking(cruiseliner1,agent).
-clock(2350), sector(agent,cruiseliner1,port_quarter_broad).
-clock(2455), sector(cruiseliner1,agent,starboard_bow_forward).
-clock(2681), sector(agent,cruiseliner1,port_quarter_aft).
-clock(2862), sector(cruiseliner1,agent,ahead).
-clock(2877), range(agent,cruiseliner1,middle).
-clock(3146), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(1573), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(1600), sector(agent,cruiseliner1,port_beam_aft).
+clock(1699), sector(cruiseliner1,agent,starboard_beam).
+clock(1781), range(agent,cruiseliner1,middle).
+clock(1802), arc_overtaking(cruiseliner1,agent).
+clock(1862), resume(agent).
+clock(1863), not(arc_overtaking(cruiseliner1,agent)).
+clock(1871), sector(agent,cruiseliner1,port_beam).
+clock(1887), sector(agent,cruiseliner1,port_beam_forward).
+clock(1895), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,short).
+clock(2006), range(agent,cruiseliner1,near).
+clock(2106), sector(agent,cruiseliner1,port_beam).
+clock(2147), sector(cruiseliner1,agent,starboard_beam_forward).
+clock(2368), tcpa(agent,cruiseliner1,imminent).
+clock(2434), sector(agent,cruiseliner1,port_beam_aft).
+clock(2465), sector(cruiseliner1,agent,starboard_bow_broad).
+clock(2548), tcpa(agent,cruiseliner1,opening).
+clock(2577), arc_overtaking(cruiseliner1,agent).
+clock(2722), sector(agent,cruiseliner1,port_quarter_broad).
+clock(2755), sector(cruiseliner1,agent,starboard_bow_forward).
+clock(3023), dcpa(agent,cruiseliner1,safe), tcpa(agent,cruiseliner1,opening).
+clock(3092), range(agent,cruiseliner1,middle).
+clock(3099), sector(agent,cruiseliner1,port_quarter_aft).
+clock(3117), sector(cruiseliner1,agent,ahead).

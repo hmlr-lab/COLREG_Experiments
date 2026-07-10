@@ -102,9 +102,9 @@ less_and_adjacent(short,medium).
 less_and_adjacent(immediate,short).
 
 
-is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]) 
-is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]) 
-is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]) 
+is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
+is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate])..
 
 less_than(X,Z) :- 
     tcpa(_,_,X),
@@ -190,30 +190,28 @@ less_and_adjacent(insubstantial,small).
 
 %  CONCEPTUAL GROUPINGS
 
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,critical).
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,very_close).
-dcpa_unacceptable(X,Y) :- dcpa(X,Y,close).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
+dcpa_unacceptable(X,Y) :- not(dcpa_acceptable(X,Y)).
 
 tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
 
-range_actionable(X,Y) :- not(range(X,Y,very_far)).
+actionable_range(X,Y) :- not(range(X,Y,very_far)).
 
 
-%  time_ample  (Rule 8(a))
+%  ample_time  (Rule 8(a))
 
-time_ample(X,Y)    :- tcpa(X,Y,medium).
-time_ample(X,Y)    :- tcpa(X,Y,long).
-time_ample(X,Y)    :- tcpa(X,Y,very_long).
+ample_time(X,Y)    :- tcpa(X,Y,medium).
+ample_time(X,Y)    :- tcpa(X,Y,long).
+ample_time(X,Y)    :- tcpa(X,Y,very_long).
 
 
 
 %  RISK OF COLLISION (Rule 7)
 
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
-risk_collision(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
 
 
 %  CLOSE-QUARTERS SITUATION (Rule 8)
@@ -227,17 +225,17 @@ close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), ran
 %  ENCOUNTER  (three types, one per pair) - the finding of fact
 
 encounter(X,Y,rule13_overtaking) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     arc_overtaking(X,Y).
 
 encounter(X,Y,rule14_head_on) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     sector(X,Y,ahead), sector(Y,X,ahead),
     not(encounter(X,Y,rule13_overtaking)),
     not(encounter(Y,X,rule13_overtaking)).
 
 encounter(X,Y,rule15_crossing) :-
-    risk_collision(X,Y),
+    collision_risk(X,Y),
     not(encounter(X,Y,rule13_overtaking)),
     not(encounter(Y,X,rule13_overtaking)),
     not(encounter(X,Y,rule14_head_on)).
@@ -252,9 +250,9 @@ encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15
 encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), port(X,Y).
 
 
-%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by time_ample
+%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by ample_time
 
-conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), time_ample(X,Y).
+conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), ample_time(X,Y).
 conduct(X,Y,rule17_standon_may_act)  :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,short).
 conduct(X,Y,rule17_standon_must_act) :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,imminent).
 
