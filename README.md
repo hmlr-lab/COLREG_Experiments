@@ -1,8 +1,21 @@
-# BMT_Experiments
+# BMT_Experiments -PyGol
 
 This example demonstrates how to generate symbolic facts from simulation logs and learn logical rules automatically.
 
 ## Usage
+
+### Setup Enviroment
+
+From project root move to PyGol-runner `cd PyGol-runner`
+Install requirements: `pip3 install -r requirements.txt`
+
+From within the `PyGol-runner/PyGol_Files/` directory run the command 
+```bash
+    python3 generate_so.py build_ext --inplace
+```
+
+### Learning
+
     File Name: Learning.py
     Execution : python3 Learning.py
 
@@ -74,3 +87,11 @@ Learned Rules
 rules.txt
 ```
 
+# BMT_Expreiments - Prolog<sup>2</sup>
+
+Must have rust installed [Rust Installation Guide](https://doc.rust-lang.org/cargo/getting-started/installation.html)
+
+```bash
+    cd prolog2-runner
+    cargo run --release
+```

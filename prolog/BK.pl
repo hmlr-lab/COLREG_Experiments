@@ -1,4 +1,3 @@
-
 :- ['Directives.pl'].
 
 :- discontiguous less_and_adjacent/2.

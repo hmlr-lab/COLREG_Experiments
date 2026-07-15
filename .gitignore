@@ -6,9 +6,8 @@ venv/
 .vscode/
 .idea/
 *.log
-*.c
-PyGol_Files/*.so
-PyGol_Files/build/
+PyGol-runner/PyGol_Files/*.so
+PyGol-runner/PyGol_Files/build/
 __pycache__/*
 examples.pl
 facts.pl
