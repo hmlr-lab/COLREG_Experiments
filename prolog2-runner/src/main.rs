@@ -1,3 +1,4 @@
+mod generate_prolog;
 use prolog2::app::App;
 
 fn main() {
