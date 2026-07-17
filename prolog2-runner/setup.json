@@ -2,15 +2,12 @@
     "config": {
         "max_depth": 12,
         "max_clause": 3,
-        "max_pred": 2,
+        "max_pred": 0,
         "debug": false
     },
     "examples": {
-        "pos": "../examples.pl",
-        "neg": [
-            "waypoint(cruiseliner_5_1,agent_5_1,A,B,C,D,F)",
-            "waypoint(cruiseliner_4_1,agent_4_1,A,B,C,D,F)"
-        ]
+        "pos": "../prolog/generated/pos.pl",
+        "neg": "../prolog/generated/neg.pl"
     },
     "body_predicates": [
         "sector/3",
@@ -58,7 +55,7 @@
         "very_large/1"
     ],
     "files": [
-        "../prolog/BK2.pl", "../prolog/generated/facts.pl", "../prolog/meta.pl"
+        "../prolog/generated/bk.pl", "../prolog/meta.pl"
     ],
     "top_prog": true,
     "reduce": true

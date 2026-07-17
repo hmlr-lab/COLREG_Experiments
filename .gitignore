@@ -8,8 +8,6 @@
 *.log
 PyGol-runner/PyGol_Files/*.so
 PyGol-runner/PyGol_Files/build/
-examples.pl
-facts.pl
-combined_BK.pl
+prolog/generated/*
 prolog2-runner/target/
 */__pycache__/*
