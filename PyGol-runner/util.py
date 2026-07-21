@@ -5,7 +5,7 @@ import os
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-PYGOL_DIR = ROOT / "python" / "PyGol_Files"
+PYGOL_DIR = ROOT / "PyGol-runner" / "PyGol_Files"
 PROLOG = ROOT / "prolog"
 PROLOG_GENERATED = ROOT / "prolog/generated"
 EXAMPLES = ROOT / "examples"
