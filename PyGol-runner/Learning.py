@@ -28,6 +28,25 @@ file_path_log_neg = ["../examples/negatives/crossingport_1.txt",
                  "../examples/negatives/crossingstbd_1.txt",
                  ]
 
+
+
+# Example log files - headon
+# file_path_log_pos = ["../examples/positives/headon_1.txt",
+#                  ]
+
+# file_path_log_neg = ["../examples/negatives/headon_1.txt",
+#                  ]
+
+
+# Example log files - overtaking
+# file_path_log_pos = ["../examples/positives/overtaking_1.txt",
+#                      "../examples/positives/overtaking_2.txt",
+#                  ]
+
+# file_path_log_neg = ["../examples/negatives/overtaking_1.txt",
+#                      "../examples/negatives/overtaking_2.txt",
+#                  ]
+
 # Generate stage 1 BK files from log files
 facts_pos, examples_pos =  generate_bk_from_log(file_path_log_pos, verbose=False)
 facts_neg, examples_neg =  generate_bk_from_log(file_path_log_neg, verbose=False, neg=True)
@@ -42,14 +61,14 @@ write_prolog_file(facts_pos+facts_neg,fact_path)
 merge_prolog_files(fact_path, bk_path, comb_bk_path)
 
 # Learn Rules
-H, HS = learn_rules(facts_pos+facts_neg, examples_pos, examples_neg, bk_path, print_hs=False, print_h=False, seed_value=10)
+H, HS = learn_rules(facts_pos+facts_neg, examples_pos, examples_neg, bk_path, print_hs=False, print_h=False, seed_value=10, threshold=0, maximum_literals=5, exact_literals=True)
 
 # Merge duplicate hypotheses through post-processing.
 all_HS, updated_rules, sub_hypotheses = merge_duplicate_body_hypotheses(H)
 for rule in all_HS:
     pretty_print_prolog(rule)
-    pos, neg = evaluate_rule([rule], comb_bk_path, examples_pos+examples_neg,[])
-    print(f"--- TP: {pos}, TN: {neg}")
+evaluate_rule(all_HS, comb_bk_path, examples_pos,examples_neg)
+    #print(f"--- TP: {pos}, TN: {neg}")
 
 # Write the final hypotheses to a file.
 with open("rules.txt", "w") as f:
