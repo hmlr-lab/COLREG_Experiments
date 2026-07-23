@@ -3,8 +3,20 @@ import re
 import sys
 from pathlib import Path
 
+
 ROOT = Path(__file__).resolve().parent
 PYGOL_DIR = ROOT / "PyGol_Files"
+
+ROOT = Path(__file__).resolve().parent.parent
+PYGOL_DIR = ROOT / "PyGol-runner" / "PyGol_Files"
+PROLOG = ROOT / "prolog"
+PROLOG_GENERATED = ROOT / "prolog/generated"
+EXAMPLES = ROOT / "examples"
+POS_EXAMPLES = EXAMPLES / "positives"
+NEG_EXAMPLES = EXAMPLES / "negative"
+
+PROLOG_GENERATED.mkdir(exist_ok=True)
+
 
 sys.path.insert(0, str(PYGOL_DIR))
 bk_path = "../prolog/BK.pl"
