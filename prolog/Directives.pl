@@ -28,6 +28,10 @@
 :- abolish(greater_or_equal/2).
 :- abolish(dcpa_acceptable/2).
 :- abolish(dcpa_unacceptable/2).
+:- abolish(is_range/1).
+
+
+
 
 :- dynamic sector/3.
 :- dynamic range/3.
@@ -70,5 +74,6 @@
 :- dynamic greater_than/2.
 :- dynamic greater_or_equal/2.
 :- dynamic less_and_adjacent/2. 
+:- dynamic is_range/1.
 
 %:- ['BK.pl'].
