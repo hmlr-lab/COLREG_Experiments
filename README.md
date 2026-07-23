@@ -95,3 +95,9 @@ Must have rust installed [Rust Installation Guide](https://doc.rust-lang.org/car
     cd prolog2-runner
     cargo run --release
 ```
+
+To try and generate different results in `setup.json` you can try different values for `max_clause` and `max_pred` higher values will take longer to run. 
+
+There are two different strategies to be used for hypothesis generatrion default or top program constuction which can be turned on in `setup.json` by setting the field `top_prog` to true
+- The default approach will do a depth first serach of the hypothesis space and return the first valid result. the `max_clause` and `max_pred` values will directly effect the shape of the learnt hypothesis. When a hypothesis is returned you can press `space` to continue to the next valid hypothesis.
+- Top program finds all possible generalisations for each example independently, then combines the sub-hypotheses that don't entail any negatives, and reduces the clauses that redundant (removing them does't change what examples are entailed by the hypothesis). `max_clause` and `max_pred` don't have a direct effect on the shape of the final hypothesis, but control the complexity of sub hypotheses, so control how complex a final program may be, or how quickly the learning episode will run.  
