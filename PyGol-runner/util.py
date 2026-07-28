@@ -791,7 +791,8 @@ def filter_comparison_literals(
 
 
 
-def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print_h=True, seed_value=42):
+def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print_h=True, seed_value=42,
+                threshold=1,  maximum_literals=5, exact_literals=False):
     Hypothesis = []
     Hypothesis_space = []
 
@@ -805,7 +806,7 @@ def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print
                                             tqdm_disable = True)
 
         
-        
+      
 
         P_inter = modify_bcrl_janus_from_bk(
             bk_path=bk_path,
@@ -813,7 +814,7 @@ def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print
             mode_declarations=mode_declarations,
             debug=False
             )
-
+      
         N_inter = modify_bcrl_janus_from_bk(
                 bk_path=bk_path,
                 bottom_clause_dict=N,
@@ -844,22 +845,32 @@ def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print
                 verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
                 )
 
-        threshold = 2
+        threshold = threshold
         
         P_2, less_equal, greater, counts = filter_comparison_literals(
                     P=P1,
                     N=N1,
                     threshold=threshold
                 )
-
-        
+      
         
         Train_P = {i:j for i,j in P_2.items()}
         Train_N = {i:j for i,j in N1.items()}
 
+   
+       
+        length = len(next(iter(Train_P.values())))
+
         
 
-        H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=6,  exact_literals=True, distinct=False, key_size=len(Train_P),  min_pos=1, max_neg = 2, verbose=True, seed_value=seed_value)
+        if length>=maximum_literals:
+
+        
+
+            H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=maximum_literals,  exact_literals=exact_literals, distinct=False, key_size=len(Train_P),  min_pos=1, max_neg = len(Train_N), verbose=True, seed_value=seed_value)
+        else:
+            H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=length,  exact_literals=exact_literals, distinct=False, key_size=len(Train_P),  min_pos=1, max_neg = len(Train_N), verbose=True, seed_value=seed_value)
+
 
         if print_hs:
             print("\n" + "=" * 80)

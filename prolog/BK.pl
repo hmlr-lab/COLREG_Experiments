@@ -310,14 +310,14 @@ encounter(X,Y,rule13_overtaking) :-
 encounter(X,Y,rule14_head_on) :-
     collision_risk(X,Y),
     sector(X,Y,ahead), sector(Y,X,ahead),
-    not(arc_overtaking(arc_overtaking(X,Y))),
-    not(arc_overtaking(arc_overtaking(Y,X))).
+    not(encounter(X,Y,rule13_overtaking)),
+    not(encounter(Y,X,rule13_overtaking)).
 
 encounter(X,Y,rule15_crossing) :-
     collision_risk(X,Y),
-    not(arc_overtaking(arc_overtaking(X,Y))),
-    not(arc_overtaking(arc_overtaking(Y,X))),
-    not((sector(X,Y,ahead), sector(Y,X,ahead))).
+    not(encounter(X,Y,rule13_overtaking)),
+    not(encounter(Y,X,rule13_overtaking)),
+    not(encounter(X,Y,rule14_head_on)).
 
 
 %  ENCOUNTER + DUTY  (Own, Target, Encounter, Duty) - the conclusion of law

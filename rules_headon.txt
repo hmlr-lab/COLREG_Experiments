@@ -1,0 +1,1 @@
+waypoint(A,B,no_risk,no_risk,port,forward,small):-ample_time(A,B),tcpa_closing(A,B),encounter_and_duty(A,B,rule14_head_on,rule16_giveway),range(A,B,C),less_or_equal(C,far).

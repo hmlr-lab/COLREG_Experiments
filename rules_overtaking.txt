@@ -1,0 +1,1 @@
+waypoint(A,B,no_risk,no_risk,X1,aft,moderate):-member(X1, [port, starboard]),actionable_range(A,B),ample_time(A,B),close_quarters(A,B),encounter_and_duty(A,B,rule13_overtaking,rule16_giveway).
