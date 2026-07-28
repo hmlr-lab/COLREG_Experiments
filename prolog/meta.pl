@@ -24,26 +24,30 @@ P(X):-
 % --------------------------------------------------------
 % ------------------ Head Meta Rules ---------------------
 % --------------------------------------------------------
-waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
     P(Turn),
-    Q(A,B),
+    encounter_and_duty(X,Y,Encounter,Duty),
+    Q(X,Y),
     {P,Q},
-    [Avoid,Resume,Side,End].
-waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    [Avoid,Resume,Side,End,Encounter,Duty].
+waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
     P(Turn),
-    Q(A,B),
+    encounter_and_duty(X,Y,Encounter,Duty),
+    Q(X,Y),
     {P,Q},
-    [Avoid,Resume,End].
-waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    [Avoid,Resume,End,Encounter,Duty].
+waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
     P(Turn),
-    Q(A,B),
+    encounter_and_duty(X,Y,Encounter,Duty),
+    Q(X,Y),
     {P,Q},
-    [Avoid,Resume,Side].
-waypoint(A,B,Avoid,Resume,Side,End,Turn):- 
+    [Avoid,Resume,Side,Encounter,Duty].
+waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
     P(Turn),
-    Q(A,B),
+    encounter_and_duty(X,Y,Encounter,Duty),
+    Q(X,Y),
     {P,Q},
-    [Avoid,Resume].
+    [Avoid,Resume,Encounter,Duty].
 
 % --------------------------------------------------------
 % ---------------- Condition Chaining --------------------
@@ -81,6 +85,6 @@ very_large(very_large).
 % waypoint(Arg_0,Arg_1,no_risk,no_risk,Arg_2,aft,Arg_3):-moderate(Arg_3),pred_666(Arg_0,Arg_1).
 % pred_666(Arg_0,Arg_1):-tcpa(Arg_0,Arg_1,medium).
 
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,small):-sector(Arg_0,Arg_1,head).
+% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,small):-sector(Arg_0,Arg_1,ahead).
 % waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,large):-sector(Arg_0,Arg_1,port_bow_broad).
 % waypoint(Arg_0,Arg_1,no_risk,no_risk,_Var,aft,moderate):-tcpa(Arg_0,Arg_1,medium).
