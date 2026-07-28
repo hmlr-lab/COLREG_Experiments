@@ -309,7 +309,7 @@ encounter(X,Y,rule13_overtaking) :-
 
 encounter(X,Y,rule14_head_on) :-
     collision_risk(X,Y),
-    sector(X,Y,ahead), sector(Y,X,ahead),
+    mutual_ahead(X,Y),
     not(arc_overtaking(X,Y)),
     not(arc_overtaking(Y,X)).
 
