@@ -77,14 +77,3 @@ small(small).
 moderate(moderate).
 large(large).
 very_large(very_large).
-
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,Arg_2):-small(Arg_2),pred_862(Arg_0,Arg_1).
-% pred_862(Arg_0,Arg_1):-sector(Arg_0,Arg_1,ahead).
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,Arg_2):-large(Arg_2),pred_1152(Arg_0,Arg_1).
-% pred_1152(Arg_0,Arg_1):-sector(Arg_0,Arg_1,port_bow_broad).
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,Arg_2,aft,Arg_3):-moderate(Arg_3),pred_666(Arg_0,Arg_1).
-% pred_666(Arg_0,Arg_1):-tcpa(Arg_0,Arg_1,medium).
-
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,small):-sector(Arg_0,Arg_1,ahead).
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,port,forward,large):-sector(Arg_0,Arg_1,port_bow_broad).
-% waypoint(Arg_0,Arg_1,no_risk,no_risk,_Var,aft,moderate):-tcpa(Arg_0,Arg_1,medium).
