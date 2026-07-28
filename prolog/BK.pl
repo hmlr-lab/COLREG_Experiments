@@ -28,6 +28,14 @@
 :- abolish(greater_or_equal/2).
 :- abolish(dcpa_acceptable/2).
 :- abolish(dcpa_unacceptable/2).
+:- abolish(ample_time/2).
+:- abolish(is_range/1).
+:- abolish(is_dcpa/1).
+:- abolish(is_tcpa/1).
+:- abolish(actionable_range/2).
+:- abolish(collision_risk/2).
+:- abolish(mutual_ahead/2).
+
 
 :- dynamic sector/3.
 :- dynamic range/3.
@@ -70,6 +78,7 @@
 :- dynamic greater_than/2.
 :- dynamic greater_or_equal/2.
 :- dynamic less_and_adjacent/2. 
+
 
 :- discontiguous less_and_adjacent/2.
 :- discontiguous greater_or_equal/2.
