@@ -1,2 +1,2 @@
-waypoint(A,B,no_risk,no_risk,port,forward,large):-close_quarters_developing(A,B),encounter_and_duty(A,B,rule15_crossing,rule17_standon),range(A,B,C),tcpa(A,B,D),less_or_equal(far,C).
-waypoint(A,B,no_risk,no_risk,port,aft,moderate):-ample_time(A,B),encounter_and_duty(A,B,rule15_crossing,rule16_giveway),range(A,B,C),tcpa(A,B,D),less_or_equal(C,middle).
+waypoint(A,B,no_risk,no_risk,port,forward,large):-actionable_range(A,B),close_quarters_developing(A,B),encounter_and_duty(A,B,rule15_crossing,rule17_standon),conduct(A,B,rule17_standon_may_act).
+waypoint(A,B,no_risk,no_risk,port,aft,moderate):-actionable_range(A,B),ample_time(A,B),close_quarters_developing(A,B),encounter_and_duty(A,B,rule15_crossing,rule16_giveway).
