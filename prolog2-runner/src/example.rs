@@ -8,6 +8,7 @@ pub struct Example {
     pub range: String,
     pub dcpa: String,
     pub tcpa: String,
+    pub arc_overtaking: String,
     pub waypoint: String,
 }
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
@@ -22,6 +23,7 @@ impl Example {
             range: String::new(),
             dcpa: String::new(),
             tcpa: String::new(),
+            arc_overtaking: String::new(),
             waypoint: String::new(),
         }
     }
@@ -42,7 +44,10 @@ impl Example {
             self.tcpa = literal
         } else if literal.contains("waypoint") {
             self.waypoint = literal
+        } else if literal.contains("arc_overtaking") {
+            self.arc_overtaking = literal
         }
+
     }
 
     pub fn write_bk(&self, bk: &mut String) {
@@ -51,5 +56,8 @@ impl Example {
         write!(bk, "{}.\n", self.range);
         write!(bk, "{}.\n", self.dcpa);
         write!(bk, "{}.\n", self.tcpa);
+        if !self.arc_overtaking.is_empty(){
+            write!(bk, "{}.\n", self.arc_overtaking);
+        }
     }
 }

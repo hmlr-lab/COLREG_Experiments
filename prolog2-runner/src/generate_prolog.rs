@@ -8,7 +8,7 @@ const GENERATED_DIR: &str = "../prolog/generated/";
 const EXAMPLE_DIR: &str = "../examples/";
 const BK_PATH: &str = "../prolog/BK.pl";
 const DELIMINATORS: [char; 4] = [',', '(', ')', '.'];
-const PREDICATES: [&'static str; 5] = ["sector", "range", "dcpa", "tcpa", "waypoint"];
+const PREDICATES: [&'static str; 6] = ["sector", "range", "dcpa", "tcpa", "waypoint", "arc_overtaking"];
 
 pub fn generate_prolog() {
     let (pos_examples, neg_examples) = get_examples();
@@ -22,6 +22,7 @@ pub fn generate_prolog() {
     let mut neg_ex_file = String::new();
 
     for ex in pos_examples.iter() {
+
         ex.write_bk(&mut bk);
         pos_ex_file += &ex.waypoint;
         pos_ex_file += ".\n";
