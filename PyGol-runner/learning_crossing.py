@@ -25,6 +25,7 @@ file_path_log_pos = ["../examples/positives/crossingport_1.txt",
 
 file_path_log_neg = ["../examples/negatives/crossingport_1.txt",
                      "../examples/negatives/crossingport_2.txt",
+                      "../examples/negatives/crossingport_3.txt",
                  "../examples/negatives/crossingstbd_1.txt",
                  ]
 
@@ -46,7 +47,7 @@ write_prolog_file(facts_pos+facts_neg,fact_path)
 merge_prolog_files(fact_path, bk_path, comb_bk_path)
 
 # Learn Rules
-H, HS = learn_rules(facts_pos+facts_neg, examples_pos, examples_neg, bk_path, print_hs=False, print_h=False, seed_value=10, threshold=2, maximum_literals=5, exact_literals=True)
+H, HS = learn_rules(facts_pos+facts_neg, examples_pos, examples_neg, bk_path, print_hs=True, print_h=False, seed_value=10, threshold=0, maximum_literals=20, exact_literals=True)
 
 # Merge duplicate hypotheses through post-processing.
 all_HS, updated_rules, sub_hypotheses = merge_duplicate_body_hypotheses(H)
