@@ -11,9 +11,6 @@
     },
     "body_predicates": [
         "sector/3",
-        "range/3",
-        "dcpa/3",
-        "tcpa/3",
         "bearing/3",
         "distance/3",
         "arc_overtaking/2",
