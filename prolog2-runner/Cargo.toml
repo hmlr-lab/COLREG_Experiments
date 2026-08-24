@@ -4,4 +4,4 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
-prolog-squared = "1.4.3"
+prolog-squared = "1.4.4"
