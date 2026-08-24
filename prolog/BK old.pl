@@ -122,11 +122,32 @@ less_and_adjacent(middle,far).
 less_and_adjacent(near,middle).
 less_and_adjacent(very_near,near).
 
-% tcpa
-less_and_adjacent(long,very_long).
-less_and_adjacent(medium,long).
-less_and_adjacent(short,medium).
-less_and_adjacent(immediate,short).
+less_than(X,Z) :- 
+    range(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
+
+less_than(X,Y) :-
+    range(_,_,X),
+    less_and_adjacent(X,Y).
+
+less_or_equal(X,Y) :- 
+    range(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    range(_,_,X).
+
+greater_than(X,Y) :- 
+    range(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    range(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    range(_,_,X).
 
 % dcpa
 less_and_adjacent(marginal,safe).
@@ -134,33 +155,126 @@ less_and_adjacent(close,marginal).
 less_and_adjacent(very_close,close).
 less_and_adjacent(critical,very_close).
 
+less_than(X,Z) :- 
+    dcpa(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
+
+less_than(X,Y) :-
+    dcpa(_,_,X),
+    less_and_adjacent(X,Y).
+
+less_or_equal(X,Y) :- 
+    dcpa(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    dcpa(_,_,X).
+
+greater_than(X,Y) :- 
+    dcpa(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    dcpa(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    dcpa(_,_,X).
+
+
+% tcpa
+less_and_adjacent(long,very_long).
+less_and_adjacent(medium,long).
+less_and_adjacent(short,medium).
+less_and_adjacent(immediate,short).
+
+
+is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
+is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
+is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
+
+less_than(X,Z) :- 
+    tcpa(_,_,X),
+    less_and_adjacent(X,Y), 
+    less_than(Y,Z).
+
+less_than(X,Y) :-
+    tcpa(_,_,X),
+    less_and_adjacent(X,Y).
+
+less_or_equal(X,Y) :- 
+    tcpa(_,_,X),
+    less_and_adjacent(Y,X).
+
+less_or_equal(X,X) :- 
+    tcpa(_,_,X).
+
+greater_than(X,Y) :- 
+    tcpa(_,_,X),
+    less_than(Y,X).
+
+greater_or_equal(X,Y) :- 
+    tcpa(_,_,X),
+    greater_than(X,Y).
+
+greater_or_equal(X,X) :- 
+    tcpa(_,_,X).
+
+
+
+
+
 % turn magnitude
 less_and_adjacent(large,very_large).
 less_and_adjacent(moderate,large).
 less_and_adjacent(small,moderate).
 less_and_adjacent(insubstantial,small).
 
-less_than(X,Y) :- 
-    less_and_adjacent(X,Z), 
-    less_than(Z,Y).
-less_than(X,Y) :-
-    less_and_adjacent(X,Y).
+%less_than(X,Z) :- 
+%   tcpa(_,_,X),
+%   less_and_adjacent(X,Y), 
+%   less_than(Y,Z).
 
-greater_than(X,Y) :- 
-    less_and_adjacent(Z,X), 
-    greater_than(Z,Y).
-greater_than(X,Y) :-
-    less_and_adjacent(Y,X).
+%less_than(X,Y) :-
+%    tcpa(_,_,X),
+%    less_and_adjacent(X,Y).
 
-less_than_equal(X,Y) :- X = Y.
-less_than_equal(X,Y) :- less_than(X,Y).
+%less_or_equal(X,Y) :- 
+%    tcpa(_,_,X),
+%    less_and_adjacent(Y,X).
 
-greater_than_equal(X,Y) :- X = Y.
-greater_than_equal(X,Y) :- greater_than(X,Y).
+%less_or_equal(X,X) :- 
+%   tcpa(_,_,X).
 
-is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
-is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
-is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
+%greater_than(X,Y) :- 
+%    tcpa(_,_,X),
+%    less_than(Y,X).
+
+%greater_or_equal(X,Y) :- 
+%    tcpa(_,_,X),
+%    greater_than(X,Y).
+
+%greater_or_equal(X,X) :- 
+%    tcpa(_,_,X).
+
+
+
+
+
+
+%turn_smaller(X,Z) :- turn_smaller_adjacent(X,Y), turn_smaller(Y,Z). % Recursion
+%turn_smaller(X,Y) :- turn_smaller_adjacent(X,Y). % Base case
+%turn_smaller_similar(X,Y) :- turn_smaller(X,Y). % Inclusive of boundary
+%turn_smaller_similar(X,X).
+%turn_larger(X,Y) :- turn_smaller(Y,X). % Inverse
+%turn_larger_similar(X,Y) :- turn_larger(X,Y).
+%turn_larger_similar(X,X).
+%turn_smaller_adjacent(large,very_large).
+%turn_smaller_adjacent(moderate,large).
+%turn_smaller_adjacent(small,moderate).
+%turn_smaller_adjacent(insubstantial,small).
+
 
 %  CONCEPTUAL GROUPINGS
 

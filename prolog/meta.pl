@@ -20,57 +20,6 @@ P(X):-
     {P,Q,R},
     [A,B].
 
-% --------------------------------------------------------
-% ------------------ Head Meta Rules ---------------------
-% --------------------------------------------------------
-waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
-    P(Turn),
-    encounter_and_duty(X,Y,Encounter,Duty),
-    Q(X,Y),
-    {P,Q},
-    [Avoid,Resume,Side,End,Encounter,Duty].
-waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
-    P(Turn),
-    encounter_and_duty(X,Y,Encounter,Duty),
-    Q(X,Y),
-    {P,Q},
-    [Avoid,Resume,End,Encounter,Duty].
-waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
-    P(Turn),
-    encounter_and_duty(X,Y,Encounter,Duty),
-    Q(X,Y),
-    {P,Q},
-    [Avoid,Resume,Side,Encounter,Duty].
-waypoint(X,Y,Avoid,Resume,Side,End,Turn):- 
-    P(Turn),
-    encounter_and_duty(X,Y,Encounter,Duty),
-    Q(X,Y),
-    {P,Q},
-    [Avoid,Resume,Encounter,Duty].
-
-% --------------------------------------------------------
-% ---------------- Condition Chaining --------------------
-% --------------------------------------------------------
-P(X,Y):-
-    Q(X,Y,A),
-    {P,Q,A}.
-P(X,Y):-
-    Q(X,Y,A,B),
-    {P,Q,A,B}.
-
-P(X,Y):-
-    Q(X,Y),
-    R(X,Y),
-    {P,Q,R}.
-P(X,Y):-
-    Q(X,Y,A),
-    R(X,Y),
-    {P,Q,R,A}.
-P(X,Y):-
-    Q(X,Y,A,B),
-    R(X,Y),
-    {P,Q,R,A,B}.
-
 % Force transitive for tcpa - dcpa - range
 % Single Comparison
 P(X,Y):-
@@ -95,7 +44,7 @@ P(X,Y):-
     comparitor(R),
     Q(Z,A),
     R(Z,B),
-    {Q,R}
+    {Q,R},
     [P,A,B].
 P(X,Y):-
     dcpa(X,Y,Z),
@@ -103,7 +52,7 @@ P(X,Y):-
     comparitor(R),
     Q(Z,A),
     R(Z,B),
-    {Q,R}
+    {Q,R},
     [P,A,B].
 P(X,Y):-
     range(X,Y,Z),
@@ -111,5 +60,34 @@ P(X,Y):-
     comparitor(R),
     Q(Z,A),
     R(Z,B),
-    {Q,R}
+    {Q,R},
     [P,A,B].
+
+% --------------------------------------------------------
+% ---------------- Condition Chaining --------------------
+% ----P(X,Y):-
+%     Q(X,Y,A),
+%     {P,Q,A}.
+% P(X,Y):-
+%     Q(X,Y,A,B),
+%     {P,Q,A,B}.
+
+% P(X,Y):-
+%     Q(X,Y),
+%     R(X,Y),
+%     {P,Q,R}.
+% P(X,Y):-
+%     Q(X,Y,A),
+%     R(X,Y),
+%     {P,Q,R,A}.
+% P(X,Y):-
+%     Q(X,Y,A,B),
+%     R(X,Y),
+%     {P,Q,R,A,B}.
+----------------------------------------------------
+% 
+% --------------------------------------------------------
+% ---------------- Take action clauses  ------------------
+% --------------------------------------------------------
+P(X):- Q(X,_,Z), R(Z), {P,Q,R}.
+P(X):- Q(X), R(X).
