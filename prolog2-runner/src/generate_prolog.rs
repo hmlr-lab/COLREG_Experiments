@@ -1,134 +1,89 @@
 use std::{
-    io::Write, fs::{File, read_dir, read_to_string},
+    fs::{File, create_dir_all, read_to_string},
+    io::Write,
 };
 
-use crate::example::Example;
+use crate::situation::Situation;
 
-const GENERATED_DIR: &str = "../prolog/generated/";
-const EXAMPLE_DIR: &str = "../examples/";
 const BK_PATH: &str = "../prolog/BK.pl";
-const DELIMINATORS: [char; 4] = [',', '(', ')', '.'];
-const PREDICATES: [&'static str; 6] = ["sector", "range", "dcpa", "tcpa", "waypoint", "arc_overtaking"];
+const GENERATED_DIR: &str = "../prolog/generated/";
 
-pub fn generate_prolog() {
-    let (pos_examples, neg_examples) = get_examples();
+pub fn generate_prolog(situations: Vec<Situation>) {
+    create_dir_all(format!("{GENERATED_DIR}pos")).unwrap();
+    create_dir_all(format!("{GENERATED_DIR}neg")).unwrap();
+    combine_bk(&situations);
+    gen_take_action(&situations);
+    gen_waypoint_examples(&situations);
+}
+
+/// Take BK file and combine with facts from situations
+/// Write output to GENERATED_DIR + "bk.pl"
+fn combine_bk(situations: &Vec<Situation>) {
+    //Load BK.pl file and remove directives
     let mut bk: String = read_to_string(BK_PATH)
         .unwrap()
         .lines()
         .filter(|line| line.find(":-") != Some(0))
         .map(|line| [line, "\n"].concat())
         .collect();
-    let mut pos_ex_file = String::new();
-    let mut neg_ex_file = String::new();
-
-    for ex in pos_examples.iter() {
-
-        ex.write_bk(&mut bk);
-        pos_ex_file += &ex.waypoint;
-        pos_ex_file += ".\n";
+    // Add situation facts to bk
+    for sit in situations {
+        for fact in &sit.facts {
+            bk += fact;
+            bk += ".\n";
+        }
     }
-    for ex in neg_examples.iter() {
-        ex.write_bk(&mut bk);
-        neg_ex_file += &ex.waypoint;
-        neg_ex_file += ".\n";
-    }
-
-    let mut file = File::create([GENERATED_DIR,"pos.pl"].concat()).unwrap();
-    file.write_all(&pos_ex_file.into_bytes()).unwrap();
-
-    let mut file = File::create([GENERATED_DIR,"neg.pl"].concat()).unwrap();
-    file.write_all(&neg_ex_file.into_bytes()).unwrap();
-
-    let mut file = File::create([GENERATED_DIR,"bk.pl"].concat()).unwrap();
+    let mut file = File::create([GENERATED_DIR, "bk.pl"].concat()).unwrap();
     file.write_all(&bk.into_bytes()).unwrap();
 }
 
-fn get_examples() -> (Vec<Example>, Vec<Example>) {
-    let pos_examples: Vec<Example> = list_log_files(&(EXAMPLE_DIR.to_string() + "positives/"))
-        .unwrap()
-        .into_iter()
-        .map(|example_path| path_to_example(example_path))
-        .collect();
-    let neg_examples: Vec<Example> = list_log_files(&(EXAMPLE_DIR.to_string() + "negatives/"))
-        .unwrap()
-        .into_iter()
-        .map(|example_path| path_to_example(example_path))
-        .collect();
-    (pos_examples, neg_examples)
-}
+/// Generate positve and negative example files for take action predicate
+/// Write ouput to GENERATED_DIR + "pos/take_action.pl" or "neg/take_action.pl"
+fn gen_take_action(situations: &Vec<Situation>) {
+    let mut pos = String::new();
+    let mut neg = String::new();
 
-fn list_log_files(dir: &str) -> std::io::Result<Vec<String>> {
-    let mut files = Vec::new();
-    let entries = read_dir(dir)?;
-
-    for entry in entries {
-        let entry = entry?;
-        let path = entry.path();
-
-        if path.extension().map_or(false, |ext| ext == "txt") {
-            files.push(path.display().to_string());
+    for sit in situations {
+        if sit.take_action {
+            pos += &format!("take_action(agent{}).\n", sit.id);
+        } else {
+            neg += &format!("take_action(agent{}).\n", sit.id);
         }
     }
-    Ok(files)
+
+    let mut file = File::create([GENERATED_DIR, "pos/", "take_action.pl"].concat()).unwrap();
+    file.write_all(&pos.into_bytes()).unwrap();
+
+    let mut file = File::create([GENERATED_DIR, "neg/", "take_action.pl"].concat()).unwrap();
+    file.write_all(&neg.into_bytes()).unwrap();
 }
 
-fn path_to_example(path: String) -> Example {
-    let mut example = Example::new();
-    let file = read_to_string(path).unwrap();
-    for literal in tokens_to_literals(tokenise(file)) {
-        example.push_literal(literal);
-    }
-    example
-}
+/// Generate examples for each target predicate of waypoint examples
+/// Write output to GENERATED_DIR + "pos" + "{target predicate}" or,
+/// GENERATED_DIR + "neg" + "{target predicate}.pl"
+fn gen_waypoint_examples(situations: &Vec<Situation>) {
+    for pred in ["turn", "side", "avoid", "resume"] {
+        let mut pos = String::new();
+        let mut neg = String::new();
 
-fn tokenise(file: String) -> Vec<String> {
-    let mut tokens = Vec::new();
-    let mut li = 0;
-    let mut hi = 0;
-    let mut next_token = String::new();
-    for ch in file.chars() {
-        if DELIMINATORS.contains(&ch) {
-            tokens.push(next_token.clone());
-            tokens.push(ch.to_string());
-            next_token.clear();
-            continue;
-        }
-        if !ch.is_whitespace() {
-            next_token.push(ch);
-        }
-    }
-    tokens
-}
-
-fn tokens_to_literals(tokens: Vec<String>) -> Vec<String> {
-    let mut literals = Vec::new();
-    let mut i = 0;
-    // println!("{tokens:?}");
-    while i < tokens.len() {
-        if PREDICATES.contains(&tokens[i].as_str()) {
-            let mut literal = tokens[i].clone();
-            let done = &literal == "waypoint";
-            loop {
-                i += 1;
-                literal += &tokens[i];
-                if tokens[i] == ")" {
-                    literals.push(literal);
-                    if done {
-                        i = tokens.len();
-                    }
-                    break;
+        for sit in situations {
+            for cond in &sit.pos_conds {
+                if cond.is_pred(pred) {
+                    pos += &cond.to_string(sit.id);
+                    pos += "\n";
                 }
             }
-        } else {
-            i += 1;
+            for cond in &sit.neg_conds {
+                if cond.is_pred(pred) {
+                    neg += &cond.to_string(sit.id);
+                    neg += "\n";
+                }
+            }
         }
+
+        let mut file = File::create([GENERATED_DIR, "pos/", pred, ".pl"].concat()).unwrap();
+        file.write_all(&pos.into_bytes()).unwrap();
+        let mut file = File::create([GENERATED_DIR, "neg/", pred, ".pl"].concat()).unwrap();
+        file.write_all(&neg.into_bytes()).unwrap();
     }
-
-    literals
-}
-
-fn example_from_literals(literals: Vec<String>) -> Example {
-    let mut example = Example::new();
-    for literal in literals {}
-    example
 }
