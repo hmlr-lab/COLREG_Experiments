@@ -357,3 +357,21 @@
       - avoid(agent,cruiseliner1,no_risk)
       - resume(agent,cruiseliner1,no_risk)
       - side(agent,cruiseliner1,port)
+- facts:
+  - sector(agent,vessel1,starboard_beam_forward)
+  - range(agent,vessel1,far)
+  - dcpa(agent,vessel1,safe)
+  - tcpa(agent,vessel1,short)
+  - sector(vessel1,agent,starboard_bow_broad)
+  - range(vessel1,agent,far)
+  - dcpa(vessel1,agent,safe)
+  - tcpa(vessel1,agent,short)
+  take_action: neg
+  waypoints:
+    neg:
+      0:
+      - turn(agent,large)
+      - avoid(agent,vessel1,medium_critical)
+      - resume(agent,vessel1,no_risk)
+      - side(agent,vessel1,port)
+    pos: {}
