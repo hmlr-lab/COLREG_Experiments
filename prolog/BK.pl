@@ -158,6 +158,46 @@ less_or_equal(X,Y) :- less_than(X,Y).
 greater_or_equal(X,Y) :- X = Y.
 greater_or_equal(X,Y) :- greater_than(X,Y).
 
+range_gt(X,Y,A):-
+    range(X,Y,B),
+    greater_than(B,A).
+range_ge(X,Y,A):-
+    range(X,Y,B),
+    greater_or_equal(B,A).
+range_lt(X,Y,A):-
+    range(X,Y,B),
+    less_than(B,A).
+range_le(X,Y,A):-
+    range(X,Y,B),
+    less_or_equal(B,A).
+
+
+dcpa_gt(X,Y,A):-
+    dcpa(X,Y,B),
+    greater_than(B,A).
+dcpa_ge(X,Y,A):-
+    dcpa(X,Y,B),
+    greater_or_equal(B,A).
+dcpa_lt(X,Y,A):-
+    dcpa(X,Y,B),
+    less_than(B,A).
+dcpa_le(X,Y,A):-
+    dcpa(X,Y,B),
+    less_or_equal(B,A).
+
+tcpa_gt(X,Y,A):-
+    tcpa(X,Y,B),
+    greater_than(B,A).
+tcpa_ge(X,Y,A):-
+    tcpa(X,Y,B),
+    greater_or_equal(B,A).
+tcpa_lt(X,Y,A):-
+    tcpa(X,Y,B),
+    less_than(B,A).
+tcpa_le(X,Y,A):-
+    tcpa(X,Y,B),
+    less_or_equal(B,A).
+
 is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
 is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
 is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
