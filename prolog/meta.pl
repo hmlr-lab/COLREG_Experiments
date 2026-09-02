@@ -3,6 +3,7 @@
 % --------------------------------------------------------
 P(X):- Q(X), R(X). % Branch with agent
 P(X):- Q(X,Y), R(X,Y), {P,Q,R}. % Branch with shared vessel
+P(X):- Q(X,Y), {P,Q,R}.
 P(X):- Q(X,Z,A), {P,Q,A}. % Property true for any vessel
 P(X):- Q(X,Z,A,B), {P,Q,A,B}. % Property true for any vessel
 
@@ -64,14 +65,6 @@ P(X,Y):- Q(X,Y,A,B), [P,Q,A,B]. % Has 2 constant property
 %     R(Z,B),
 %     {Q,R},
 %     [P,A,B].
-
-% % --------------------------------------------------------
-% % ----------- Compliance Condition Clauses ---------------
-% % --------------------------------------------------------
-% P(X,Y,Z):- comparitor(Q), Q(Z,A), R(X,Y), {P,Q,R,A}.
-% P(X,Y,Z):- comparitor(Q), comparitor(R), Q(Z,A), R(Z,B), Z(X,Y), {P,Q,R,S,A,B}.
-
-
 
 range_gt(X,Y,A):-
     range(X,Y,B),
