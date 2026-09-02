@@ -10,15 +10,15 @@ fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
 
-    // iterate_max_clause_pred("setup_take_action.json", 2, 4);
+    iterate_max_clause_pred("setup_avoid.json", 2, 4);
     
-    let app = App::from_setup_json("setup.json").unwrap().config(Config {
-        max_depth: 5,
-        max_clause: 3,
-        max_pred: 2,
-        debug: false,
-    });
-    app.run();
+    // let app = App::from_setup_json("setup_avoid.json").unwrap().config(Config {
+    //     max_depth: 5,
+    //     max_clause: 4,
+    //     max_pred: 2,
+    //     debug: false,
+    // });
+    // app.run();
 }
 
 fn iterate_max_clause_pred(setup_path: &str, mut max_max_pred: usize, mut max_max_clause: usize) {

@@ -19,10 +19,6 @@ P(X,Y):- Q(X,Y,A,B), [P,Q,A,B]. % Has 2 constant property
 % --------------------------------------------------------
 % ----------------- Transitive Values --------------------
 % --------------------------------------------------------
-% Force transitive for tcpa - dcpa - range
-
-% Set of comparitors
-% comparitor(X):- member(X, [less_than,less_or_equal, greater_than, greater_or_equal]).
 
 % % Single Comparison
 % P(X,Y):-
