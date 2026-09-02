@@ -47,7 +47,7 @@ impl From<&str> for Risk {
             "short_critical" => Risk::ShortCritical,
             "short_veryclose" => Risk::ShortVeryclose,
             "short_close" => Risk::ShortClose,
-            "medium_critical," => Risk::MediumCritical,
+            "medium_critical" => Risk::MediumCritical,
             "medium_veryclose" => Risk::MediumVeryclose,
             "medium_close" => Risk::MediumClose,
             _ => panic!("Unrecognised risk value: {value}"),
