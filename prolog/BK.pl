@@ -152,15 +152,18 @@ greater_than(X,Y) :-
 greater_than(X,Y) :-
     less_and_adjacent(Y,X).
 
-less_than_equal(X,Y) :- X = Y.
-less_than_equal(X,Y) :- less_than(X,Y).
+less_or_equal(X,Y) :- X = Y.
+less_or_equal(X,Y) :- less_than(X,Y).
 
-greater_than_equal(X,Y) :- X = Y.
-greater_than_equal(X,Y) :- greater_than(X,Y).
+greater_or_equal(X,Y) :- X = Y.
+greater_or_equal(X,Y) :- greater_than(X,Y).
 
 is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
 is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
 is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
+is_turn(Turn) :- member(Turn, [very_large, large, moderate, small, insubstantial]).
+
+
 
 %  CONCEPTUAL GROUPINGS
 

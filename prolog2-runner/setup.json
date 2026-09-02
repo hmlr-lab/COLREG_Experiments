@@ -1,13 +1,13 @@
 {
     "config": {
         "max_depth": 10,
-        "max_clause": 7,
-        "max_pred": 5,
+        "max_clause": 3,
+        "max_pred": 0,
         "debug": false
     },
     "examples": {
-        "pos": "../prolog/generated/pos.pl",
-        "neg": "../prolog/generated/neg.pl"
+        "pos": "../prolog/generated/pos/take_action.pl",
+        "neg": "../prolog/generated/neg/take_action.pl"
     },
     "body_predicates": [
         "sector/3",
@@ -37,7 +37,6 @@
         "conduct/4",
         "extremis_override/2",
         "cites/2",
-        "less_and_adjacent/2",
         "less_than/2",
         "less_or_equal/2",
         "greater_than/2",
@@ -47,7 +46,21 @@
         "small/1",
         "moderate/1",
         "large/1",
-        "very_large/1"
+        "very_large/1",
+        "range_gt/3",
+        "range_lt/3",
+        "range_ge/3",
+        "range_le/3",
+
+        "tcpa_gt/3",
+        "tcpa_lt/3",
+        "tcpa_ge/3",
+        "tcpa_le/3",
+        
+        "dcpa_gt/3",
+        "dcpa_lt/3",
+        "dcpa_ge/3",
+        "dcpa_le/3"
     ],
     "files": [
         "../prolog/generated/bk.pl", "../prolog/meta.pl"

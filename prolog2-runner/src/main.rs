@@ -10,6 +10,6 @@ fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
 
-    // let app = App::from_setup_json("setup.json").unwrap();
-    // app.run();
+    let app = App::from_setup_json("setup.json").unwrap();
+    app.run();
 }
