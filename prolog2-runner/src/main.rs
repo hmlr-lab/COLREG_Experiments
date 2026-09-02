@@ -14,8 +14,8 @@ fn main() {
     
     let app = App::from_setup_json("setup.json").unwrap().config(Config {
         max_depth: 5,
-        max_clause: 2,
-        max_pred: 1,
+        max_clause: 3,
+        max_pred: 2,
         debug: false,
     });
     app.run();

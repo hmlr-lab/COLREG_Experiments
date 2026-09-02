@@ -33,7 +33,7 @@ fn combine_bk(situations: &Vec<Situation>) {
             bk += ".\n";
         }
     }
-    let mut file = File::create([GENERATED_DIR, "bk.pl"].concat()).unwrap();
+    let mut file = File::create([GENERATED_DIR, "combined_bk.pl"].concat()).unwrap();
     file.write_all(&bk.into_bytes()).unwrap();
 }
 
