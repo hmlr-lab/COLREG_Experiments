@@ -3,8 +3,8 @@
 % --------------------------------------------------------
 P(X):- Q(X), R(X). % Branch with agent
 P(X):- Q(X,Y), R(X,Y), {P,Q,R}. % Branch with shared vessel
-P(X):- Q(X,_,A), {P,Q,A}. % Property true for any vessel
-P(X):- Q(X,_,A,B), {P,Q,A,B}. % Property true for any vessel
+P(X):- Q(X,Z,A), {P,Q,A}. % Property true for any vessel
+P(X):- Q(X,Z,A,B), {P,Q,A,B}. % Property true for any vessel
 
 
 % --------------------------------------------------------

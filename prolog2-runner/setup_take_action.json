@@ -1,12 +1,16 @@
 {
     "config": {
-        "max_depth": 20,
+        "max_depth": 10,
         "max_clause": 3,
         "max_pred": 0,
         "debug": false
     },
     "examples": {
-        "pos": "../prolog/generated/pos/take_action.pl",
+        "pos": [
+            "take_action(agent1)",
+            "take_action(agent2)",
+            "take_action(agent5)."
+        ],
         "neg": "../prolog/generated/neg/take_action.pl"
     },
     "body_predicates": [
