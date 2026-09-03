@@ -279,6 +279,8 @@ encounter_and_duty(X,Y,rule13_overtaking,rule17_standon) :- encounter(Y,X,rule13
 encounter_and_duty(X,Y,rule14_head_on,rule16_giveway)    :- encounter(X,Y,rule14_head_on).        % head-on: mutual
 encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), starboard(X,Y).
 encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), port(X,Y).
+encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), port(Y,X).
+encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), starboard(Y,X).
 
 
 %  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by ample_time
