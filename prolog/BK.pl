@@ -65,8 +65,8 @@
 :- dynamic close_quarters_developing/2.
 :- dynamic close_quarters/2.
 :- dynamic encounter/3.
-:- dynamic encounter_and_duty/4.
-:- dynamic conduct/4.
+:- dynamic encounter_and_conduct/4.
+:- dynamic duty/4.
 :- dynamic extremis_override/2.
 :- dynamic cites/2.
 :- dynamic less_and_adjacent/2.
@@ -272,22 +272,29 @@ encounter(X,Y,rule15_crossing) :-
 mutual_ahead(X,Y):-
     sector(X,Y,ahead),
     sector(Y,X,ahead).
-%  ENCOUNTER + DUTY  (Own, Target, Encounter, Duty) - the conclusion of law
-
-encounter_and_duty(X,Y,rule13_overtaking,rule16_giveway) :- encounter(X,Y,rule13_overtaking).   % X overtakes Y
-encounter_and_duty(X,Y,rule13_overtaking,rule17_standon) :- encounter(Y,X,rule13_overtaking).   % Y overtakes X
-encounter_and_duty(X,Y,rule14_head_on,rule16_giveway)    :- encounter(X,Y,rule14_head_on).        % head-on: mutual
-encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), starboard(X,Y).
-encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), port(X,Y).
-encounter_and_duty(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), port(Y,X).
-encounter_and_duty(X,Y,rule15_crossing,rule17_standon)   :- encounter(X,Y,rule15_crossing), starboard(Y,X).
 
 
-%  CONDUCT  (action form of the duty) - only stand-on is sub-classified, by ample_time
+%  ENCOUNTER + CONDUCT  (Own, Target, Encounter, Conduct) - the conclusion of law
+encounter_and_conduct(X,Y,rule13_overtaking,rule16_giveway) :- encounter(X,Y,rule13_overtaking).   % X overtakes Y
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_maintain) :- encounter(Y,X,rule13_overtaking), ample_time(X,Y).   % Y overtakes X
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_may_act) :- encounter(Y,X,rule13_overtaking), tcpa(X,Y,short).   % Y overtakes X
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_must_act) :- encounter(Y,X,rule13_overtaking), tcpa(X,Y,imminent).   % Y overtakes X
+encounter_and_conduct(X,Y,rule14_head_on,rule16_giveway)    :- encounter(X,Y,rule14_head_on).        % head-on: mutual
+encounter_and_conduct(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), starboard(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), port(Y,X).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_maintain)   :- encounter(X,Y,rule15_crossing), port(X,Y), ample_time(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_maintain)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), ample_time(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_may_act)   :- encounter(X,Y,rule15_crossing), port(X,Y), tcpa(X,Y,short).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_may_act)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), tcpa(X,Y,short).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_must_act)   :- encounter(X,Y,rule15_crossing), port(X,Y), tcpa(X,Y,imminent).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_must_act)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), tcpa(X,Y,imminent).
 
-conduct(X,Y,rule17_standon_maintain) :- encounter_and_duty(X,Y,_,rule17_standon), ample_time(X,Y).
-conduct(X,Y,rule17_standon_may_act)  :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,short).
-conduct(X,Y,rule17_standon_must_act) :- encounter_and_duty(X,Y,_,rule17_standon), tcpa(X,Y,imminent).
+
+%  DUTY 
+duty(X,Y,rule16_giveway) :- encounter_and_conduct(X,Y,_,rule16_giveway).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_maintain).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_may_act).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_must_act).
 
 
 %  EMERGENCY  - in extremis, departure from any rule; encounter-agnostic (Rule 2(b))
