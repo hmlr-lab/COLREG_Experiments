@@ -66,6 +66,6 @@
     "files": [
         "../prolog/generated/combined_bk.pl", "../prolog/meta.pl", "../prolog/waypoint_meta.pl"
     ],
-    "top_prog": false,
+    "top_prog": true,
     "reduce": true
 }
