@@ -140,6 +140,18 @@ less_and_adjacent(moderate,large).
 less_and_adjacent(small,moderate).
 less_and_adjacent(insubstantial,small).
 
+% Avoid Resume Risks
+less_and_adjacent(no_risk, risk_developing).
+less_and_adjacent(risk_developing, medium_close).
+less_and_adjacent(medium_close, medium_veryclose).
+less_and_adjacent(medium_veryclose, medium_close).
+less_and_adjacent(medium_critical, short_close).
+less_and_adjacent(short_close, short_veryclose).
+less_and_adjacent(short_veryclose, short_critical).
+less_and_adjacent(short_critical, imminent_close).
+less_and_adjacent(imminent_close, imminent_veryclose).
+less_and_adjacent(imminent_veryclose, imminent_critical).
+
 less_than(X,Y) :- 
     less_and_adjacent(X,Z), 
     less_than(Z,Y).
