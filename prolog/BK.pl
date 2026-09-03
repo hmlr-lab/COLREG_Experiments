@@ -126,7 +126,7 @@ less_and_adjacent(very_near,near).
 less_and_adjacent(long,very_long).
 less_and_adjacent(medium,long).
 less_and_adjacent(short,medium).
-less_and_adjacent(immediate,short).
+less_and_adjacent(imminent,short).
 
 % dcpa
 less_and_adjacent(marginal,safe).
