@@ -210,12 +210,6 @@ tcpa_le(X,Y,A):-
     tcpa(X,Y,B),
     less_or_equal(B,A).
 
-is_range(Range) :- member(Range,[very_far,far,middle,near,very_near]).
-is_dcpa(DCPA) :- member(DCPA,[safe,marginal,close,very_close,critical]). 
-is_tcpa(TCPA) :- member(TCPA,[very_long,long,medium,short,immediate]).
-is_turn(Turn) :- member(Turn, [very_large, large, moderate, small, insubstantial]).
-
-
 
 %  CONCEPTUAL GROUPINGS
 
