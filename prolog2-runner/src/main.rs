@@ -48,22 +48,25 @@ fn learn_waypoint() {
     let mut hypothesis = String::new();
 
     for target in ["turn", "side", "avoid", "resume"] {
-        println!("Learn {target}");
+
+        println!("====================================");
+        println!("========= Learn {target} ===========");
+        println!("====================================");
         let mut app = App::from_setup_json(format!("setup_{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,
-                max_clause: 4,
+                max_clause: 3,
                 max_pred: 1,
                 debug: false,
-            });
-
-        match  app.query_session_from_examples().unwrap().next(){
-            Some(solution) => hypothesis += &solution.hypothesis,
-            None => println!("No solution for {target}")
-        }
-        // let h = app.run_top_prog();
-        // println!("{h}");
+        });
+        
+        // match  app.query_session_from_examples().unwrap().next(){
+        //     Some(solution) => hypothesis += &solution.hypothesis,
+        //     None => println!("No solution for {target}")
+        // }
+        let h = app.run_top_prog();
+        hypothesis += &h;
     }
 
     println!("====================================");
