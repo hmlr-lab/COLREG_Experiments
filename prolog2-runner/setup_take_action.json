@@ -65,6 +65,6 @@
     "files": [
         "../prolog/generated/combined_bk.pl", "../prolog/meta.pl"
     ],
-    "top_prog": false,
-    "reduce": false
+    "top_prog": true,
+    "reduce": true
 }

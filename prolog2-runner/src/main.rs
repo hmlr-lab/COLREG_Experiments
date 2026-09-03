@@ -10,19 +10,19 @@ fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
 
-    iterate_max_clause_pred("setup_avoid.json", 2, 4);
+    // iterate_max_clause_pred("setup_avoid.json", 2, 4);
 
-    let mut app = App::from_setup_json("setup_avoid.json")
-        .unwrap()
-        .config(Config {
-            max_depth: 5,
-            max_clause: 4,
-            max_pred: 2,
-            debug: false,
-        });
-
-    let h = app.run_top_prog();
+    // let mut app = App::from_setup_json("setup_side.json")
+    //     .unwrap()
+    //     .config(Config {
+    //         max_depth: 5,
+    //         max_clause: 3,
+    //         max_pred: 1,
+    //         debug: false,
+    //     });
     // app.run();
+
+    learn_waypoint();
 }
 
 fn iterate_max_clause_pred(setup_path: &str, mut max_max_pred: usize, mut max_max_clause: usize) {
@@ -45,19 +45,29 @@ fn iterate_max_clause_pred(setup_path: &str, mut max_max_pred: usize, mut max_ma
 }
 
 fn learn_waypoint() {
-    let hypothesis = String::new();
+    let mut hypothesis = String::new();
 
-    for target in ["turn, side, avoid, resume"] {
+    for target in ["turn", "side", "avoid", "resume"] {
+        println!("Learn {target}");
         let mut app = App::from_setup_json(format!("setup_{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,
                 max_clause: 4,
-                max_pred: 2,
+                max_pred: 1,
                 debug: false,
             });
 
-        let h = app.run_top_prog();
-        println!("{h}");
+        match  app.query_session_from_examples().unwrap().next(){
+            Some(solution) => hypothesis += &solution.hypothesis,
+            None => println!("No solution for {target}")
+        }
+        // let h = app.run_top_prog();
+        // println!("{h}");
     }
+
+    println!("====================================");
+    println!("======== Final Hypothesis ==========");
+    println!("====================================");
+    println!("{hypothesis}");
 }

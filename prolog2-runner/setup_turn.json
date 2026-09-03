@@ -63,7 +63,7 @@
         "dcpa_le/3"
     ],
     "files": [
-        "../prolog/generated/combined_bk.pl", "../prolog/meta.pl", "../prolog/waypoint_meta.pl"
+        "../prolog/generated/combined_bk.pl", "../prolog/meta.pl", "../prolog/turn_meta.pl"
     ],
     "top_prog": true,
     "reduce": true
