@@ -95,19 +95,20 @@ fn learn_waypoint() {
     let mut log_file = File::create("learning_waypoint_log").unwrap();
     for target in ["turn", "side", "avoid", "resume"] {
 
-        println!("====================================");
+        println!("==================================");
         println!("========= Learn {target} ===========");
-        println!("====================================");
+        println!("==================================");
         let mut app = App::from_setup_json(format!("setup_{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,
-                max_clause: 4,
-                max_pred: 2,
+                max_clause: 2,
+                max_pred: 1,
                 debug: false,
         })
-        .top_prog(TopProg::True(true))
+        // .top_prog(TopProg::True(true))
         .add_body_predicates(BODY_PREDICATES).unwrap();
+        // First proof from standard query
         // match  app.query_session_from_examples().unwrap().next(){
         //     Some(solution) => {
         //         writeln!(log_file, "====================================").unwrap();
@@ -119,12 +120,13 @@ fn learn_waypoint() {
         //     None => println!("No solution for {target}")
         // }
 
-        // let h = app.run_top_prog();
-        // writeln!(log_file, "====================================").unwrap();
-        // writeln!(log_file, "========= Learn {target} ===========").unwrap();
-        // writeln!(log_file, "====================================").unwrap();
-        // writeln!(log_file, "{h}").unwrap();
-        // hypothesis += &h;
+        // Top prog
+        let h = app.run_top_prog();
+        writeln!(log_file, "==================================").unwrap();
+        writeln!(log_file, "========= Learn {target} ===========").unwrap();
+        writeln!(log_file, "==================================").unwrap();
+        writeln!(log_file, "{h}").unwrap();
+        hypothesis += &h;
     }
 
     println!("====================================");
