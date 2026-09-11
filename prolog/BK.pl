@@ -144,7 +144,7 @@ less_and_adjacent(insubstantial,small).
 less_and_adjacent(no_risk, risk_developing).
 less_and_adjacent(risk_developing, medium_close).
 less_and_adjacent(medium_close, medium_veryclose).
-less_and_adjacent(medium_veryclose, medium_close).
+less_and_adjacent(medium_veryclose, medium_critical).
 less_and_adjacent(medium_critical, short_close).
 less_and_adjacent(short_close, short_veryclose).
 less_and_adjacent(short_veryclose, short_critical).
@@ -164,10 +164,10 @@ greater_than(X,Y) :-
 greater_than(X,Y) :-
     less_and_adjacent(Y,X).
 
-less_or_equal(X,Y) :- X = Y.
+less_or_equal(X,X).
 less_or_equal(X,Y) :- less_than(X,Y).
 
-greater_or_equal(X,Y) :- X = Y.
+greater_or_equal(X,X).
 greater_or_equal(X,Y) :- greater_than(X,Y).
 
 range_gt(X,Y,A):-
