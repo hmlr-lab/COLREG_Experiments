@@ -14,23 +14,23 @@
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,medium_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
       1:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,medium_veryclose)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,small)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,small)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,starboard_bow_forward)
   - range(agent,vessel1,middle)
@@ -47,18 +47,18 @@
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,short_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,starboard_bow_forward)
   - range(agent,vessel1,far)
@@ -75,18 +75,18 @@
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,medium_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
       1:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,port_bow_broad)
   - range(agent,vessel1,very_far)
@@ -103,18 +103,18 @@
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,risk_developing)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,small)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,port_bow_broad)
   - range(agent,vessel1,far)
@@ -131,13 +131,13 @@
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,port_bow_broad)
   - range(agent,vessel1,middle)
@@ -154,13 +154,13 @@
       - turn(agent,large)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,port_bow_broad)
   - range(agent,vessel1,very_near)
@@ -177,13 +177,13 @@
       - turn(agent,large)
       - avoid(agent,vessel1,imminent_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,short_close)
       - resume(agent,vessel1,imminent_close)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,very_far)
@@ -197,18 +197,18 @@
       - turn(agent,small)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,risk_developing)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,small)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,very_far)
@@ -225,18 +225,18 @@
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,medium_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,middle)
@@ -253,18 +253,18 @@
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,short_veryclose)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,middle)
@@ -282,23 +282,23 @@
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,risk_developing)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
       1:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,near)
@@ -316,23 +316,23 @@
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,medium_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
       1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,medium_close)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos:
       0:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
       1:
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,starboard)
+      - cpa_side(agent,vessel1,starboard)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,very_near)
@@ -351,12 +351,12 @@
       - turn(agent,moderate)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
       1:
       - turn(agent,large)
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
 - facts:
   - sector(agent,vessel1,starboard_beam_forward)
   - range(agent,vessel1,far)
@@ -373,5 +373,5 @@
       - turn(agent,large)
       - avoid(agent,vessel1,medium_critical)
       - resume(agent,vessel1,no_risk)
-      - side(agent,vessel1,port)
+      - cpa_side(agent,vessel1,port)
     pos: {}
