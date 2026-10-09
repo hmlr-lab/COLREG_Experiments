@@ -1,0 +1,81 @@
+- facts:
+  - sector(agent,vessel1,ahead)
+  - range(agent,vessel1,very_far)
+  - sector(vessel1,agent,ahead)
+  - range(vessel1,agent,very_far)
+  - waypoint_reached(vessel1)
+  take_action: neg
+  waypoints:
+    neg:
+      0:
+      - turn(agent,small)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
+      1:
+      - turn(agent,insubstantial)
+      - avoid(agent,vessel1,risk_developing)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
+    pos:
+      0:
+      - turn(agent,small)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
+- facts:
+  - sector(agent,vessel1,ahead)
+  - range(agent,vessel1,very_far)
+  - dcpa(agent,vessel1,critical)
+  - tcpa(agent,vessel1,medium)
+  - sector(vessel1,agent,ahead)
+  - range(vessel1,agent,very_far)
+  - dcpa(vessel1,agent,critical)
+  - tcpa(vessel1,agent,medium)
+  take_action: pos
+  waypoints:
+    neg:
+      0:
+      - turn(agent,moderate)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
+      1:
+      - turn(agent,insubstantial)
+      - avoid(agent,vessel1,medium_close)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
+    pos:
+      0:
+      - turn(agent,moderate)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
+- facts:
+  - sector(agent,vessel1,ahead)
+  - range(agent,vessel1,middle)
+  - dcpa(agent,vessel1,critical)
+  - tcpa(agent,vessel1,short)
+  - sector(vessel1,agent,ahead)
+  - range(vessel1,agent,middle)
+  - dcpa(vessel1,agent,critical)
+  - tcpa(vessel1,agent,short)
+  take_action: pos
+  waypoints:
+    neg:
+      0:
+      - turn(agent,moderate)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
+      1:
+      - turn(agent,insubstantial)
+      - avoid(agent,vessel1,short_veryclose)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
+    pos:
+      0:
+      - turn(agent,moderate)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
