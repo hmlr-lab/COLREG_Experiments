@@ -1,18 +1,16 @@
 - facts:
-  - sector(agent,vessel1,ahead)
-  - range(agent,vessel1,very_far)
-  - sector(vessel1,agent,ahead)
-  - range(vessel1,agent,very_far)
-  - waypoint_reached(vessel1)
+  - sector(agent,cruiseliner1,ahead)
+  - range(agent,cruiseliner1,very_far)
+  - dcpa(agent,cruiseliner1,critical)
+  - tcpa(agent,cruiseliner1,long)
+  - sector(cruiseliner1,agent,ahead)
+  - range(cruiseliner1,agent,very_far)
+  - dcpa(cruiseliner1,agent,critical)
+  - tcpa(cruiseliner1,agent,long)
   take_action: neg
   waypoints:
     neg:
       0:
-      - turn(agent,small)
-      - avoid(agent,vessel1,no_risk)
-      - resume(agent,vessel1,no_risk)
-      - cpa_side(agent,vessel1,starboard)
-      1:
       - turn(agent,insubstantial)
       - avoid(agent,vessel1,risk_developing)
       - resume(agent,vessel1,no_risk)
@@ -23,6 +21,11 @@
       - avoid(agent,vessel1,no_risk)
       - resume(agent,vessel1,no_risk)
       - cpa_side(agent,vessel1,port)
+      1:
+      - turn(agent,small)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
 - facts:
   - sector(agent,vessel1,ahead)
   - range(agent,vessel1,very_far)
