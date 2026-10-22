@@ -1,0 +1,17 @@
+scenario,take_action_status,take_action_values,turn_status,turn_values,avoid_status,avoid_values,resume_status,resume_values,cpa_side_status,cpa_side_values
+crossing1_1.pl,FALSE,,TRUE,"turn(agent,small)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port); cpa_side(agent,vessel1,starboard)"
+crossing1_2.pl,TRUE,take_action(agent),TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+crossing1_3.pl,TRUE,take_action(agent),TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+crossing1_4.pl,TRUE,take_action(agent),TRUE,"turn(agent,large)",TRUE,"avoid(agent,cruiseliner1,no_risk)",TRUE,"resume(agent,cruiseliner1,no_risk)",TRUE,"cpa_side(agent,cruiseliner1,port)"
+crossing2_1.pl,FALSE,,TRUE,"turn(agent,moderate); turn(agent,small)",TRUE,"avoid(agent,vessel1,no_risk); avoid(agent,vessel1,short_close)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port); cpa_side(agent,vessel1,starboard)"
+crossing2_2.pl,FALSE,,TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk); avoid(agent,vessel1,short_close)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+crossing2_3.pl,TRUE,take_action(agent),TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk); avoid(agent,vessel1,short_close)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+crossing2_4.pl,TRUE,take_action(agent),TRUE,"turn(agent,large)",TRUE,"avoid(agent,cruiseliner1,no_risk); avoid(agent,cruiseliner1,short_close)",TRUE,"resume(agent,cruiseliner1,no_risk)",TRUE,"cpa_side(agent,cruiseliner1,port)"
+headon1_1.pl,FALSE,,TRUE,"turn(agent,small)",TRUE,"avoid(agent,cruiseliner1,no_risk)",TRUE,"resume(agent,cruiseliner1,no_risk)",TRUE,"cpa_side(agent,cruiseliner1,port); cpa_side(agent,cruiseliner1,starboard)"
+headon1_2.pl,TRUE,take_action(agent),TRUE,"turn(agent,moderate); turn(agent,small)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+headon1_3.pl,TRUE,take_action(agent),TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port)"
+overtaking1_1.pl,FALSE,,TRUE,"turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port); cpa_side(agent,vessel1,starboard)"
+overtaking1_2.pl,TRUE,take_action(agent),TRUE,"turn(agent,large); turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port); cpa_side(agent,vessel1,starboard)"
+overtaking1_3.pl,TRUE,take_action(agent),TRUE,"turn(agent,large); turn(agent,moderate)",TRUE,"avoid(agent,vessel1,no_risk)",TRUE,"resume(agent,vessel1,no_risk)",TRUE,"cpa_side(agent,vessel1,port); cpa_side(agent,vessel1,starboard)"
+overtaking1_4.pl,TRUE,take_action(agent),TRUE,"turn(agent,large)",TRUE,"avoid(agent,cruiseliner1,no_risk)",TRUE,"resume(agent,cruiseliner1,no_risk)",TRUE,"cpa_side(agent,cruiseliner1,port); cpa_side(agent,cruiseliner1,starboard)"
+passing1_1.pl,FALSE,,FALSE,,TRUE,"avoid(agent,vessel1,no_risk)",FALSE,,FALSE,

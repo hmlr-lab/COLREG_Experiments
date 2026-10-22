@@ -56,20 +56,209 @@ def queries_from_modeb_declarations(mode_declarations):
 def normalize_agent_names(literal):
     literal = re.sub(r"\bagent[^,\)]*", "A", literal)
     literal = re.sub(r"\bcruiseliner[^,\)]*", "B", literal)
+    literal = re.sub(r"\bvessel[^,\)]*", "B", literal)
     return literal
 
+
+# def get_example_binding(example):
+#     _, args = extract_pred_args(example)
+
+#     if len(args) < 2:
+#         return {
+#                 "A": args[0]
+#             }
+
+#     return {
+#         "A": args[0],
+#         "B": args[1]
+#     }
+
+# def get_example_binding(example):
+#     """
+#     Supports both:
+
+#         take_action(agent_1)
+#         take_action(agent_1, vessel_1)
+
+#     For unary targets, initially bind only A.
+#     B will be discovered later.
+#     """
+
+#     _, args = extract_pred_args(example)
+
+#     if not args:
+#         raise ValueError(
+#             f"Cannot extract arguments from example: {example}"
+#         )
+
+#     binding = {
+#         "A": args[0]
+#     }
+
+#     # If target already contains B, use it directly
+#     if len(args) >= 2:
+#         binding["B"] = args[1]
+
+#     return binding
 
 def get_example_binding(example):
     _, args = extract_pred_args(example)
 
-    if len(args) < 2:
-        raise ValueError(f"Cannot extract A,B from example: {example}")
+    if not args:
+        raise ValueError(f"Cannot extract arguments from example: {example}")
 
-    return {
-        "A": args[0],
-        "B": args[1]
+    binding = {
+        "A": args[0]
     }
 
+    # Only bind B when the second argument is really a vessel
+    if len(args) >= 2:
+        if (
+            args[1].startswith("vessel_")
+            or args[1].startswith("cruiseliner_")
+        ):
+            binding["B"] = args[1]
+
+    return binding
+
+
+
+def infer_B_from_bottom_clause(
+    bottom_literals,
+    binding,
+    debug=False
+):
+    """
+    Infer B when the target is unary, e.g.
+
+        take_action(agent_1)
+
+    using an existing bottom-clause literal such as:
+
+        sector(A,B,starboard_bow_forward)
+
+    which becomes:
+
+        sector(agent_1,B,starboard_bow_forward)
+
+    and may return:
+
+        B = vessel_1
+    """
+
+    # B already known
+    if "B" in binding:
+        return binding
+
+    # Prefer predicates that are normally safe for finding B
+    priority = [
+        "sector",
+        "starboard_forward",
+        "port_forward",
+        "forward",
+        "arc_overtaking",
+        "range",
+        "dcpa",
+        "tcpa"
+    ]
+
+    def priority_key(literal):
+        pred, _ = extract_pred_args(literal)
+
+        if pred in priority:
+            return priority.index(pred)
+
+        return len(priority)
+
+    literals = sorted(
+        bottom_literals,
+        key=priority_key
+    )
+
+    for literal in literals:
+
+        pred, args = extract_pred_args(literal)
+
+        if pred is None:
+            continue
+
+        # We specifically need a literal involving B
+        if "B" not in args:
+            continue
+
+        # Replace known variables, mainly A
+        query_args = [
+            binding.get(arg, arg)
+            for arg in args
+        ]
+
+        query = (
+            f"{pred}("
+            + ",".join(query_args)
+            + ")"
+        )
+
+        if debug:
+            print("Trying to infer B:", query)
+
+        try:
+            solutions = list(janus.query(query))
+
+        except Exception as e:
+
+            if debug:
+                print(
+                    "Could not use for B:",
+                    query,
+                    e
+                )
+
+            continue
+
+        for solution in solutions:
+
+            if "B" in solution:
+
+                B_value = str(solution["B"])
+
+                binding["B"] = B_value
+
+                if debug:
+                    print(
+                        "Found B:",
+                        B_value,
+                        "using",
+                        query
+                    )
+
+                return binding
+
+    # -----------------------------------------------------
+    # Fallback for your COLREGS naming scheme
+    #
+    # agent_1  -> vessel_1
+    # agent_11 -> vessel_11
+    # -----------------------------------------------------
+
+    A_value = binding.get("A")
+
+    if A_value and A_value.startswith("agent_"):
+
+        B_value = A_value.replace(
+            "agent_",
+            "vessel_",
+            1
+        )
+
+        binding["B"] = B_value
+
+        if debug:
+            print(
+                "B inferred from naming convention:",
+                B_value
+            )
+
+    return binding
 
 def ground_bottom_literal(literal, binding):
     pred, args = extract_pred_args(literal)
@@ -215,6 +404,84 @@ def clear_bottom_facts(bottom_facts, debug=False):
         janus.query_once(query)
 
 
+# def modify_bcrl_janus_from_bk(
+#     bk_path,
+#     bottom_clause_dict,
+#     mode_declarations,
+#     normalize=True,
+#     debug=False
+# ):
+#     consult_bk_once(bk_path, debug=debug)
+
+#     query_literals = queries_from_modeb_declarations(mode_declarations)
+
+#     output = {}
+
+#     for example, bottom_literals in bottom_clause_dict.items():
+
+#         binding = get_example_binding(example)
+
+#         bottom_facts = []
+
+#         for lit in bottom_literals:
+#             grounded = ground_bottom_literal(lit, binding)
+#             if grounded:
+#                 bottom_facts.append(grounded)
+
+#         if debug:
+#             print("\n================================")
+#             print("Example:", example)
+#             print("Binding:", binding)
+#             print("Modeb queries:", query_literals)
+#             print("Ground bottom facts:")
+#             for f in bottom_facts:
+#                 print("  ", f)
+
+#         assert_bottom_facts(bottom_facts, debug=debug)
+
+#         if normalize:
+#             updated_literals = [
+#                 normalize_agent_names(lit)
+#                 for lit in bottom_literals
+#             ]
+#         else:
+#             updated_literals = list(bottom_literals)
+
+#         for q in query_literals:
+
+#             grounded_q = bind_query_with_example(q, binding)
+#             #print(grounded_q)
+#             if debug:
+#                 print("\nQUERY:", grounded_q)
+
+#             try:
+#                 solutions = list(janus.query(grounded_q))
+#             except janus.PrologError as e:
+#                 if "sufficiently instantiated" in str(e):
+#                     continue
+#                 raise
+
+#             for sol in solutions:
+#                 lit = subst_to_literal(grounded_q, sol)
+
+#                 if normalize:
+#                     lit = normalize_agent_names(lit)
+
+#                 if lit not in updated_literals:
+#                     updated_literals.append(lit)
+
+#                     if debug:
+#                         print("  ADDED:", lit)
+
+#         clear_bottom_facts(bottom_facts, debug=debug)
+
+#         output[example] = updated_literals
+
+#     return output
+
+
+
+
 def modify_bcrl_janus_from_bk(
     bk_path,
     bottom_clause_dict,
@@ -222,69 +489,209 @@ def modify_bcrl_janus_from_bk(
     normalize=True,
     debug=False
 ):
-    consult_bk_once(bk_path, debug=debug)
 
-    query_literals = queries_from_modeb_declarations(mode_declarations)
+    # =====================================================
+    # 1. Consult BK
+    # =====================================================
+
+    consult_bk_once(
+        bk_path,
+        debug=debug
+    )
+
+    query_literals = queries_from_modeb_declarations(
+        mode_declarations
+    )
 
     output = {}
 
+    # =====================================================
+    # 2. Process each example
+    # =====================================================
+
     for example, bottom_literals in bottom_clause_dict.items():
 
+        # ---------------------------------------------
+        # Initial binding
+        #
+        # take_action(agent_1)
+        #
+        # gives:
+        #
+        # A = agent_1
+        # ---------------------------------------------
+
         binding = get_example_binding(example)
+
+        # ---------------------------------------------
+        # NEW PART
+        #
+        # Find B using existing bottom clause / BK
+        # ---------------------------------------------
+
+        binding = infer_B_from_bottom_clause(
+            bottom_literals,
+            binding,
+            debug=debug
+        )
+
+        if debug:
+
+            print("\n================================")
+            print("Example:", example)
+            print("Final binding:", binding)
+
+        # ---------------------------------------------
+        # Example:
+        #
+        # A = agent_1
+        # B = vessel_1
+        #
+        # Therefore:
+        #
+        # sector(A,B,...)
+        #
+        # becomes:
+        #
+        # sector(agent_1,vessel_1,...)
+        # ---------------------------------------------
 
         bottom_facts = []
 
         for lit in bottom_literals:
-            grounded = ground_bottom_literal(lit, binding)
+
+            grounded = ground_bottom_literal(
+                lit,
+                binding
+            )
+
             if grounded:
                 bottom_facts.append(grounded)
 
         if debug:
-            print("\n================================")
-            print("Example:", example)
-            print("Binding:", binding)
-            print("Modeb queries:", query_literals)
+
+            print("Modeb queries:")
+            for q in query_literals:
+                print("  ", q)
+
             print("Ground bottom facts:")
             for f in bottom_facts:
                 print("  ", f)
 
-        assert_bottom_facts(bottom_facts, debug=debug)
+        # =================================================
+        # 3. Assert existing bottom-clause information
+        # =================================================
+
+        assert_bottom_facts(
+            bottom_facts,
+            debug=debug
+        )
+
+        # =================================================
+        # 4. Start output with original bottom clause
+        # =================================================
 
         if normalize:
+
             updated_literals = [
                 normalize_agent_names(lit)
                 for lit in bottom_literals
             ]
+
         else:
-            updated_literals = list(bottom_literals)
+
+            updated_literals = list(
+                bottom_literals
+            )
+
+        # =================================================
+        # 5. Query additional predicates from BK
+        # =================================================
 
         for q in query_literals:
 
-            grounded_q = bind_query_with_example(q, binding)
-            #print(grounded_q)
+            grounded_q = bind_query_with_example(
+                q,
+                binding
+            )
+
             if debug:
-                print("\nQUERY:", grounded_q)
+                print(
+                    "\nQUERY:",
+                    grounded_q
+                )
 
             try:
-                solutions = list(janus.query(grounded_q))
+
+                solutions = list(
+                    janus.query(grounded_q)
+                )
+
             except Exception as e:
-                print("FAILED QUERY:", grounded_q)
-                clear_bottom_facts(bottom_facts, debug=debug)
-                raise e
 
-            for sol in solutions:
-                lit = subst_to_literal(grounded_q, sol)
+                print(
+                    "FAILED QUERY:",
+                    grounded_q
+                )
 
-                if normalize:
-                    lit = normalize_agent_names(lit)
-
-                if lit not in updated_literals:
-                    updated_literals.append(lit)
+                # Do not terminate learning just because one
+                # derived predicate cannot be evaluated.
+                if (
+                    "sufficiently instantiated"
+                    in str(e)
+                ):
 
                     if debug:
-                        print("  ADDED:", lit)
+                        print(
+                            "Skipping insufficiently "
+                            "instantiated query."
+                        )
 
-        clear_bottom_facts(bottom_facts, debug=debug)
+                    continue
+
+                clear_bottom_facts(
+                    bottom_facts,
+                    debug=debug
+                )
+
+                raise e
+
+            # =================================================
+            # 6. Add solutions returned by BK
+            # =================================================
+
+            for sol in solutions:
+
+                lit = subst_to_literal(
+                    grounded_q,
+                    sol
+                )
+
+                if normalize:
+                    lit = normalize_agent_names(
+                        lit
+                    )
+
+                if lit not in updated_literals:
+
+                    updated_literals.append(
+                        lit
+                    )
+
+                    if debug:
+                        print(
+                            "  ADDED:",
+                            lit
+                        )
+
+        # =================================================
+        # 7. Remove temporary facts
+        # =================================================
+
+        clear_bottom_facts(
+            bottom_facts,
+            debug=debug
+        )
 
         output[example] = updated_literals
 

@@ -1,0 +1,8 @@
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).

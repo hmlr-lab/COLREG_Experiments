@@ -1,0 +1,5 @@
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).

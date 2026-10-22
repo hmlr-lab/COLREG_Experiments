@@ -1,0 +1,10 @@
+take_action(agent_1).
+take_action(agent_2).
+take_action(agent_3).
+take_action(agent_6).
+take_action(agent_7).
+take_action(agent_9).
+take_action(agent_10).
+take_action(agent_12).
+take_action(agent_13).
+take_action(agent_14).

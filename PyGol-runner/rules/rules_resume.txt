@@ -1,0 +1,1 @@
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
