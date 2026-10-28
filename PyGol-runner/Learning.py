@@ -1,44 +1,62 @@
 from datetime import datetime
-from turtle import pos
+from pathlib import Path
 
 from util import *
-import os
-
-output_dir = Path(__file__).resolve().parent / "rules"
-
-# Create the directory if it doesn't exist
-output_dir.mkdir(parents=True, exist_ok=True)
-
-
-
 from PyGol import *
 
-combined_rules  = {}
-facts = "bk_files/facts.pl"
-bk_path = "bk_files/BK.pl"
-# Learn Take Action
+# Resolve all project files relative to this script, not the shell's working directory.
+BASE_DIR = Path(__file__).resolve().parent
+output_dir = BASE_DIR / "rules"
+output_dir.mkdir(parents=True, exist_ok=True)
+
+combined_rules = {}
+facts = str(BASE_DIR / "bk_files" / "facts.pl")
+bk_path = str(BASE_DIR / "bk_files" / "BK.pl")
+output_path = BASE_DIR / "bk_files" / "combined_BK.pl"
+output_path.parent.mkdir(parents=True, exist_ok=True)
+
+
+def example_path(kind, filename):
+    return str(BASE_DIR / kind / filename)
+
+
+def save_rules(filename, rules):
+    file_path = output_dir / filename
+    with open(file_path, "w") as f:
+        for rule in rules:
+            pretty_print_prolog(rule)
+            f.write(rule + ".\n")
+    print(f"Rules written to {file_path}")
+
+
+def prepare_examples(positive_path, negative_path):
+    pos_all = read_example(positive_path)
+    neg_all = read_example(negative_path)
+    pos_examples = sorted(set(pos_all))
+    neg_examples = sorted(set(neg_all) - set(pos_all))
+    return pos_examples, neg_examples
+
+
+# Merge facts and background knowledge once for subsequent evaluation.
+merge_prolog_files(facts, bk_path, str(output_path))
+
 print("\n" + "=" * 60)
 print("        Learning Take Action")
 print("=" * 60)
 
-pos_example = "positive_examples/take_action.pl"
-neg_example = "negative_examples/take_action.pl"
+pos_example = example_path("positive_examples", "take_action.pl")
+neg_example = example_path("negative_examples", "take_action.pl")
 
-merge_prolog_files(facts, bk_path, "bk_files/combined_BK.pl")
-
-H, HS = learn_rules(facts, pos_example, neg_example, bk_path, print_hs=False, print_h=False, seed_value=10)
+H, HS = learn_rules(
+    facts, pos_example, neg_example, bk_path,
+    print_hs=False, print_h=False, seed_value=10
+)
 pos_example_list = pygol.read_example(pos_example)
 neg_example_list = pygol.read_example(neg_example)
-
-pygol.evaluate_theory_prolog(H, "bk_files/combined_BK.pl", sorted(pos_example_list), sorted(neg_example_list))
-# Write the final hypotheses to a file.
-file_name_hypo = output_dir / "rules_take_action.txt"
-with open(file_name_hypo, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
-        #combined_rules.append(rule)
-        f.write(rule + ".\n")
-print(f"Rules written to {file_name_hypo}")
+pygol.evaluate_theory_prolog(
+    H, str(output_path), sorted(pos_example_list), sorted(neg_example_list)
+)
+save_rules("rules_take_action.txt", H)
 combined_rules["take_action"] = H
 
 
@@ -46,34 +64,18 @@ print("\n" + "=" * 60)
 print("        Learning Turning Magnitude")
 print("=" * 60)
 
-pos_example_avoid = "positive_examples/turn.pl"
-neg_example_avoid = "negative_examples/turn.pl"
-
-pos_all = read_example(pos_example_avoid)
-neg_all = read_example(neg_example_avoid)
-
-
-#remove dupilcated from pos
-pos_example = list(set(pos_all))
-
-# remove noisy examples from neg
-neg_example = [eache for eache in neg_all if eache not in pos_all]
-
-
-H= learn_rules_muti_label(facts, sorted(pos_example), sorted(neg_example), bk_path, print_hs=False, print_h=False, seed_value=10, label_literal=1)
-
+pos_example, neg_example = prepare_examples(
+    example_path("positive_examples", "turn.pl"),
+    example_path("negative_examples", "turn.pl"),
+)
+H = learn_rules_muti_label(
+    facts, pos_example, neg_example, bk_path,
+    print_hs=False, print_h=False, seed_value=10, label_literal=1
+)
 print(f"Positive Examples: {len(pos_example)}")
 print(f"Negative Examples: {len(neg_example)}")
-pygol.evaluate_theory_prolog(H, "bk_files/combined_BK.pl", sorted(pos_example), sorted(neg_example))
-# Write the final hypotheses to a file.
-file_name_hypo = output_dir / "rules_turning_magnitude.txt"
-with open(file_name_hypo, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
-        #combined_rules.append(rule)
-        f.write(rule + ".\n")
-print(f"Rules written to {file_name_hypo}")
-
+pygol.evaluate_theory_prolog(H, str(output_path), pos_example, neg_example)
+save_rules("rules_turning_magnitude.txt", H)
 combined_rules["turning_magnitude"] = H
 
 
@@ -81,30 +83,18 @@ print("\n" + "=" * 60)
 print("        Learning Avoid")
 print("=" * 60)
 
-pos_example_avoid = "positive_examples/avoid.pl"
-neg_example_avoid = "negative_examples/avoid.pl"
-
-pos_all = read_example(pos_example_avoid)
-neg_all = read_example(neg_example_avoid)
-
-
-#remove dupilcated from pos
-pos_example = list(set(pos_all))
-# remove noisy examples from neg
-neg_example = [eache for eache in neg_all if eache not in pos_all]
-H= learn_rules_muti_label(facts, sorted(pos_example), sorted(neg_example), bk_path, print_hs=False, print_h=False, seed_value=10)
-
+pos_example, neg_example = prepare_examples(
+    example_path("positive_examples", "avoid.pl"),
+    example_path("negative_examples", "avoid.pl"),
+)
+H = learn_rules_muti_label(
+    facts, pos_example, neg_example, bk_path,
+    print_hs=False, print_h=False, seed_value=10
+)
 print(f"Positive Examples: {len(pos_example)}")
 print(f"Negative Examples: {len(neg_example)}")
-pygol.evaluate_theory_prolog(H, "bk_files/combined_BK.pl", sorted(pos_example), sorted(neg_example))
-# Write the final hypotheses to a file.
-file_name_hypo = output_dir / "rules_avoid.txt"
-with open(file_name_hypo, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
-        #combined_rules.append(rule)
-        f.write(rule + ".\n")
-print(f"Rules written to {file_name_hypo}")
+pygol.evaluate_theory_prolog(H, str(output_path), pos_example, neg_example)
+save_rules("rules_avoid.txt", H)
 combined_rules["avoid"] = H
 
 
@@ -112,28 +102,16 @@ print("\n" + "=" * 60)
 print("        Learning Resume")
 print("=" * 60)
 
-pos_example_avoid = "positive_examples/resume.pl"
-neg_example_avoid = "negative_examples/resume.pl"
-
-pos_all = read_example(pos_example_avoid)
-neg_all = read_example(neg_example_avoid)
-
-
-#remove dupilcated from pos
-pos_example = list(set(pos_all))
-# remove noisy examples from neg
-neg_example = [eache for eache in neg_all if eache not in pos_all]
-
-H= learn_rules_muti_label(facts, sorted(pos_example), sorted(neg_example), bk_path, print_hs=False, print_h=False, seed_value=10)
-pygol.evaluate_theory_prolog(H, "bk_files/combined_BK.pl", sorted(pos_example), sorted(neg_example))
-# Write the final hypotheses to a file.
-file_name_hypo = output_dir / "rules_resume.txt"
-with open(file_name_hypo, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
-        #combined_rules.append(rule)
-        f.write(rule + ".\n")
-print(f"Rules written to {file_name_hypo}")
+pos_example, neg_example = prepare_examples(
+    example_path("positive_examples", "resume.pl"),
+    example_path("negative_examples", "resume.pl"),
+)
+H = learn_rules_muti_label(
+    facts, pos_example, neg_example, bk_path,
+    print_hs=False, print_h=False, seed_value=10
+)
+pygol.evaluate_theory_prolog(H, str(output_path), pos_example, neg_example)
+save_rules("rules_resume.txt", H)
 combined_rules["resume"] = H
 
 
@@ -141,55 +119,33 @@ print("\n" + "=" * 60)
 print("        Learning Side")
 print("=" * 60)
 
-pos_example_avoid = "positive_examples/cpa_side.pl"
-neg_example_avoid = "negative_examples/cpa_side.pl"
-
-
-pos_all = sorted(read_example(pos_example_avoid))
-neg_all = sorted(read_example(neg_example_avoid))
-
-
-
-neg_example = [eache for eache in neg_all if eache not in pos_all]
-#remove dupilcated from pos
-pos_example = sorted(list(set(pos_all)))
-# remove noisy examples from neg
-neg_example = sorted(list(set(neg_example)))
-
-
-H= learn_rules_muti_label(facts, pos_example, neg_example, bk_path, print_hs=False, print_h=False, seed_value=10)
-
-pygol.evaluate_theory_prolog(H, "bk_files/combined_BK.pl", sorted(pos_example), sorted(neg_example))
-# Write the final hypotheses to a file.
-file_name_hypo = output_dir / "rules_side.txt"
-with open(file_name_hypo, "w") as f:
-    for rule in H:
-        pretty_print_prolog(rule)
-        #combined_rules.append(rule)
-        f.write(rule + ".\n")
-print(f"Rules written to {file_name_hypo}")
+pos_example, neg_example = prepare_examples(
+    example_path("positive_examples", "cpa_side.pl"),
+    example_path("negative_examples", "cpa_side.pl"),
+)
+H = learn_rules_muti_label(
+    facts, pos_example, neg_example, bk_path,
+    print_hs=False, print_h=False, seed_value=10
+)
+pygol.evaluate_theory_prolog(H, str(output_path), pos_example, neg_example)
+save_rules("rules_side.txt", H)
 combined_rules["side"] = H
 
 
 combined_rules_file = output_dir / "rules.txt"
 with open(combined_rules_file, "w") as f:
-    #f.write(f"% Retain only pairs with a single, non-conflicting CPA side prediction.\n")
-    for k, v in combined_rules.items():
-        f.write(f"% Rules for {k}\n")
-        for rule in v:
+    for category, rules in combined_rules.items():
+        f.write(f"% Rules for {category}\n")
+        for rule in rules:
             f.write(rule + ".\n")
         f.write("\n")
 
-#record all the rules over time in a file
+# Append a timestamped record of all learned rules.
 final_rules_file = output_dir / "log_rules.txt"
 with open(final_rules_file, "a") as f:
-    # include timestamp in the file
     f.write(f"% Timestamp: {datetime.now()}\n")
-    for k, v in combined_rules.items():
-        f.write(f"% Rules for {k}\n")
-        for rule in v:
+    for category, rules in combined_rules.items():
+        f.write(f"% Rules for {category}\n")
+        for rule in rules:
             f.write(rule + ".\n")
         f.write("\n")
-
-
-
