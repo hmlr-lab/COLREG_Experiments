@@ -5,5 +5,5 @@ edition = "2024"
 
 [dependencies]
 indexmap = "2.14.0"
-prolog-squared = "1.6.0"
+prolog-squared = "1.6.1"
 rust-yaml = "1.1.0"

@@ -302,9 +302,9 @@ dependencies = [
 
 [[package]]
 name = "prolog-squared"
-version = "1.6.0"
+version = "1.6.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7f086c1972da38cc400d4090662f66d109cfc5d8e11bce121d40f146faf36953"
+checksum = "a2f93737c97ca3fc5c6dbe7bf9847af29b12db0a7ebaaedec17514f9f59f6689"
 dependencies = [
  "console",
  "fsize",
