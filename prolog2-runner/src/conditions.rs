@@ -126,7 +126,7 @@ impl From<&str> for Condition {
         let args: Vec<&str> = value[i1 + 1..i2].split(',').collect();
         match pred {
             "turn" => Condition::Turn(args[0].into()),
-            "side" => Condition::Side(args[0].into(), args[1].into()),
+            "cpa_side" => Condition::Side(args[0].into(), args[1].into()),
             "avoid" => Condition::Avoid(args[0].into(), args[1].into()),
             "resume" => Condition::Resume(args[0].into(), args[1].into()),
             _ => panic!("Unexpected predicate symbol in waypoint conditions: \"{pred}\""),
@@ -152,7 +152,7 @@ impl Condition {
         match self {
             Condition::Turn(turn) => format!("turn(agent{id},{}).", turn.to_string()),
             Condition::Side(vessel, side) => {
-                format!("side(agent{id},{vessel}_{id},{}).", side.to_string())
+                format!("cpa_side(agent{id},{vessel}_{id},{}).", side.to_string())
             }
             Condition::Avoid(vessel, risk) => {
                 format!("avoid(agent{id},{vessel}_{id},{}).", risk.to_string())
