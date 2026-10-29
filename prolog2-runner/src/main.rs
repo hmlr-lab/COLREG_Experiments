@@ -66,7 +66,7 @@ fn learn_take_action(log_file: &mut File) {
         .unwrap()
         .config(Config {
             max_depth: 5,
-            max_clause: 4,
+            max_clause: 3,
             debug: false,
             protect_h_preds: true,
         })
@@ -114,16 +114,17 @@ fn learn_waypoint(log_file: &mut File) {
 }
 
 fn log_heading(heading: &str, bold: bool, log_file: &mut File) {
-    if bold {
-        writeln!(log_file, "{:=<30}", "").unwrap();
-        println!("{:=<30}", "");
+    fn line(bold: bool, log_file: &mut File) {
+        if bold {
+            writeln!(log_file, "{:=<40}", "").unwrap();
+            println!("{:=<40}", "");
+        }
     }
+
+    line(bold, log_file);
     writeln!(log_file, "========= {heading:^20} =========").unwrap();
     println!("========= {heading:^20} =========");
-    if bold {
-        writeln!(log_file, "{:=<30}", "").unwrap();
-        println!("{:=<30}", "");
-    }
+    line(bold, log_file);
 }
 
 fn log(text: &str, log_file: &mut File) {
