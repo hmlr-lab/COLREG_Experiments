@@ -53,80 +53,80 @@ const BODY_PREDICATES: &[&str] = &[
 fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
+    let mut log_file = File::create("prolog2.log").unwrap();
 
-    iterate_max_clause("setup_take_action.json", 3);
-
-    learn_waypoint();
+    learn_take_action(&mut log_file);
+    learn_waypoint(&mut log_file);
 }
 
-fn iterate_max_clause(setup_path: &str, max_clause: usize) {
-    for max_clause in 1..max_clause + 1 {
-        println!("=================================");
-        println!("Try max_clause: {max_clause}");
-        println!("=================================");
-        let app = App::from_setup_json(setup_path).unwrap().config(Config {
-            max_depth: 10,
-            max_clause,
+fn learn_take_action(log_file: &mut File) {
+    log_heading("Learn take_action", true, log_file);
+
+    let mut app = App::from_setup_json(format!("setup_take_action.json"))
+        .unwrap()
+        .config(Config {
+            max_depth: 5,
+            max_clause: 4,
             debug: false,
             protect_h_preds: true,
-        });
-        app.run();
+        })
+        // .top_prog(TopProg::True(true))
+        .add_body_predicates(BODY_PREDICATES)
+        .unwrap();
+    let hypotheses = app.run_parallel().unwrap();
+    for (i, h) in hypotheses.iter().enumerate() {
+        writeln!(
+            log_file,
+            "================= Hypothesis {i} ================="
+        )
+        .unwrap();
+        writeln!(log_file, "{h}").unwrap();
     }
 }
 
-fn learn_waypoint() {
+fn learn_waypoint(log_file: &mut File) {
     let mut hypothesis = String::new();
-    let mut log_file = File::create("learning_waypoint_log").unwrap();
     for target in ["turn", "side", "avoid", "resume"] {
-        println!("==================================");
-        println!("========= Learn {target} ===========");
-        println!("==================================");
-        writeln!(log_file, "====================================").unwrap();
-        writeln!(log_file, "========= Learn {target} ===========").unwrap();
-        writeln!(log_file, "====================================").unwrap();
+        log_heading(&format!("Learn {target}"), true, log_file);
         let mut app = App::from_setup_json(format!("setup_{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,
-                max_clause: 4,
+                max_clause: 3,
                 debug: false,
                 protect_h_preds: true,
             })
             // .top_prog(TopProg::True(true))
             .add_body_predicates(BODY_PREDICATES)
             .unwrap();
-        // First proof from standard query
-        // match  app.query_session_from_examples().unwrap().next(){
-        //     Some(solution) => {
-        //         writeln!(log_file, "====================================").unwrap();
-        //         writeln!(log_file, "========= Learn {target} ===========").unwrap();
-        //         writeln!(log_file, "====================================").unwrap();
-        //         writeln!(log_file, "{}", &solution.hypothesis).unwrap();
-        //         hypothesis += &solution.hypothesis
-        //     },
-        //     None => println!("No solution for {target}")
-        // }
 
         let hypotheses = app.run_parallel().unwrap();
         hypothesis += &hypotheses[0];
 
         for (i, h) in hypotheses.iter().enumerate() {
-            writeln!(
-                log_file,
-                "================= Hypothesis {i} ================="
-            )
-            .unwrap();
-            writeln!(log_file, "{h}").unwrap();
+            log_heading(&format!("Hypothesis {i}"), false, log_file);
+            log(h, log_file);
         }
     }
 
-    println!("====================================");
-    println!("======== Final Hypothesis ==========");
-    println!("====================================");
-    println!("{hypothesis}");
+    log_heading("Final Hypothesis", true, log_file);
+    log(&hypothesis, log_file);
+}
 
-    writeln!(log_file, "====================================").unwrap();
-    writeln!(log_file, "======== Final Hypothesis ==========").unwrap();
-    writeln!(log_file, "====================================").unwrap();
-    writeln!(log_file, "{hypothesis}").unwrap();
+fn log_heading(heading: &str, bold: bool, log_file: &mut File) {
+    if bold {
+        writeln!(log_file, "{:=<30}", "").unwrap();
+        println!("{:=<30}", "");
+    }
+    writeln!(log_file, "========= {heading:^20} =========").unwrap();
+    println!("========= {heading:^20} =========");
+    if bold {
+        writeln!(log_file, "{:=<30}", "").unwrap();
+        println!("{:=<30}", "");
+    }
+}
+
+fn log(text: &str, log_file: &mut File) {
+    println!("{text}");
+    writeln!(log_file, "{text}").unwrap();
 }
