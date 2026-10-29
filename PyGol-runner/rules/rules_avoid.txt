@@ -1,0 +1,2 @@
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).

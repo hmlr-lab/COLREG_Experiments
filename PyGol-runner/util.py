@@ -3,29 +3,36 @@ import re
 import sys
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parent
 PYGOL_DIR = ROOT / "PyGol_Files"
 
-ROOT = Path(__file__).resolve().parent.parent
-PYGOL_DIR = ROOT / "PyGol-runner" / "PyGol_Files"
-PROLOG = ROOT / "prolog"
-PROLOG_GENERATED = ROOT / "prolog/generated"
-EXAMPLES = ROOT / "examples"
-POS_EXAMPLES = EXAMPLES / "positives"
-NEG_EXAMPLES = EXAMPLES / "negative"
-
-PROLOG_GENERATED.mkdir(exist_ok=True)
-
-
 sys.path.insert(0, str(PYGOL_DIR))
-bk_path = "../prolog/BK.pl"
 
 import PyGol as pygol
 from janus_test import *
 from bc_pruner import *
 
-mode_declarations =  [
+
+mode_declarations = [
+    # Heads
+    #"modeb(*, applies(A,B,R)).",
+    #"modeb(*, role(A,B,R)).",
+    #"modeb(*, priority(A,B,R1,R2,W)).",
+
+    # Primitive facts
+    "modeb(*, sector(A,B,S)).",
+    "modeb(*, range(A,B,R)).",
+    "modeb(*, dcpa(A,B,D)).",
+    "modeb(*, tcpa(A,B,T)).",
+    "modeb(*, bearing(A,B,V)).",
+    "modeb(*, distance(A,B,V)).",
+    "modeb(*, status(A,S)).",
+    "modeb(*, waterway(A,W)).",
+    "modeb(*, constraint_draught(A)).",
+    "modeb(*, clock(C)).",
+
+    # Geometric abstractions
+    "modeb(*, arc_overtaking(A,B)).",
     "modeb(*, port_forward(A,B)).",
     "modeb(*, port_aft(A,B)).",
     "modeb(*, starboard_forward(A,B)).",
@@ -35,90 +42,43 @@ mode_declarations =  [
     "modeb(*, forward(A,B)).",
     "modeb(*, aft(A,B)).",
 
-    "modeb(*, less_than(R1,R2)).",
-    "modeb(*, less_or_equal(R1,R2)).",
-    "modeb(*, greater_than(R1,R2)).",
-    "modeb(*, greater_or_equal(R1,R2)).",
-
-    "modeb(*, dcpa_unacceptable(A,B)).",
-    "modeb(*, dcpa_acceptable(A,B)).",
-
+    # Derived concepts
+    "modeb(*, dcpa_unsafe(A,B)).",
+    "modeb(*, dcpa_safe(A,B)).",
     "modeb(*, tcpa_closing(A,B)).",
-    "modeb(*, actionable_range(A,B)).",
-
-    "modeb(*, ample_time(A,B)).",
-
-    "modeb(*, collision_risk(A,B)).",
-
-    "modeb(*, close_quarters_developing(A,B)).",
-    "modeb(*, close_quarters(A,B)).",
-
-    "modeb(*, encounter(A,B,R)).",
-    "modeb(*, encounter_and_duty(A,B,R,D)).",
-
-    "modeb(*, conduct(A,B,R)).",
-
-    "modeb(*, rule2_extremis(A,B)).",
-
-    "modeb(*, sector(A,B,S)).",
-    "modeb(*, range(A,B,R)).",
-    "modeb(*, dcpa(A,B,D)).",
-    "modeb(*, tcpa(A,B,T)).",
-    "modeb(*, arc_overtaking(A,B)).",
-]
-
-# mode_declarations = [
-#     # Heads
-#     #"modeb(*, applies(A,B,R)).",
-#     #"modeb(*, role(A,B,R)).",
-#     #"modeb(*, priority(A,B,R1,R2,W)).",
-
-#     # Primitive facts
-#     "modeb(*, sector(A,B,S)).",
-#     "modeb(*, range(A,B,R)).",
-#     "modeb(*, dcpa(A,B,D)).",
-#     "modeb(*, tcpa(A,B,T)).",
-#     "modeb(*, bearing(A,B,V)).",
-#     "modeb(*, distance(A,B,V)).",
-#     "modeb(*, status(A,S)).",
-#     "modeb(*, waterway(A,W)).",
-#     "modeb(*, constraint_draught(A)).",
-#     "modeb(*, clock(C)).",
-
-#     # Geometric abstractions
-#     "modeb(*, arc_overtaking(A,B)).",
-#     "modeb(*, port_forward(A,B)).",
-#     "modeb(*, port_aft(A,B)).",
-#     "modeb(*, starboard_forward(A,B)).",
-#     "modeb(*, starboard_aft(A,B)).",
-#     "modeb(*, port(A,B)).",
-#     "modeb(*, starboard(A,B)).",
-#     "modeb(*, forward(A,B)).",
-#     "modeb(*, aft(A,B)).",
-
-#     # Derived concepts
-#     "modeb(*, dcpa_unsafe(A,B)).",
-#     "modeb(*, dcpa_safe(A,B)).",
-#     "modeb(*, tcpa_closing(A,B)).",
-#     "modeb(*, range_actionable(A,B)).",
+    "modeb(*, range_actionable(A,B)).",
    
-#     "modeb(*, risk_collision(A,B)).",
-#     "modeb(*, close_quarters(A,B)).",
-#     "modeb(*, close_quarters_developing(A,B)).",
+    "modeb(*, risk_collision(A,B)).",
+    "modeb(*, close_quarters(A,B)).",
+    "modeb(*, close_quarters_developing(A,B)).",
 
-#     # Recursive predicates
-#     "modeb(*, encounter(A,B,R)).",
-#     "modeb(*, encounter_and_duty(A,B,R,D)).",
-#     "modeb(*, conduct(A,B,R,D)).",
+    # Recursive predicates
+    "modeb(*, encounter(A,B,R)).",
+    "modeb(*, encounter_and_conduct(A,B,R,D)).",
+    #"modeb(*, conduct(A,B,R,D)).",
+    
+    #"modeb(*, less_than(R1,R2)).",
+    #"modeb(*, greater_than(R1,R2)).",
+    #"modeb(*, less_or_equal(R1,R2)).",
+    #"modeb(*, greater_or_equal(R1,R2)).",
+    "modeb(*, range_gt(R1,R2,R3)).",
+    "modeb(*, range_ge(R1,R2,R3)).",
+    "modeb(*, range_lt(R1,R2,R3)).",
+    "modeb(*, range_le(R1,R2,R3)).",
 
-#     "modeb(*, time_ample(A,B)).",
-#     #"modeb(*, role(A,B,R)).",
-#     #"modeb(*, priority(A,B,R1,R2,W))."
-#     "range_nearer(*, time_ample(A,B)).",
-#     "range_nearer_similar(*, time_ample(A,B)).",
-#     "range_farther(*, time_ample(A,B)).",
-#     "range_farther_similar(*, time_ample(A,B)).",
-#     ]
+    "modeb(*, dcpa_gt(R1,R2,R3)).",
+        "modeb(*, dcpa_ge(R1,R2,R3)).",
+        "modeb(*, dcpa_lt(R1,R2,R3)).",
+        "modeb(*, dcpa_le(R1,R2,R3)).",
+
+
+    "modeb(*, tcpa_gt(R1,R2,R3)).",
+            "modeb(*, tcpa_ge(R1,R2,R3)).",
+            "modeb(*, tcpa_lt(R1,R2,R3)).",
+            "modeb(*, tcpa_le(R1,R2,R3)).",
+            
+    
+]
 
 K = [
  'ahead',
@@ -139,22 +99,37 @@ K = [
  'starboard_bow_forward',
  "aft", "forward",
  'n', 'nne', 'ne', 'ene', 'e', 'ese', 'se', 'sse', 's', 'ssw', 'sw', 'wsw', 'w', 'wnw', 'nw', 'nnw',
- "far","very_far", "middle","far", "near","middle",  "very_near","near", "long", "very_long", "medium", "short", "immediate", "large", "very_large", "moderate", "small", "insubstantial", 
- "no_risk", "port", "starboard", "safe",
-    "marginal",
+ "very_close",
     "close",
-    "very_close",
-    "critical",
-
+    "middle", "marginal",
+    "far", "near",
+    "very_far", "safe", "very_near", 
+    "short", "long", "medium", "opening", "imminent",  "starboard", "large", "port", "small", "opening", "dcpa_safe",
+    "critical", "no_risk", "imminent_close", "moderate"
 ]
 
 
 constraints={
         "starboard_forward": ["starboard", "forward",],  
         "port_forward":      ["port", "forward", ],     
-        #"range_actionable":["range"],
-        "collision_risk" : ["dcpa_unacceptable"],
-        "encounter_and_duty":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
+        "range_actionable":["range"],
+        "range":["sector"],
+        "encounter":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
+        "encounter_and_conduct":["sector", "aft", "forward", "ahead", "forward", "starboard_forward", "port_forward"],
+        "tcpa_closing": ["tcpa"],
+        "tcpa_closing": ["tcpa_ge", "tcpa_gt", "tcpa_le", "tcpa_lt"],
+        "tcpa_gt": ["tcpa"],
+        "tcpa_ge": ["tcpa"],
+        "tcpa_lt": ["tcpa"],
+        "tcpa_le": ["tcpa"],
+        "dcpa_gt": ["dcpa"],
+        "dcpa_ge": ["dcpa"],
+        "dcpa_lt": ["dcpa"],
+        "dcpa_le": ["dcpa"],
+        "range_gt": ["range"],
+        "range_ge": ["range"],
+        "range_lt": ["range"],
+        "range_le": ["range"],
 
     }
 
@@ -175,9 +150,6 @@ def return_substring(string):
     
     if pred in ["add_waypoint_bin"]:
         return "add_waypoint_bin"
-    
-    if pred in ["waypoint"]:
-        return "waypoint"
  
     
     return None   # explicit
@@ -220,7 +192,7 @@ def ground_facts_log_file(file_path, not_allowed=[]):
             for eachi in parts[1:]:
                 substring = return_substring(eachi)
                 #print(substring)
-                if  substring == "waypoint" :
+                if  substring == "add_waypoint" :
                     #print("I am here", substring, parts[0])
                     time = int(re.findall(r"\d+", parts[0])[0])
                     keys.append(time)
@@ -229,13 +201,21 @@ def ground_facts_log_file(file_path, not_allowed=[]):
                     #print("Replacing", substring, "with", eachi)
                     last_value = replace_starting_with(last_value, substring, eachi)
 
-            if contains_substring(last_value, "waypoint")  and  not(contains_substring(parts[1:], "waypoint")) :
-               
+
+
+            if contains_substring(last_value, "add_waypoint")  and  not(contains_substring(parts[1:], "add_waypoint")) :
                 #print("Removing add_waypoint_seg from last_value")
-                lst = [item for item in last_value if not item.startswith(tuple(["waypoint"]))]
+                lst = [item for item in last_value if not item.startswith(tuple(["add_waypoint"]))]
+            
+            
                 dict[key] = lst
             else:
-                dict[key] = last_value    
+                dict[key] = last_value
+
+
+            
+           
+                
     return dict, keys
 
 
@@ -271,7 +251,7 @@ def generate_facts_examples(state_list_pos1, keys, ex=1, print_facts=False, skip
             #print("\t", fact)
             
 
-            if "waypoint" in fact: #or "add_waypoint" in fact or "add_waypoint_bin" in fact:
+            if "add_waypoint" in fact: #or "add_waypoint" in fact or "add_waypoint_bin" in fact:
                 
                 positive_examples.append(fact)
             else:
@@ -287,15 +267,12 @@ def generate_facts_examples(state_list_pos1, keys, ex=1, print_facts=False, skip
     return facts_new, positive_examples
 
 
-def generate_bk_from_log(path, verbose=False, neg=False):
+def generate_bk_from_log(path, verbose=False):
     facts = []
     examples = []
     for count, eachpath in enumerate(path):
         state_list_pos_1, key_1 = ground_facts_log_file(eachpath)
-        if neg:
-            facts_new_1, examples_1 = generate_facts_examples(state_list_pos_1, key_1, ex=count+10, print_facts=verbose, skip_prefixes=[])
-        else:
-            facts_new_1, examples_1 = generate_facts_examples(state_list_pos_1, key_1, ex=count+1, print_facts=verbose, skip_prefixes=[])
+        facts_new_1, examples_1 = generate_facts_examples(state_list_pos_1, key_1, ex=count+1, print_facts=verbose, skip_prefixes=[])
 
         facts = facts+facts_new_1
         examples = examples + examples_1
@@ -563,342 +540,163 @@ def read_modes(file_path, strip_empty=True):
         else:
             return [line.rstrip("\n") for line in f]
         
-
-
-def simplify(file_name = "BK.pl", strings =[]):
-    #strings = P_inter[pos]
-    prefixes = ["range(", "tcpa(", "dcpa("]
-    remove_list = ["less_than(", "less_or_equal(", "greater_than(", "greater_or_equal(", "sector(",
-                   "port_forward", "port", "forward", "starboard"] 
-    result_1 = [s for s in strings if s.startswith(tuple(prefixes))]
-
-    
-    result = add_comparisons_from_bk(
-    literals=result_1,
-    bk_path=file_name,
-    include_original=True,
-    )
-
-    #print(result)
-    
-    result_2 = [
-    x for x in strings
-    if not any(x.startswith(prefix) for prefix in remove_list+prefixes)
-    ]
-    # print("---R2")
-    # print(result_2)
-    # print("---Res")
-    # print(result)
-    new_strings = result_2 + result
-
-    #print("\t", new_strings)
-   
-    return new_strings
-
-
-
-from collections import Counter
-from typing import Dict, List, Tuple
-
-
-
-import re
-from collections import Counter
-from typing import Dict, List, Set
-
-
-VARIABLE_PATTERN = re.compile(
-    r"\b(?:[A-Z][A-Za-z0-9_]*|_[A-Za-z0-9_]*)\b"
-)
-
-
-def extract_variables(literal: str) -> Set[str]:
-    """
-    Extract Prolog-style variables from a literal.
-
-    Examples:
-        range(A,B,R)              -> {'A', 'B', 'R'}
-        less_or_equal(R,middle)   -> {'R'}
-        actionable_range(A,B)     -> {'A', 'B'}
-    """
-    return set(VARIABLE_PATTERN.findall(literal))
-
-
-def remove_incomplete_literals(
-    bottom_clause: Dict[str, List[str]]
-) -> Dict[str, List[str]]:
-    """
-    Remove literals that introduce a variable which is not used
-    in any other literal.
-
-    Variables A and B are retained because they connect literals
-    throughout the bottom clause.
-
-    Example:
-        dcpa(A,B,D)
-
-    is removed when D occurs only in that literal.
-
-    Example:
-        range(A,B,R)
-        less_or_equal(R,middle)
-
-    are retained because R occurs in more than one literal.
-    """
-
-    cleaned_bottom_clause = {}
-
-    for head, literals in bottom_clause.items():
-
-        # Count in how many different literals each variable occurs.
-        variable_counts = Counter()
-
-        variables_per_literal = []
-
-        for literal in literals:
-            variables = extract_variables(literal)
-            variables_per_literal.append(variables)
-
-            for variable in variables:
-                variable_counts[variable] += 1
-
-        retained_literals = []
-
-        for literal, variables in zip(literals, variables_per_literal):
-
-            # Variables occurring in only one literal are dangling.
-            dangling_variables = {
-                variable
-                for variable in variables
-                if variable_counts[variable] == 1
-            }
-
-            if dangling_variables:
-                # print(
-                #     f"Removed: {literal} "
-                #     f"because {sorted(dangling_variables)} "
-                #     f"do not occur in another literal."
-                # )
-                continue
-
-            retained_literals.append(literal)
-
-        cleaned_bottom_clause[head] = retained_literals
-
-    return cleaned_bottom_clause
-
-
-
-def filter_comparison_literals(
-    P: Dict[str, List[str]],
-    N: Dict[str, List[str]],
-    threshold: int
-) -> Tuple[
-    Dict[str, List[str]],
-    Dict[str, List[str]],
-    Dict[str, List[str]],
-    Dict[str, Dict[str, int]]
-]:
-    """
-    Count comparison literals from each positive example in the negative
-    examples, then remove literals whose count is greater than threshold.
-
-    Parameters
-    ----------
-    P : dict
-        Positive examples and their literals.
-
-    N : dict
-        Negative examples and their literals.
-
-    threshold : int
-        Maximum allowed number of negative examples containing a literal.
-
-    Returns
-    -------
-    filtered_P : dict
-        Copy of P after removing comparison literals with count > threshold.
-
-    less_than_or_equal : dict
-        Comparison literals whose negative occurrence count <= threshold.
-
-    greater_than : dict
-        Comparison literals whose negative occurrence count > threshold.
-
-    literal_counts : dict
-        Negative occurrence count for each comparison literal.
-    """
-
-    comparison_predicates = (
-        "less_or_equal(",
-        "greater_or_equal(",
-    )
-
-    # Count each comparison literal once per negative example.
-    negative_literal_counts = Counter(
-        literal
-        for negative_literals in N.values()
-        for literal in set(negative_literals)
-        if literal.startswith(comparison_predicates)
-    )
-
-    literal_counts = {}
-    less_than_or_equal = {}
-    greater_than = {}
-    filtered_P = {}
-
-    for positive_example, positive_literals in P.items():
-
-        counts = {
-            literal: negative_literal_counts.get(literal, 0)
-            for literal in positive_literals
-            if literal.startswith(comparison_predicates)
-        }
-
-        literal_counts[positive_example] = counts
-
-        less_than_or_equal[positive_example] = [
-            literal
-            for literal, count in counts.items()
-            if count <= threshold
-        ]
-
-        greater_than[positive_example] = [
-            literal
-            for literal, count in counts.items()
-            if count > threshold
-        ]
-
-        remove_set = set(greater_than[positive_example])
-
-        filtered_P[positive_example] = [
-            literal
-            for literal in positive_literals
-            if literal not in remove_set
-        ]
-
-    cleaned_bottom_clause = remove_incomplete_literals(filtered_P)
-    #print(cleaned_bottom_clause)
-    return (
-        cleaned_bottom_clause,
-        less_than_or_equal,
-        greater_than,
-        literal_counts,
-    )
-
-
-
-
-
-
-def learn_rules(facts, pos_examples, neg_examples, bk_path, print_hs=True, print_h=True, seed_value=42,
-                threshold=1,  maximum_literals=5, exact_literals=False):
+def learn_rules(facts, pos_example,neg_example, bk_path, print_hs=True, print_h=True, seed_value=42):
     Hypothesis = []
     Hypothesis_space = []
+    P, N = pygol.bottom_clause_generation(file=facts,  
+                                        constant_set = K ,  
+                                        container = "memory",
+                                        positive_example=pos_example, 
+                                        negative_example=neg_example,tqdm_disable=True)
 
-    for eachpos in pos_examples:
     
-        P,N = pygol.bottom_clause_generation(file = facts,
-                                            constant_set = K,
-                                            container = "memory",
-                                            positive_example = [eachpos],
-                                            negative_example = neg_examples,
-                                            tqdm_disable = True)
 
-        
-      
-
-        P_inter = modify_bcrl_janus_from_bk(
+    P_inter = modify_bcrl_janus_from_bk(
             bk_path=bk_path,
             bottom_clause_dict=P,
             mode_declarations=mode_declarations,
             debug=False
+        )
+
+    # for i, j in P_inter.items():
+    #     print(i,j)
+    #     print()
+
+    N_inter = modify_bcrl_janus_from_bk(
+            bk_path=bk_path,
+            bottom_clause_dict=N,
+            mode_declarations=mode_declarations,
+            debug=False
+        )
+    # print("----")
+    # for i, j in N_inter.items():
+    #         print(i,j)
+
+    P1 = prune_bottom_clauses_from_file(
+            bk_file=bk_path,
+            bottom_clauses=P_inter,
+            verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
             )
-      
-        N_inter = modify_bcrl_janus_from_bk(
-                bk_path=bk_path,
-                bottom_clause_dict=N,
-                mode_declarations=mode_declarations,
-                debug=False
-                )
 
-        
+    N1 = prune_bottom_clauses_from_file(
+            bk_file=bk_path,
+            bottom_clauses=N_inter,
+            verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
+            )
 
-        
+    Train_P = {i:j for i,j in P1.items()}
+    Train_N = {i:j for i,j in N1.items()}
 
-        Train_P = {i:simplify(file_name=bk_path, strings=P_inter[i]) for i,j in P_inter.items()}
-        Train_N = {i:simplify(file_name=bk_path, strings=N_inter[i]) for i,j in N_inter.items()}
+
+
 
     
 
-
-        P1 = prune_bottom_clauses_from_file(
-                bk_file=bk_path,
-                bottom_clauses=Train_P,
-                verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
-                )
+    H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=3,  exact_literals=False, key_size=len(Train_P), min_pos=1, max_neg = 0, verbose=True, seed_value=seed_value)
 
 
-        N1 = prune_bottom_clauses_from_file(
-                bk_file=bk_path,
-                bottom_clauses=Train_N,
-                verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
-                )
 
-        threshold = threshold
-        
-        P_2, less_equal, greater, counts = filter_comparison_literals(
-                    P=P1,
-                    N=N1,
-                    threshold=threshold
-                )
-      
-        
-        Train_P = {i:j for i,j in P_2.items()}
-        Train_N = {i:j for i,j in N1.items()}
+    if print_hs:
+        print("\n" + "=" * 80)
+        print(f"HYPOTHESIS SPACE ({len(HS)} hypotheses)")
+        print("=" * 80)
 
-   
-       
-        length = len(next(iter(Train_P.values())))
+        for idx, h in enumerate(HS, start=1):
+            print(f"[{idx}]")
+            pretty_print_prolog(h)
 
-        
+        print("=" * 80)
+    if print_h:
+        print("\n" + "=" * 80)
+        print("HYPOTHESIS")
+        print("=" * 80)
+        for i in H:
+            pretty_print_prolog(i)
+            Hypothesis.append(i)
+            Hypothesis_space.append(HS)
+        print("\n" + "=" * 80)
 
-        if length>=maximum_literals:
-
-        
-
-            H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=maximum_literals,  exact_literals=exact_literals, distinct=False, key_size=len(Train_P),  min_pos=1, max_neg = len(Train_N), verbose=True, seed_value=seed_value)
-        else:
-            H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=length,  exact_literals=exact_literals, distinct=False, key_size=len(Train_P),  min_pos=1, max_neg = len(Train_N), verbose=True, seed_value=seed_value)
-
-
-        if print_hs:
-            print("\n" + "=" * 80)
-            print(f"HYPOTHESIS SPACE ({len(HS)} hypotheses)")
-            print("=" * 80)
-        
-            for idx, h in enumerate(HS, start=1):
-                print(f"[{idx}]")
-                pretty_print_prolog(h)
-        
-            print("=" * 80)
-        if print_h:
-            print("\n" + "=" * 80)
-            print("HYPOTHESIS")
-            print("=" * 80)
-            for i in H:
-                pretty_print_prolog(i)
-                Hypothesis.append(i)
-                Hypothesis_space.append(HS)
-            print("\n" + "=" * 80)
-        
-        else:
-            for i in H:
-                Hypothesis.append(i)
-                Hypothesis_space.append(HS)
-    
-    
+    else:
+        for i in H:
+            Hypothesis.append(i)
+            Hypothesis_space.append(HS)
     return Hypothesis, Hypothesis_space
+
+
+# def learn_rules(facts, examples, bk_path, print_hs=True, print_h=True, seed_value=42):
+#     Hypothesis = []
+#     Hypothesis_space = []
+#     for i, pos in enumerate(examples):
+#         neg = []
+#         for j, item in enumerate(examples):
+#             if i != j:
+#                 neg.append(item)
+
+#         P, N = pygol.bottom_clause_generation(file=facts,  
+#                                         constant_set = K ,  
+#                                         container = "memory",
+#                                         positive_example=[pos], 
+#                                         negative_example=neg,tqdm_disable=True)
+        
+
+#         P_inter = modify_bcrl_janus_from_bk(
+#         bk_path=bk_path,
+#         bottom_clause_dict=P,
+#         mode_declarations=mode_declarations,
+#         debug=False
+#     )
+        
+#         N_inter = modify_bcrl_janus_from_bk(
+#         bk_path=bk_path,
+#         bottom_clause_dict=N,
+#         mode_declarations=mode_declarations,
+#         debug=False
+#     )
+
+#         P1 = prune_bottom_clauses_from_file(
+#         bk_file=bk_path,
+#         bottom_clauses=P_inter,
+#         verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
+#         )
+
+#         N1 = prune_bottom_clauses_from_file(
+#         bk_file=bk_path,
+#         bottom_clauses=N_inter,
+#         verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
+#         )
+
+#         Train_P = {i:j for i,j in P1.items()}
+#         Train_N = {i:j for i,j in N1.items()}
+
+#         H, HS = pygol.pygol_learn_hypo_space(Train_P, Train_N,  constant_set = K,  max_literals=4,  exact_literals=True, distinct=False, key_size=len(Train_P), min_pos=1, max_neg = 1, verbose=True, seed_value=seed_value)
+
+        
+
+#         if print_hs:
+#             print("\n" + "=" * 80)
+#             print(f"HYPOTHESIS SPACE ({len(HS)} hypotheses)")
+#             print("=" * 80)
+
+#             for idx, h in enumerate(HS, start=1):
+#                 print(f"[{idx}]")
+#                 pretty_print_prolog(h)
+
+#             print("=" * 80)
+#         if print_h:
+#             print("\n" + "=" * 80)
+#             print("HYPOTHESIS")
+#             print("=" * 80)
+#             for i in H:
+#                 pretty_print_prolog(i)
+#                 Hypothesis.append(i)
+#                 Hypothesis_space.append(HS)
+#             print("\n" + "=" * 80)
+
+#         else:
+#             for i in H:
+#                 Hypothesis.append(i)
+#                 Hypothesis_space.append(HS)
+#     return Hypothesis, Hypothesis_space
 
 
 
@@ -933,7 +731,7 @@ def unify_predicates(predicates):
 
 
 
-
+ 
 # def generate_hypo(head,args):
 #     start=""
 #     for i in args:
@@ -1052,595 +850,205 @@ def merge_prolog_files(file1, file2, output_file):
             out.write(f2.read())
 
 
-import re
-from pathlib import Path
-from typing import Dict, List, Optional, Set, Tuple
 
-import janus_swi as janus
-
-
-# ---------------------------------------------------------------------
-# Configuration
-# ---------------------------------------------------------------------
-
-# Source predicate -> variable used for its ordered third argument
-ORDERED_PREDICATES = {
-    "range": "R",
-    "dcpa": "D",
-    "tcpa": "T",
-}
-
-COMPARISON_PREDICATES = [
-    "less_than",
-    "less_or_equal",
-    "greater_than",
-    "greater_or_equal",
-]
-
-
-# ---------------------------------------------------------------------
-# BK loading
-# ---------------------------------------------------------------------
-
-def consult_bk(bk_path: str) -> None:
+def extract_lines_by_predicate(file_path, predicate):
     """
-    Consult the Prolog background-knowledge file.
-    """
-
-    path = Path(bk_path).expanduser().resolve()
-
-    if not path.exists():
-        raise FileNotFoundError(f"BK file not found: {path}")
-
-    prolog_path = (
-        str(path)
-        .replace("\\", "/")
-        .replace("'", "\\'")
-    )
-
-    janus.query_once(f"consult('{prolog_path}')")
-
-
-# ---------------------------------------------------------------------
-# Prolog literal parsing
-# ---------------------------------------------------------------------
-
-def parse_prolog_literal(
-    literal: str,
-) -> Tuple[Optional[str], List[str]]:
-    """
-    Parse a simple Prolog literal.
-
-    Example
-    -------
-    range(A,B,far)
-
-    Returns
-    -------
-    ("range", ["A", "B", "far"])
-    """
-
-    literal = literal.strip().rstrip(".")
-
-    match = re.fullmatch(
-        r"([a-zA-Z_]\w*)\((.*)\)",
-        literal,
-    )
-
-    if not match:
-        return None, []
-
-    predicate = match.group(1)
-
-    arguments = [
-        argument.strip()
-        for argument in match.group(2).split(",")
-    ]
-
-    return predicate, arguments
-
-
-def make_prolog_literal(
-    predicate: str,
-    arguments: List[str],
-) -> str:
-    """
-    Construct a Prolog literal from a predicate and argument list.
-    """
-
-    return f"{predicate}({','.join(arguments)})"
-
-
-# ---------------------------------------------------------------------
-# Read ordering from BK
-# ---------------------------------------------------------------------
-
-def get_adjacency_edges() -> List[Tuple[str, str]]:
-    """
-    Read all less_and_adjacent(Smaller,Larger) relations from the BK.
+    Extract lines from a Prolog file that start with one predicate.
 
     Example:
-        less_and_adjacent(very_near,near)
-
-    means:
-        very_near < near
+        extract_lines_by_predicate("turn.pl", "turn_small")
     """
 
-    edges = []
+    matched_lines = []
 
-    for solution in janus.query(
-        "less_and_adjacent(Smaller,Larger)"
-    ):
-        smaller = str(solution["Smaller"])
-        larger = str(solution["Larger"])
+    with open(file_path, "r") as f:
+        for line in f:
+            line = line.strip()
 
-        edge = (smaller, larger)
+            if line.startswith(predicate + "("):
+                matched_lines.append(line)
 
-        if edge not in edges:
-            edges.append(edge)
-
-    return edges
+    return matched_lines
 
 
-def find_connected_component(
-    source_value: str,
-    edges: List[Tuple[str, str]],
-) -> Set[str]:
-    """
-    Find the ordered scale containing source_value.
 
-    This prevents range, DCPA, and TCPA values from being mixed.
-    """
+def learn_rules_muti_label(facts, pos_example,neg_example, bk_path, print_hs=True, print_h=True, seed_value=42, label_literal = 2, max_literals=3):
+    Hypothesis = []
+    Hypothesis_space = []
+    P, N = pygol.bottom_clause_generation(file=facts,  
+                                        constant_set = K ,  
+                                        container = "memory",
+                                        positive_example=pos_example, 
+                                        negative_example=neg_example,tqdm_disable=True)
+   
 
-    graph: Dict[str, Set[str]] = {}
-
-    for smaller, larger in edges:
-        graph.setdefault(smaller, set()).add(larger)
-        graph.setdefault(larger, set()).add(smaller)
-
-    if source_value not in graph:
-        return {source_value}
-
-    component: Set[str] = set()
-    stack = [source_value]
-
-    while stack:
-        current = stack.pop()
-
-        if current in component:
-            continue
-
-        component.add(current)
-
-        for neighbour in graph.get(current, set()):
-            if neighbour not in component:
-                stack.append(neighbour)
-
-    return component
-
-
-def build_ordered_scale(
-    source_value: str,
-    edges: List[Tuple[str, str]],
-) -> List[str]:
-    """
-    Build the complete ordered scale from smallest to largest.
-
-    Examples
-    --------
-    range:
-        very_near < near < middle < far < very_far
-
-    dcpa:
-        critical < very_close < close < marginal < safe
-
-    tcpa:
-        immediate < short < medium < long < very_long
-    """
-
-    component = find_connected_component(
-        source_value=source_value,
-        edges=edges,
-    )
-
-    next_value: Dict[str, str] = {}
-
-    incoming_count: Dict[str, int] = {
-        value: 0
-        for value in component
-    }
-
-    for smaller, larger in edges:
-        if smaller in component and larger in component:
-            next_value[smaller] = larger
-            incoming_count[larger] += 1
-
-    starts = [
-        value
-        for value in component
-        if incoming_count[value] == 0
-    ]
-
-    if not starts:
-        return []
-
-    current = starts[0]
-    ordered_scale = []
-
-    while current not in ordered_scale:
-        ordered_scale.append(current)
-
-        if current not in next_value:
-            break
-
-        current = next_value[current]
-
-    return ordered_scale
-
-
-# ---------------------------------------------------------------------
-# Generalise original source literals
-# ---------------------------------------------------------------------
-
-def generalise_source_literal(
-    literal: str,
-) -> str:
-    """
-    Replace the concrete third argument with its corresponding variable.
-
-    Examples
-    --------
-    range(A,B,far)
-        -> range(A,B,R)
-
-    dcpa(A,B,very_close)
-        -> dcpa(A,B,D)
-
-    tcpa(A,B,medium)
-        -> tcpa(A,B,T)
-    """
-
-    predicate, arguments = parse_prolog_literal(literal)
-
-    if predicate not in ORDERED_PREDICATES:
-        return literal.strip().rstrip(".")
-
-    if len(arguments) != 3:
-        return literal.strip().rstrip(".")
-
-    arguments[2] = ORDERED_PREDICATES[predicate]
-
-    return make_prolog_literal(
-        predicate=predicate,
-        arguments=arguments,
-    )
-
-
-def generalise_source_literals(
-    literals: List[str],
-) -> List[str]:
-    """
-    Generalise every supported source literal.
-    """
-
-    output = []
-
-    for literal in literals:
-        generalised = generalise_source_literal(literal)
-
-        if generalised not in output:
-            output.append(generalised)
-
-    return output
-
-
-# ---------------------------------------------------------------------
-# Generate comparison literals
-# ---------------------------------------------------------------------
-
-def generate_less_than_literals(
-    source_value: str,
-    variable: str,
-    ordered_scale: List[str],
-) -> List[str]:
-    """
-    Generate strict less_than literals.
-
-    For source_value='far' and variable='R':
-
-        less_than(very_near,R)
-        less_than(near,R)
-        less_than(middle,R)
-        less_than(R,very_far)
-    """
-
-    if source_value not in ordered_scale:
-        return []
-
-    index = ordered_scale.index(source_value)
-
-    smaller_values = ordered_scale[:index]
-    larger_values = ordered_scale[index + 1:]
-
-    output = []
-
-    for smaller in smaller_values:
-        output.append(
-            f"less_than({smaller},{variable})"
+    P_inter = modify_bcrl_janus_from_bk(
+            bk_path=bk_path,
+            bottom_clause_dict=P,
+            mode_declarations=mode_declarations,
+            debug=False
         )
 
-    for larger in larger_values:
-        output.append(
-            f"less_than({variable},{larger})"
-        )
-
-    return output
-
-
-def generate_less_or_equal_literals(
-    source_value: str,
-    variable: str,
-    ordered_scale: List[str],
-) -> List[str]:
-    """
-    Generate less_or_equal literals following the orientation
-    used in your current BK.
-
-    For source_value='far' and variable='R':
-
-        less_or_equal(R,middle)
-        less_or_equal(R,near)
-        less_or_equal(R,very_near)
-        less_or_equal(very_far,R)
-    """
-
-    if source_value not in ordered_scale:
-        return []
-
-    index = ordered_scale.index(source_value)
-
-    smaller_values = ordered_scale[:index]
-    larger_values = ordered_scale[index + 1:]
-
-    output = []
-
-    # Observed value is on the left
-    for smaller in reversed(smaller_values):
-        output.append(
-            f"less_or_equal({variable},{smaller})"
-        )
-
-    # Observed value is on the right
-    for larger in larger_values:
-        output.append(
-            f"less_or_equal({larger},{variable})"
-        )
-
-    return output
-
-
-def generate_greater_than_literals(
-    source_value: str,
-    variable: str,
-    ordered_scale: List[str],
-) -> List[str]:
-    """
-    Generate strict greater_than literals.
-
-    For source_value='far' and variable='R':
-
-        greater_than(R,middle)
-        greater_than(R,near)
-        greater_than(R,very_near)
-        greater_than(very_far,R)
-    """
-
-    if source_value not in ordered_scale:
-        return []
-
-    index = ordered_scale.index(source_value)
-
-    smaller_values = ordered_scale[:index]
-    larger_values = ordered_scale[index + 1:]
-
-    output = []
-
-    for smaller in reversed(smaller_values):
-        output.append(
-            f"greater_than({variable},{smaller})"
-        )
-
-    for larger in larger_values:
-        output.append(
-            f"greater_than({larger},{variable})"
-        )
     
-    return output
 
-
-def generate_greater_or_equal_literals(
-    source_value: str,
-    variable: str,
-    ordered_scale: List[str],
-) -> List[str]:
-    """
-    Generate greater_or_equal literals.
-
-    For source_value='far' and variable='R':
-
-        greater_or_equal(R,middle)
-        greater_or_equal(R,near)
-        greater_or_equal(R,very_near)
-        greater_or_equal(very_far,R)
-    """
-
-    if source_value not in ordered_scale:
-        return []
-
-    index = ordered_scale.index(source_value)
-
-    smaller_values = ordered_scale[:index]
-    larger_values = ordered_scale[index + 1:]
-
-    output = []
-
-    for smaller in reversed(smaller_values):
-        output.append(
-            f"greater_or_equal({variable},{smaller})"
+    N_inter = modify_bcrl_janus_from_bk(
+            bk_path=bk_path,
+            bottom_clause_dict=N,
+            mode_declarations=mode_declarations,
+            debug=False
         )
 
-    for larger in larger_values:
-        output.append(
-            f"greater_or_equal({larger},{variable})"
-        )
-
-    return output
 
 
-def generate_comparisons_for_value(
-    source_value: str,
-    variable: str,
-    edges: List[Tuple[str, str]],
-) -> List[str]:
-    """
-    Generate all comparison literals for one source value.
-    """
+    
 
-    ordered_scale = build_ordered_scale(
-        source_value=source_value,
-        edges=edges,
+    P1 = prune_bottom_clauses_from_file(
+            bk_file=bk_path,
+            bottom_clauses=P_inter,
+            verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
+            )
+
+    N1 = prune_bottom_clauses_from_file(
+            bk_file=bk_path,
+            bottom_clauses=N_inter,
+            verbose=False,  explicit_constraints=  constraints      # set True to see why each literal was removed/kept
+            )
+
+    Train_P = {i:j for i,j in P1.items()}
+    Train_N = {i:j for i,j in N1.items()}
+
+    # print(Train_P)
+    # print(Train_N)
+
+    # print("positive examples:", len(Train_P))
+    # for key, value in Train_P.items():
+    #     print(f"{key}: {value}")
+    # print("negative examples:", len(Train_N))
+    # for key, value in Train_N.items():
+    #     print(f"{key}: {value}")
+
+    
+    
+
+    results = pygol.pygol_learn_multiclass_hypo_space(
+        positive_bc=Train_P,
+        negative_bc=Train_N,
+        file="BK.pl",
+        min_pos=1,
+        max_neg=0,
+        max_literals=max_literals,
+        exact_literals=False,
+        key_size="all",
+        seed_value=seed_value,
+        label_index=label_literal,
+        distinct=True,
+        all_explicit_negatives=False
     )
 
-    if not ordered_scale:
-        print(
-            f"No ordered scale found for value: "
-            f"{source_value}"
-        )
-        return []
+    H_all = pygol.get_all_hypotheses(results)
 
-    output = []
 
-    groups = [
-        generate_less_than_literals(
-            source_value=source_value,
-            variable=variable,
-            ordered_scale=ordered_scale,
-        ),
-        generate_less_or_equal_literals(
-            source_value=source_value,
-            variable=variable,
-            ordered_scale=ordered_scale,
-        ),
-        generate_greater_than_literals(
-            source_value=source_value,
-            variable=variable,
-            ordered_scale=ordered_scale,
-        ),
-        generate_greater_or_equal_literals(
-            source_value=source_value,
-            variable=variable,
-            ordered_scale=ordered_scale,
-        ),
+    return H_all
+
+
+
+
+
+from collections import defaultdict
+
+def remove_conflicting_examples(examples):
+    grouped = defaultdict(set)
+
+    for example in examples:
+        parts = example.strip().removeprefix("cpa_side(").removesuffix(").").split(",")
+        agent, vessel, side = parts
+        grouped[(agent, vessel)].add(side)
+
+    return [
+        example for example in examples
+        if len(grouped[tuple(
+            example.removeprefix("cpa_side(").removesuffix(").").split(",")[:2]
+        )]) == 1
     ]
 
-    for group in groups:
-        for literal in group:
-            if literal not in output:
-                output.append(literal)
-
-    return output
 
 
-# ---------------------------------------------------------------------
-# Main function
-# ---------------------------------------------------------------------
+from pathlib import Path
+import yaml
 
-def add_comparisons_from_bk(
-    literals: List[str],
-    bk_path: str,
-    include_original: bool = True,
-) -> List[str]:
+
+def merge_yaml(existing, new):
+    """Recursively merge YAML dictionaries and lists."""
+
+    if isinstance(existing, dict) and isinstance(new, dict):
+        for key, value in new.items():
+            if key in existing:
+                existing[key] = merge_yaml(existing[key], value)
+            else:
+                existing[key] = value
+        return existing
+
+    if isinstance(existing, list) and isinstance(new, list):
+        return existing + new
+
+    return new
+
+
+def combine_yaml_files(input_folder, output_file="combined.yaml"):
     """
-    Consult the BK, generalise range/dcpa/tcpa literals, and generate
-    complete comparison literals.
+    Combine all YAML files in a folder into one YAML file.
 
-    Input example
-    -------------
-    [
-        "range(A,B,far)",
-        "dcpa(A,B,very_close)",
-        "tcpa(A,B,medium)"
-    ]
+    Args:
+        input_folder (str): Folder containing YAML files.
+        output_file (str): Path to the combined YAML file.
 
-    Output starts with
-    ------------------
-    [
-        "range(A,B,R)",
-        "dcpa(A,B,D)",
-        "tcpa(A,B,T)",
-        ...
-    ]
+    Returns:
+        dict or list: Combined YAML data.
     """
 
-    consult_bk(bk_path)
+    folder = Path(input_folder)
+    output = Path(output_file).resolve()
 
-    edges = get_adjacency_edges()
+    yaml_files = sorted(
+        file for file in folder.iterdir()
+        if file.is_file()
+        and file.suffix.lower() in (".yaml", ".yml")
+        and file.resolve() != output
+    )
 
-    if include_original:
-        output = generalise_source_literals(literals)
-    else:
-        output = []
+    combined_data = None
 
-    for literal in literals:
-        source_predicate, arguments = parse_prolog_literal(
-            literal
-        )
+    for yaml_file in yaml_files:
+        with open(yaml_file, "r", encoding="utf-8") as f:
+            data = yaml.safe_load(f)
 
-        if source_predicate not in ORDERED_PREDICATES:
+        if data is None:
             continue
 
-        if len(arguments) != 3:
-            continue
+        if combined_data is None:
+            combined_data = data
+        else:
+            combined_data = merge_yaml(combined_data, data)
 
-        source_value = arguments[2]
-        variable = ORDERED_PREDICATES[source_predicate]
+    if combined_data is None:
+        return None
 
-        generated_literals = generate_comparisons_for_value(
-            source_value=source_value,
-            variable=variable,
-            edges=edges,
+    output.parent.mkdir(parents=True, exist_ok=True)
+
+    with open(output, "w", encoding="utf-8") as f:
+        yaml.safe_dump(
+            combined_data,
+            f,
+            default_flow_style=False,
+            sort_keys=False,
+            allow_unicode=True
         )
 
-        for generated_literal in generated_literals:
-            if generated_literal not in output:
-                output.append(generated_literal)
+    print(f"Combined {len(yaml_files)} YAML files into {output}")
 
-    return output
+    return combined_data
 
 
-# ---------------------------------------------------------------------
-# Example
-# ---------------------------------------------------------------------
 
-#if __name__ == "__main__":
 
-    # input_literals = [
-    #     "range(A,B,far)",
-    #     "dcpa(A,B,very_close)",
-    #     "tcpa(A,B,medium)",
-    # ]
 
-    # result = add_comparisons_from_bk(
-    #     literals=input_literals,
-    #     bk_path="BK.pl",
-    #     include_original=True,
-    # )
-
-    # print("\nGenerated literals")
-    # print("=" * 80)
-
-    # for literal in result:
-    #     print(literal)
-
-    # print("=" * 80)
-    # print(f"Total literals: {len(result)}")

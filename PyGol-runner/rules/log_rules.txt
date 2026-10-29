@@ -1,0 +1,224 @@
+% Timestamp: 2026-10-22 19:34:38.243498
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-22 19:39:39.218023
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-22 19:41:23.873497
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-27 17:05:26.450333
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-28 13:42:02.472787
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-28 17:02:51.496699
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+
+% Timestamp: 2026-10-28 17:37:03.592970
+% Rules for take_action
+take_action(A):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_must_act).
+take_action(A):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters(A,B),tcpa_le(A,B,imminent),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule17_standon_may_act).
+take_action(A):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+take_action(A):-encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+take_action(A):-range(B,A,very_near),tcpa_ge(A,B,short),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+
+% Rules for turning_magnitude
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).
+
+% Rules for avoid
+avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
+avoid(A,B,short_close):-port_forward(A,B).
+
+% Rules for resume
+resume(A,B,no_risk):-dcpa_lt(A,B,safe).
+
+% Rules for side
+cpa_side(A,B,port):-dcpa_lt(A,B,safe).
+cpa_side(A,B,starboard):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+cpa_side(A,B,starboard):-close_quarters(A,B),dcpa_ge(A,B,critical),range(B,A,near).
+cpa_side(A,B,starboard):-close_quarters(A,B),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway),range(B,A,very_near).
+cpa_side(A,B,starboard):-tcpa_closing(A,B),tcpa_ge(A,B,long).
+

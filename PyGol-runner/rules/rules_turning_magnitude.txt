@@ -1,0 +1,5 @@
+turn(A,large):-close_quarters(A,B).
+turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
+turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,small):-range_gt(A,B,far).

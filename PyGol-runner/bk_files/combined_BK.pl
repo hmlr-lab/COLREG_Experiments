@@ -1,0 +1,467 @@
+sector(agent_0,vessel_0,starboard_bow_forward).
+range(agent_0,vessel_0,very_far).
+dcpa(agent_0,vessel_0,critical).
+tcpa(agent_0,vessel_0,long).
+sector(vessel_0,agent_0,port_bow_broad).
+range(vessel_0,agent_0,very_far).
+dcpa(vessel_0,agent_0,critical).
+tcpa(vessel_0,agent_0,long).
+sector(agent_1,vessel_1,starboard_bow_forward).
+range(agent_1,vessel_1,middle).
+dcpa(agent_1,vessel_1,critical).
+tcpa(agent_1,vessel_1,short).
+sector(vessel_1,agent_1,port_bow_broad).
+range(vessel_1,agent_1,middle).
+dcpa(vessel_1,agent_1,critical).
+tcpa(vessel_1,agent_1,short).
+sector(agent_2,vessel_2,starboard_bow_forward).
+range(agent_2,vessel_2,far).
+dcpa(agent_2,vessel_2,critical).
+tcpa(agent_2,vessel_2,medium).
+sector(vessel_2,agent_2,port_bow_broad).
+range(vessel_2,agent_2,far).
+dcpa(vessel_2,agent_2,critical).
+tcpa(vessel_2,agent_2,medium).
+sector(agent_3,vessel_3,starboard_bow_forward).
+range(agent_3,vessel_3,very_near).
+dcpa(agent_3,vessel_3,critical).
+tcpa(agent_3,vessel_3,imminent).
+sector(vessel_3,agent_3,port_bow_broad).
+range(vessel_3,agent_3,very_near).
+dcpa(vessel_3,agent_3,critical).
+tcpa(vessel_3,agent_3,imminent).
+sector(agent_4,vessel_4,port_bow_broad).
+range(agent_4,vessel_4,very_far).
+dcpa(agent_4,vessel_4,critical).
+tcpa(agent_4,vessel_4,long).
+sector(vessel_4,agent_4,starboard_bow_broad).
+range(vessel_4,agent_4,very_far).
+dcpa(vessel_4,agent_4,critical).
+tcpa(vessel_4,agent_4,long).
+sector(agent_5,vessel_5,port_bow_broad).
+range(agent_5,vessel_5,far).
+dcpa(agent_5,vessel_5,critical).
+tcpa(agent_5,vessel_5,medium).
+sector(vessel_5,agent_5,starboard_bow_broad).
+range(vessel_5,agent_5,far).
+dcpa(vessel_5,agent_5,critical).
+tcpa(vessel_5,agent_5,medium).
+sector(agent_6,vessel_6,port_bow_broad).
+range(agent_6,vessel_6,middle).
+dcpa(agent_6,vessel_6,critical).
+tcpa(agent_6,vessel_6,short).
+sector(vessel_6,agent_6,starboard_bow_broad).
+range(vessel_6,agent_6,middle).
+dcpa(vessel_6,agent_6,critical).
+tcpa(vessel_6,agent_6,short).
+sector(agent_7,vessel_7,port_bow_broad).
+range(agent_7,vessel_7,very_near).
+dcpa(agent_7,vessel_7,critical).
+tcpa(agent_7,vessel_7,imminent).
+sector(vessel_7,agent_7,starboard_bow_broad).
+range(vessel_7,agent_7,very_near).
+dcpa(vessel_7,agent_7,critical).
+tcpa(vessel_7,agent_7,imminent).
+sector(agent_8,vessel_8,ahead).
+range(agent_8,vessel_8,very_far).
+dcpa(agent_8,vessel_8,critical).
+tcpa(agent_8,vessel_8,long).
+sector(vessel_8,agent_8,ahead).
+range(vessel_8,agent_8,very_far).
+dcpa(vessel_8,agent_8,critical).
+tcpa(vessel_8,agent_8,long).
+sector(agent_9,vessel_9,ahead).
+range(agent_9,vessel_9,very_far).
+dcpa(agent_9,vessel_9,critical).
+tcpa(agent_9,vessel_9,medium).
+sector(vessel_9,agent_9,ahead).
+range(vessel_9,agent_9,very_far).
+dcpa(vessel_9,agent_9,critical).
+tcpa(vessel_9,agent_9,medium).
+sector(agent_10,vessel_10,ahead).
+range(agent_10,vessel_10,middle).
+dcpa(agent_10,vessel_10,critical).
+tcpa(agent_10,vessel_10,short).
+sector(vessel_10,agent_10,ahead).
+range(vessel_10,agent_10,middle).
+dcpa(vessel_10,agent_10,critical).
+tcpa(vessel_10,agent_10,short).
+sector(agent_11,vessel_11,ahead).
+range(agent_11,vessel_11,middle).
+dcpa(agent_11,vessel_11,critical).
+tcpa(agent_11,vessel_11,long).
+sector(vessel_11,agent_11,astern).
+arc_overtaking(agent_11,vessel_11).
+range(vessel_11,agent_11,middle).
+dcpa(vessel_11,agent_11,critical).
+tcpa(vessel_11,agent_11,long).
+sector(agent_12,vessel_12,ahead).
+range(agent_12,vessel_12,near).
+dcpa(agent_12,vessel_12,critical).
+tcpa(agent_12,vessel_12,medium).
+sector(vessel_12,agent_12,astern).
+arc_overtaking(agent_12,vessel_12).
+range(vessel_12,agent_12,near).
+dcpa(vessel_12,agent_12,critical).
+tcpa(vessel_12,agent_12,medium).
+sector(agent_13,vessel_13,ahead).
+range(agent_13,vessel_13,very_near).
+dcpa(agent_13,vessel_13,critical).
+tcpa(agent_13,vessel_13,short).
+sector(vessel_13,agent_13,astern).
+arc_overtaking(agent_13,vessel_13).
+range(vessel_13,agent_13,very_near).
+dcpa(vessel_13,agent_13,critical).
+tcpa(vessel_13,agent_13,short).
+sector(agent_14,vessel_14,ahead).
+range(agent_14,vessel_14,very_near).
+dcpa(agent_14,vessel_14,critical).
+tcpa(agent_14,vessel_14,imminent).
+sector(vessel_14,agent_14,astern).
+arc_overtaking(agent_14,vessel_14).
+range(vessel_14,agent_14,very_near).
+dcpa(vessel_14,agent_14,critical).
+tcpa(vessel_14,agent_14,imminent).
+sector(agent_15,vessel_15,starboard_beam_forward).
+range(agent_15,vessel_15,far).
+dcpa(agent_15,vessel_15,safe).
+tcpa(agent_15,vessel_15,imminent).
+sector(vessel_15,agent_15,starboard_bow_broad).
+range(vessel_15,agent_15,far).
+dcpa(vessel_15,agent_15,safe).
+tcpa(vessel_15,agent_15,imminent).
+
+
+:- style_check(-discontiguous).
+:- set_prolog_flag(verbose, silent).
+
+:- abolish(port_forward/2).
+:- abolish(port_aft/2).
+:- abolish(starboard_forward/2).
+:- abolish(starboard_aft/2).
+:- abolish(port/2).
+:- abolish(starboard/2).
+:- abolish(forward/2).
+:- abolish(aft/2).
+:- abolish(dcpa_unsafe/2).
+:- abolish(dcpa_safe/2).
+:- abolish(tcpa_closing/2).
+:- abolish(range_actionable/2).
+:- abolish(time_ample/2).
+:- abolish(risk_collision/2).
+:- abolish(close_quarters_developing/2).
+:- abolish(close_quarters/2).
+:- abolish(encounter/3).
+:- abolish(encounter_and_duty/4).
+:- abolish(conduct/3).
+:- abolish(rule2_extremis/2).
+:- abolish(less_and_adjacent/2).
+:- abolish(less_than/2).
+:- abolish(less_or_equal/2).
+:- abolish(greater_than/2).
+:- abolish(greater_or_equal/2).
+:- abolish(dcpa_acceptable/2).
+:- abolish(dcpa_unacceptable/2).
+:- abolish(ample_time/2).
+:- abolish(is_range/1).
+:- abolish(is_dcpa/1).
+:- abolish(is_tcpa/1).
+:- abolish(actionable_range/2).
+:- abolish(collision_risk/2).
+:- abolish(mutual_ahead/2).
+
+
+:- dynamic sector/3.
+:- dynamic range/3.
+:- dynamic dcpa/3.
+:- dynamic tcpa/3.
+:- dynamic bearing/3.
+:- dynamic distance/3.
+:- dynamic arc_overtaking/2.
+:- dynamic status/2.
+:- dynamic waterway/2.
+:- dynamic constraint_draught/1.
+:- dynamic clock/1.
+:- dynamic port_forward/2.
+:- dynamic port_aft/2.
+:- dynamic starboard_forward/2.
+:- dynamic starboard_aft/2.
+:- dynamic port/2.
+:- dynamic starboard/2.
+:- dynamic forward/2.
+:- dynamic aft/2.
+:- dynamic dcpa_unsafe/2.
+:- dynamic dcpa_safe/2.
+:- dynamic tcpa_closing/2.
+:- dynamic range_actionable/2.
+:- dynamic time_ample/3.
+:- dynamic risk_collision/2.
+:- dynamic close_quarters_developing/2.
+:- dynamic close_quarters/2.
+:- dynamic encounter/3.
+:- dynamic encounter_and_conduct/4.
+:- dynamic duty/4.
+:- dynamic extremis_override/2.
+:- dynamic cites/2.
+:- dynamic less_and_adjacent/2.
+:- dynamic less_than/2.
+:- dynamic less_or_equal/2.
+:- dynamic greater_than/2.
+:- dynamic greater_or_equal/2.
+:- dynamic cpa_acceptable/2.
+:- dynamic greater_than/2.
+:- dynamic greater_or_equal/2.
+:- dynamic less_and_adjacent/2. 
+
+
+:- discontiguous less_and_adjacent/2.
+:- discontiguous greater_or_equal/2.
+:- discontiguous greater_than/2.
+:- discontiguous less_than/2.
+:- discontiguous less_or_equal/2. 
+
+%  GEOMETRIC ABSTRACTION
+port_forward(X,Y)      :- sector(X,Y,port_bow_forward).
+port_forward(X,Y)      :- sector(X,Y,port_bow_broad).
+port_forward(X,Y)      :- sector(X,Y,port_beam_forward).
+port_aft(X,Y)          :- sector(X,Y,port_beam_aft).
+port_aft(X,Y)          :- sector(X,Y,port_quarter_broad).
+port_aft(X,Y)          :- sector(X,Y,port_quarter_aft).
+starboard_forward(X,Y) :- sector(X,Y,starboard_bow_forward).
+starboard_forward(X,Y) :- sector(X,Y,starboard_bow_broad).
+starboard_forward(X,Y) :- sector(X,Y,starboard_beam_forward).
+starboard_aft(X,Y)     :- sector(X,Y,starboard_beam_aft).
+starboard_aft(X,Y)     :- sector(X,Y,starboard_quarter_broad).
+starboard_aft(X,Y)     :- sector(X,Y,starboard_quarter_aft).
+
+port(X,Y)      :- port_forward(X,Y).
+port(X,Y)      :- port_aft(X,Y).
+port(X,Y)      :- sector(X,Y,port_beam).
+starboard(X,Y) :- starboard_forward(X,Y).
+starboard(X,Y) :- starboard_aft(X,Y).
+starboard(X,Y) :- sector(X,Y,starboard_beam).
+forward(X,Y)   :- port_forward(X,Y).
+forward(X,Y)   :- starboard_forward(X,Y).
+forward(X,Y)   :- sector(X,Y,ahead).
+aft(X,Y)       :- port_aft(X,Y).
+aft(X,Y)       :- starboard_aft(X,Y).
+aft(X,Y)       :- sector(X,Y,astern).
+
+
+% ORDERINGS
+
+% range
+less_and_adjacent(far,very_far).
+less_and_adjacent(middle,far).
+less_and_adjacent(near,middle).
+less_and_adjacent(very_near,near).
+
+% tcpa
+less_and_adjacent(long,very_long).
+less_and_adjacent(medium,long).
+less_and_adjacent(short,medium).
+less_and_adjacent(imminent,short).
+
+% dcpa
+less_and_adjacent(marginal,safe).
+less_and_adjacent(close,marginal).
+less_and_adjacent(very_close,close).
+less_and_adjacent(critical,very_close).
+
+% turn magnitude
+less_and_adjacent(large,very_large).
+less_and_adjacent(moderate,large).
+less_and_adjacent(small,moderate).
+less_and_adjacent(insubstantial,small).
+
+% Avoid Resume Risks
+less_and_adjacent(no_risk, risk_developing).
+less_and_adjacent(risk_developing, medium_close).
+less_and_adjacent(medium_close, medium_veryclose).
+less_and_adjacent(medium_veryclose, medium_critical).
+less_and_adjacent(medium_critical, short_close).
+less_and_adjacent(short_close, short_veryclose).
+less_and_adjacent(short_veryclose, short_critical).
+less_and_adjacent(short_critical, imminent_close).
+less_and_adjacent(imminent_close, imminent_veryclose).
+less_and_adjacent(imminent_veryclose, imminent_critical).
+
+
+% ============================================================
+% DOMAIN OF ORDERED VALUES
+% ============================================================
+
+order_value(X) :-
+    less_and_adjacent(X,_).
+
+order_value(X) :-
+    less_and_adjacent(_,X).
+
+
+% ============================================================
+% STRICT ORDERING
+% ============================================================
+
+less_than(X,Y) :-
+    less_and_adjacent(X,Z),
+    less_than(Z,Y).
+
+less_than(X,Y) :-
+    less_and_adjacent(X,Y).
+
+
+greater_than(X,Y) :-
+    less_and_adjacent(Z,X),
+    greater_than(Z,Y).
+
+greater_than(X,Y) :-
+    less_and_adjacent(Y,X).
+
+
+% ============================================================
+% NON-STRICT ORDERING
+% ============================================================
+
+less_or_equal(X,X) :-
+    order_value(X).
+
+less_or_equal(X,Y) :-
+    less_than(X,Y).
+
+
+greater_or_equal(X,X) :-
+    order_value(X).
+
+greater_or_equal(X,Y) :-
+    greater_than(X,Y).
+
+
+
+
+range_gt(X,Y,A):-
+    range(X,Y,B),
+    greater_than(B,A).
+range_ge(X,Y,A):-
+    range(X,Y,B),
+    greater_or_equal(B,A).
+range_lt(X,Y,A):-
+    range(X,Y,B),
+    less_than(B,A).
+range_le(X,Y,A):-
+    range(X,Y,B),
+    less_or_equal(B,A).
+
+
+dcpa_gt(X,Y,A):-
+    dcpa(X,Y,B),
+    greater_than(B,A).
+dcpa_ge(X,Y,A):-
+    dcpa(X,Y,B),
+    greater_or_equal(B,A).
+dcpa_lt(X,Y,A):-
+    dcpa(X,Y,B),
+    less_than(B,A).
+dcpa_le(X,Y,A):-
+    dcpa(X,Y,B),
+    less_or_equal(B,A).
+
+tcpa_gt(X,Y,A):-
+    tcpa(X,Y,B),
+    greater_than(B,A).
+tcpa_ge(X,Y,A):-
+    tcpa(X,Y,B),
+    greater_or_equal(B,A).
+tcpa_lt(X,Y,A):-
+    tcpa(X,Y,B),
+    less_than(B,A).
+tcpa_le(X,Y,A):-
+    tcpa(X,Y,B),
+    less_or_equal(B,A).
+
+
+%  CONCEPTUAL GROUPINGS
+
+dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
+dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
+dcpa_unacceptable(X,Y) :- not(dcpa_acceptable(X,Y)).
+
+tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
+
+actionable_range(X,Y) :- not(range(X,Y,very_far)).
+
+
+%  ample_time  (Rule 8(a))
+
+ample_time(X,Y)    :- tcpa(X,Y,medium).
+ample_time(X,Y)    :- tcpa(X,Y,long).
+ample_time(X,Y)    :- tcpa(X,Y,very_long).
+
+
+
+%  RISK OF COLLISION (Rule 7)
+
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,short).
+collision_risk(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,medium).
+
+
+%  CLOSE-QUARTERS SITUATION (Rule 8)
+
+close_quarters_developing(X,Y) :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,far).
+close_quarters_developing(X,Y) :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,middle).
+close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,near).
+close_quarters(X,Y)            :- dcpa_unacceptable(X,Y), tcpa_closing(X,Y), range(X,Y,very_near).
+
+
+%  ENCOUNTER  (three types, one per pair) - the finding of fact
+
+encounter(X,Y,rule13_overtaking) :-
+    collision_risk(X,Y),
+    arc_overtaking(X,Y).
+
+encounter(X,Y,rule14_head_on) :-
+    collision_risk(X,Y),
+    mutual_ahead(X,Y),
+    not(arc_overtaking(X,Y)),
+    not(arc_overtaking(Y,X)).
+
+encounter(X,Y,rule15_crossing) :-
+    collision_risk(X,Y),
+    not(arc_overtaking(X,Y)),
+    not(arc_overtaking(Y,X)),
+    not(mutual_ahead(X,Y)).
+
+mutual_ahead(X,Y):-
+    sector(X,Y,ahead),
+    sector(Y,X,ahead).
+
+
+%  ENCOUNTER + CONDUCT  (Own, Target, Encounter, Conduct) - the conclusion of law
+encounter_and_conduct(X,Y,rule13_overtaking,rule16_giveway) :- encounter(X,Y,rule13_overtaking).   % X overtakes Y
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_maintain) :- encounter(Y,X,rule13_overtaking), ample_time(X,Y).   % Y overtakes X
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_may_act) :- encounter(Y,X,rule13_overtaking), tcpa(X,Y,short).   % Y overtakes X
+encounter_and_conduct(X,Y,rule13_overtaking,rule17_standon_must_act) :- encounter(Y,X,rule13_overtaking), tcpa(X,Y,imminent).   % Y overtakes X
+encounter_and_conduct(X,Y,rule14_head_on,rule16_giveway)    :- encounter(X,Y,rule14_head_on).        % head-on: mutual
+encounter_and_conduct(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), starboard(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule16_giveway)   :- encounter(X,Y,rule15_crossing), port(Y,X).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_maintain)   :- encounter(X,Y,rule15_crossing), port(X,Y), ample_time(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_maintain)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), ample_time(X,Y).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_may_act)   :- encounter(X,Y,rule15_crossing), port(X,Y), tcpa(X,Y,short).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_may_act)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), tcpa(X,Y,short).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_must_act)   :- encounter(X,Y,rule15_crossing), port(X,Y), tcpa(X,Y,imminent).
+encounter_and_conduct(X,Y,rule15_crossing,rule17_standon_must_act)   :- encounter(X,Y,rule15_crossing), starboard(Y,X), tcpa(X,Y,imminent).
+
+
+%  DUTY 
+duty(X,Y,rule16_giveway) :- encounter_and_conduct(X,Y,_,rule16_giveway).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_maintain).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_may_act).
+duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_must_act).
+
+
+%  EMERGENCY  - in extremis, departure from any rule; encounter-agnostic (Rule 2(b))
+
+rule2_extremis(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
+%might be a cleaner way to do this
+
+

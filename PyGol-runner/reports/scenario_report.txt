@@ -1,0 +1,315 @@
+JANUS / PYGOL SCENARIO EVALUATION
+BK: BK.pl
+Hypotheses: current_combined_rules.txt
+Scenarios: 16
+
+========================================================================
+Scenario: crossing1_1.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): TRUE
+  turn(agent,small).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+  cpa_side(agent,vessel1,starboard).
+
+========================================================================
+Scenario: crossing1_2.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: crossing1_3.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: crossing1_4.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,large).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,cruiseliner1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,cruiseliner1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,cruiseliner1,port).
+
+========================================================================
+Scenario: crossing2_1.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+  turn(agent,small).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+  avoid(agent,vessel1,short_close).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+  cpa_side(agent,vessel1,starboard).
+
+========================================================================
+Scenario: crossing2_2.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+  avoid(agent,vessel1,short_close).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: crossing2_3.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+  avoid(agent,vessel1,short_close).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: crossing2_4.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,large).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,cruiseliner1,no_risk).
+  avoid(agent,cruiseliner1,short_close).
+
+resume(agent,B,C): TRUE
+  resume(agent,cruiseliner1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,cruiseliner1,port).
+
+========================================================================
+Scenario: headon1_1.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): TRUE
+  turn(agent,small).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,cruiseliner1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,cruiseliner1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,cruiseliner1,port).
+  cpa_side(agent,cruiseliner1,starboard).
+
+========================================================================
+Scenario: headon1_2.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+  turn(agent,small).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: headon1_3.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+
+========================================================================
+Scenario: overtaking1_1.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): TRUE
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+  cpa_side(agent,vessel1,starboard).
+
+========================================================================
+Scenario: overtaking1_2.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,large).
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+  cpa_side(agent,vessel1,starboard).
+
+========================================================================
+Scenario: overtaking1_3.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,large).
+  turn(agent,moderate).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,vessel1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,vessel1,port).
+  cpa_side(agent,vessel1,starboard).
+
+========================================================================
+Scenario: overtaking1_4.pl
+========================================================================
+
+take_action(agent): TRUE
+  take_action(agent).
+
+turn(agent,B): TRUE
+  turn(agent,large).
+
+avoid(agent,B,C): TRUE
+  avoid(agent,cruiseliner1,no_risk).
+
+resume(agent,B,C): TRUE
+  resume(agent,cruiseliner1,no_risk).
+
+cpa_side(agent,B,C): TRUE
+  cpa_side(agent,cruiseliner1,port).
+  cpa_side(agent,cruiseliner1,starboard).
+
+========================================================================
+Scenario: passing1_1.pl
+========================================================================
+
+take_action(agent): FALSE
+
+turn(agent,B): FALSE
+
+avoid(agent,B,C): TRUE
+  avoid(agent,vessel1,no_risk).
+
+resume(agent,B,C): FALSE
+
+cpa_side(agent,B,C): FALSE
+
