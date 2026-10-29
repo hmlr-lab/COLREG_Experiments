@@ -4,10 +4,7 @@ mod situation;
 use std::fs::File;
 use std::io::Write;
 
-use prolog2::{
-    Config,
-    app::{App, TopProg},
-};
+use prolog2::{Config, app::App};
 use situation::Situation;
 
 use crate::generate_prolog::generate_prolog;
@@ -86,7 +83,7 @@ fn learn_take_action(log_file: &mut File) {
 
 fn learn_waypoint(log_file: &mut File) {
     let mut hypothesis = String::new();
-    for target in ["turn", "side", "avoid", "resume"] {
+    for target in ["turn", "cpa_side", "avoid", "resume"] {
         log_heading(&format!("Learn {target}"), true, log_file);
         let mut app = App::from_setup_json(format!("setup_{target}.json"))
             .unwrap()
@@ -100,12 +97,15 @@ fn learn_waypoint(log_file: &mut File) {
             .add_body_predicates(BODY_PREDICATES)
             .unwrap();
 
-        let hypotheses = app.run_parallel().unwrap();
-        hypothesis += &hypotheses[0];
+        if let Some(hypotheses) = app.run_parallel() {
+            hypothesis += &hypotheses[0];
 
-        for (i, h) in hypotheses.iter().enumerate() {
-            log_heading(&format!("Hypothesis {i}"), false, log_file);
-            log(h, log_file);
+            for (i, h) in hypotheses.iter().enumerate() {
+                log_heading(&format!("Hypothesis {i}"), false, log_file);
+                log(h, log_file);
+            }
+        } else {
+            log("No valid Hypothesis", log_file);
         }
     }
 

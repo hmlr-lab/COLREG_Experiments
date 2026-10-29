@@ -103,7 +103,7 @@ impl From<&str> for Side {
         match value {
             "port" => Side::Port,
             "starboard" => Side::Starboard,
-            _ => panic!("Unrecognised side value: {value}"),
+            _ => panic!("Unrecognised cpa_side value: {value}"),
         }
     }
 }
@@ -138,7 +138,7 @@ impl Condition {
     pub fn pred_symbol(&self) -> &str {
         match self {
             Condition::Turn(_) => "turn",
-            Condition::Side(_, _) => "side",
+            Condition::Side(_, _) => "cpa_side",
             Condition::Avoid(_, _) => "avoid",
             Condition::Resume(_, _) => "resume",
         }
@@ -151,8 +151,11 @@ impl Condition {
     pub fn to_string(&self, id: usize) -> String {
         match self {
             Condition::Turn(turn) => format!("turn(agent{id},{}).", turn.to_string()),
-            Condition::Side(vessel, side) => {
-                format!("cpa_side(agent{id},{vessel}_{id},{}).", side.to_string())
+            Condition::Side(vessel, cpa_side) => {
+                format!(
+                    "cpa_side(agent{id},{vessel}_{id},{}).",
+                    cpa_side.to_string()
+                )
             }
             Condition::Avoid(vessel, risk) => {
                 format!("avoid(agent{id},{vessel}_{id},{}).", risk.to_string())
