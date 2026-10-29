@@ -54,37 +54,23 @@ fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
 
-    // iterate_max_clause_pred("setup_avoid.json", 2, 4);
-
-    let mut app = App::from_setup_json("setup_side.json")
-        .unwrap()
-        .config(Config {
-            max_depth: 5,
-            max_clause: 3,
-            debug: false,
-            protect_h_preds: true,
-        });
-    // app.run();
+    iterate_max_clause("setup_take_action.json", 3);
 
     learn_waypoint();
 }
 
-fn iterate_max_clause_pred(setup_path: &str, mut max_max_pred: usize, mut max_max_clause: usize) {
-    max_max_pred += 1;
-    max_max_clause += 1;
-    for max_clause in 1..max_max_clause {
-        for max_pred in 1..max_max_pred {
-            println!("=================================");
-            println!("Try max_clause: {max_clause}, max_pred: {max_pred}");
-            println!("=================================");
-            let app = App::from_setup_json(setup_path).unwrap().config(Config {
-                max_depth: 5,
-                max_clause,
-                debug: false,
-                protect_h_preds: true,
-            });
-            app.run();
-        }
+fn iterate_max_clause(setup_path: &str, max_clause: usize) {
+    for max_clause in 1..max_clause + 1 {
+        println!("=================================");
+        println!("Try max_clause: {max_clause}");
+        println!("=================================");
+        let app = App::from_setup_json(setup_path).unwrap().config(Config {
+            max_depth: 10,
+            max_clause,
+            debug: false,
+            protect_h_preds: true,
+        });
+        app.run();
     }
 }
 
