@@ -62,7 +62,7 @@ fn gen_take_action(situations: &Vec<Situation>) {
 /// Write output to GENERATED_DIR + "pos" + "{target predicate}" or,
 /// GENERATED_DIR + "neg" + "{target predicate}.pl"
 fn gen_waypoint_examples(situations: &Vec<Situation>) {
-    for pred in ["turn", "side", "avoid", "resume"] {
+    for pred in ["turn", "cpa_side", "avoid", "resume"] {
         let mut pos = String::new();
         let mut neg = String::new();
 

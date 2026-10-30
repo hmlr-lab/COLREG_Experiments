@@ -4,12 +4,12 @@ use indexmap::IndexMap;
 use rust_yaml::{Value, Yaml};
 use std::{
     collections::HashSet,
-    fs::read_to_string,
+    fs::{read_dir, read_to_string},
     sync::atomic::{AtomicUsize, Ordering::Relaxed},
 };
 
 static ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
-const EXAMPLES_PATH: &str = "../examples/take_action/examples.yaml";
+const EXAMPLES_PATH: &str = "../examples/take_action/";
 
 #[derive(Debug)]
 pub struct Situation {
@@ -23,23 +23,24 @@ pub struct Situation {
 impl Situation {
     pub fn load_situations() -> Vec<Self> {
         let yaml = Yaml::new();
-        let parsed = yaml
-            .load_str(&read_to_string(EXAMPLES_PATH).unwrap())
-            .unwrap();
-        parsed
-            .as_sequence()
-            .unwrap()
-            .iter()
-            .map(|parsed_sit| match Self::from_yaml(parsed_sit) {
-                Ok(sit) => sit,
-                Err(err) => panic!(
-                    "
+        let mut res = Vec::new();
+        for file in read_dir(EXAMPLES_PATH).unwrap() {
+            let parsed = yaml
+                .load_str(&read_to_string(file.unwrap().path()).unwrap())
+                .unwrap();
+            res.extend(parsed.as_sequence().unwrap().iter().map(
+                |parsed_sit| match Self::from_yaml(parsed_sit) {
+                    Ok(sit) => sit,
+                    Err(err) => panic!(
+                        "
                     {err}
                     Failed to parse situation yaml:\n{}",
-                    yaml.dump_str(&parsed_sit).unwrap()
-                ),
-            })
-            .collect()
+                        yaml.dump_str(&parsed_sit).unwrap()
+                    ),
+                },
+            ))
+        }
+        res
     }
 
     pub fn from_yaml(yaml: &Value) -> Result<Self, String> {
@@ -127,8 +128,8 @@ fn parse_facts(mapping: &IndexMap<Value, Value>, id: usize) -> Result<Vec<String
         .map(|value| {
             let fact = value.as_str().unwrap().to_owned();
             fact.replace("agent", &format!("agent{id}"))
-            .replace("cruiseliner1", &format!("cruiseliner1_{id}"))
-            .replace("vessel1", &format!("vessel1_{id}"))
+                .replace("cruiseliner1", &format!("cruiseliner1_{id}"))
+                .replace("vessel1", &format!("vessel1_{id}"))
         })
         .collect())
 }
