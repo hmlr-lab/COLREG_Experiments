@@ -69,13 +69,13 @@ fn gen_waypoint_examples(situations: &Vec<Situation>) {
         for sit in situations {
             for cond in &sit.pos_conds {
                 if cond.is_pred(pred) {
-                    pos += &cond.to_string(sit.id);
+                    pos += &cond.to_string(&sit.id);
                     pos += "\n";
                 }
             }
             for cond in &sit.neg_conds {
                 if cond.is_pred(pred) {
-                    neg += &cond.to_string(sit.id);
+                    neg += &cond.to_string(&sit.id);
                     neg += "\n";
                 }
             }

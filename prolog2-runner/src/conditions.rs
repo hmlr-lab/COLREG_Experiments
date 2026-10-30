@@ -148,20 +148,20 @@ impl Condition {
         self.pred_symbol() == pred
     }
 
-    pub fn to_string(&self, id: usize) -> String {
+    pub fn to_string(&self, id: &str) -> String {
         match self {
-            Condition::Turn(turn) => format!("turn(agent{id},{}).", turn.to_string()),
+            Condition::Turn(turn) => format!("turn(agent_{id},{}).", turn.to_string()),
             Condition::Side(vessel, cpa_side) => {
                 format!(
-                    "cpa_side(agent{id},{vessel}_{id},{}).",
+                    "cpa_side(agent_{id},{vessel}_{id},{}).",
                     cpa_side.to_string()
                 )
             }
             Condition::Avoid(vessel, risk) => {
-                format!("avoid(agent{id},{vessel}_{id},{}).", risk.to_string())
+                format!("avoid(agent_{id},{vessel}_{id},{}).", risk.to_string())
             }
             Condition::Resume(vessel, risk) => {
-                format!("resume(agent{id},{vessel}_{id},{}).", risk.to_string())
+                format!("resume(agent_{id},{vessel}_{id},{}).", risk.to_string())
             }
         }
     }

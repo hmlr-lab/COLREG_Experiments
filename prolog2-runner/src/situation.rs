@@ -5,15 +5,13 @@ use rust_yaml::{Value, Yaml};
 use std::{
     collections::HashSet,
     fs::{read_dir, read_to_string},
-    sync::atomic::{AtomicUsize, Ordering::Relaxed},
 };
 
-static ID_COUNTER: AtomicUsize = AtomicUsize::new(0);
 const EXAMPLES_PATH: &str = "../examples/take_action/";
 
 #[derive(Debug)]
 pub struct Situation {
-    pub id: usize,
+    pub id: String,
     pub facts: Vec<String>,
     pub take_action: bool,
     pub pos_conds: Vec<Condition>,
@@ -24,12 +22,37 @@ impl Situation {
     pub fn load_situations() -> Vec<Self> {
         let yaml = Yaml::new();
         let mut res = Vec::new();
-        for file in read_dir(EXAMPLES_PATH).unwrap() {
+        for file in read_dir(EXAMPLES_PATH).unwrap().map(Result::unwrap) {
+            let file_name = file
+                .file_name()
+                .to_str()
+                .unwrap()
+                .split('.')
+                .next()
+                .unwrap()
+                .to_string();
+            let mut id_counter = 0;
+
             let parsed = yaml
-                .load_str(&read_to_string(file.unwrap().path()).unwrap())
+                .load_str(&read_to_string(file.path()).unwrap())
                 .unwrap();
+
+            for parsed_sit in parsed.as_sequence().unwrap().iter() {
+                match Self::from_yaml(parsed_sit, format!("{file_name}_{id_counter}")) {
+                    Ok(sit) => res.push(sit),
+                    Err(err) => panic!(
+                        "
+                    {err}
+                    Failed to parse situation yaml:\n{}",
+                        yaml.dump_str(&parsed_sit).unwrap()
+                    ),
+                }
+                id_counter += 1;
+            }
+
             res.extend(parsed.as_sequence().unwrap().iter().map(
-                |parsed_sit| match Self::from_yaml(parsed_sit) {
+                |parsed_sit| match Self::from_yaml(parsed_sit, format!("{file_name}_{id_counter}"))
+                {
                     Ok(sit) => sit,
                     Err(err) => panic!(
                         "
@@ -43,11 +66,10 @@ impl Situation {
         res
     }
 
-    pub fn from_yaml(yaml: &Value) -> Result<Self, String> {
-        let id = ID_COUNTER.fetch_add(1, Relaxed);
+    pub fn from_yaml(yaml: &Value, id: String) -> Result<Self, String> {
         let mapping = yaml.as_mapping().unwrap();
 
-        let facts = parse_facts(mapping, id)?;
+        let facts = parse_facts(mapping, &id)?;
         let take_action = parse_take_action(mapping)?;
         let (pos_conds, neg_conds) = parse_waypoints(mapping)?;
 
@@ -118,7 +140,7 @@ fn parse_waypoints(
     ))
 }
 
-fn parse_facts(mapping: &IndexMap<Value, Value>, id: usize) -> Result<Vec<String>, String> {
+fn parse_facts(mapping: &IndexMap<Value, Value>, id: &str) -> Result<Vec<String>, String> {
     Ok(mapping
         .get(&Value::String("facts".into()))
         .ok_or("facts not present".to_string())?
@@ -127,9 +149,9 @@ fn parse_facts(mapping: &IndexMap<Value, Value>, id: usize) -> Result<Vec<String
         .iter()
         .map(|value| {
             let fact = value.as_str().unwrap().to_owned();
-            fact.replace("agent", &format!("agent{id}"))
-                .replace("cruiseliner1", &format!("cruiseliner1_{id}"))
-                .replace("vessel1", &format!("vessel1_{id}"))
+            fact.replace("agent", &format!("agt_{id}"))
+                .replace("cruiseliner1", &format!("cl_{id}"))
+                .replace("vessel1", &format!("vsl_{id}"))
         })
         .collect())
 }

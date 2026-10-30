@@ -85,7 +85,7 @@ fn learn_waypoint(log_file: &mut File) {
     let mut hypothesis = String::new();
     for target in ["turn", "cpa_side", "avoid", "resume"] {
         log_heading(&format!("Learn {target}"), true, log_file);
-        let mut app = App::from_setup_json(format!("setup_{target}.json"))
+        let mut app = App::from_setup_json(format!("setup/{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,

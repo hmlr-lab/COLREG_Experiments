@@ -2,12 +2,11 @@
     "config": {
         "max_depth": 5,
         "max_clause": 3,
-        "max_pred": 0,
         "debug": false
     },
     "examples": {
-        "pos": "../prolog/generated/pos/turn.pl",
-        "neg": "../prolog/generated/neg/turn.pl"
+        "pos": "../prolog/generated/pos/avoid.pl",
+        "neg": "../prolog/generated/neg/avoid.pl"
     },
     "body_predicates": [
         "sector/3",
@@ -24,7 +23,6 @@
         "tcpa_closing/2",
         "dcpa_unacceptable/2",
         "dcpa_acceptable/2",
-        
         "port_forward/2",
         "port_aft/2",
         "starboard_forward/2",
@@ -34,24 +32,23 @@
         "starboard/2",
         "forward/2",
         "aft/2",
-
         "range_gt/3",
         "range_lt/3",
         "range_ge/3",
         "range_le/3",
-
         "tcpa_gt/3",
         "tcpa_lt/3",
         "tcpa_ge/3",
         "tcpa_le/3",
-        
         "dcpa_gt/3",
         "dcpa_lt/3",
         "dcpa_ge/3",
         "dcpa_le/3"
     ],
     "files": [
-        "../prolog/generated/combined_bk.pl", "../prolog/meta.pl", "../prolog/turn_meta.pl"
+        "../prolog/generated/combined_bk.pl",
+        "../prolog/meta.pl",
+        "../prolog/avoid_resume_meta.pl"
     ],
     "top_prog": true,
     "reduce": true
