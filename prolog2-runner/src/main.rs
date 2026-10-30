@@ -50,9 +50,9 @@ const BODY_PREDICATES: &[&str] = &[
 fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
+    panic!();
     let mut log_file = File::create("prolog2.log").unwrap();
-
-    learn_take_action(&mut log_file);
+    // learn_take_action(&mut log_file);
     learn_waypoint(&mut log_file);
 }
 
@@ -84,12 +84,13 @@ fn learn_take_action(log_file: &mut File) {
 fn learn_waypoint(log_file: &mut File) {
     let mut hypothesis = String::new();
     for target in ["turn", "cpa_side", "avoid", "resume"] {
+        // for target in ["cpa_side"] {
         log_heading(&format!("Learn {target}"), true, log_file);
         let mut app = App::from_setup_json(format!("setup/{target}.json"))
             .unwrap()
             .config(Config {
                 max_depth: 5,
-                max_clause: 3,
+                max_clause: 2,
                 debug: false,
                 protect_h_preds: true,
             })

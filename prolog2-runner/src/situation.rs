@@ -3,6 +3,7 @@ use core::panic;
 use indexmap::IndexMap;
 use rust_yaml::{Value, Yaml};
 use std::{
+    cmp::Ordering::{Equal, Greater},
     collections::HashSet,
     fs::{read_dir, read_to_string},
 };
@@ -49,24 +50,12 @@ impl Situation {
                 }
                 id_counter += 1;
             }
-
-            res.extend(parsed.as_sequence().unwrap().iter().map(
-                |parsed_sit| match Self::from_yaml(parsed_sit, format!("{file_name}_{id_counter}"))
-                {
-                    Ok(sit) => sit,
-                    Err(err) => panic!(
-                        "
-                    {err}
-                    Failed to parse situation yaml:\n{}",
-                        yaml.dump_str(&parsed_sit).unwrap()
-                    ),
-                },
-            ))
         }
         res
     }
 
     pub fn from_yaml(yaml: &Value, id: String) -> Result<Self, String> {
+        println!("Parse {id}");
         let mapping = yaml.as_mapping().unwrap();
 
         let facts = parse_facts(mapping, &id)?;
@@ -128,7 +117,15 @@ fn parse_waypoints(
                 .as_str()
                 .ok_or("condition not string: {cond:?}")?
                 .into();
-            if !pos_conds.contains(&cond) {
+
+            // Only add negative condition if all positives of the same type are less risk
+            if pos_conds
+                .iter()
+                .all(|pos_cond: &Condition| match pos_cond.partial_cmp(&cond) {
+                    Some(Greater) | Some(Equal) => false,
+                    _ => true,
+                })
+            {
                 neg_conds.insert(cond);
             }
         }

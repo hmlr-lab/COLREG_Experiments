@@ -1,4 +1,6 @@
-#[derive(Debug, PartialEq, Eq, Hash)]
+use std::cmp::Ordering::Equal;
+
+#[derive(Debug, PartialEq, Eq, Hash, PartialOrd)]
 pub enum Turn {
     VeryLarge,
     Large,
@@ -13,7 +15,7 @@ pub enum Side {
     Starboard,
 }
 
-#[derive(Debug, PartialEq, Eq, Hash)]
+#[derive(Debug, PartialEq, Eq, Hash, PartialOrd)]
 pub enum Risk {
     NoRisk,
     RiskDeveloping,
@@ -34,6 +36,30 @@ pub enum Condition {
     Side(String, Side),
     Avoid(String, Risk),
     Resume(String, Risk),
+}
+
+impl Ord for Risk {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.to_int().cmp(&other.to_int())
+    }
+}
+
+impl Risk {
+    fn to_int(&self) -> usize {
+        match self {
+            Risk::ImminentCritical => 10,
+            Risk::ImminentVeryclose => 9,
+            Risk::ImminentClose => 8,
+            Risk::ShortCritical => 7,
+            Risk::ShortVeryclose => 6,
+            Risk::ShortClose => 5,
+            Risk::MediumCritical => 4,
+            Risk::MediumVeryclose => 3,
+            Risk::MediumClose => 2,
+            Risk::RiskDeveloping => 1,
+            Risk::NoRisk => 0,
+        }
+    }
 }
 
 impl From<&str> for Risk {
@@ -95,6 +121,24 @@ impl ToString for Turn {
             Turn::Small => "small".into(),
             Turn::Insubstantial => "insubstantial".into(),
         }
+    }
+}
+
+impl Turn {
+    fn to_int(&self) -> usize {
+        match self {
+            Turn::VeryLarge => 1,
+            Turn::Large => 2,
+            Turn::Moderate => 3,
+            Turn::Small => 4,
+            Turn::Insubstantial => 5,
+        }
+    }
+}
+
+impl Ord for Turn {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        self.to_int().cmp(&other.to_int())
     }
 }
 
@@ -164,5 +208,56 @@ impl Condition {
                 format!("resume(agent_{id},{vessel}_{id},{}).", risk.to_string())
             }
         }
+    }
+}
+
+impl PartialOrd for Condition {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        match (self, other) {
+            (Self::Turn(a), Self::Turn(b)) => Some(a.cmp(b)),
+            (Self::Resume(o1, a), Self::Resume(o2, b)) if *o1 == *o2 => Some(a.cmp(b)),
+            (Self::Avoid(o1, a), Self::Avoid(o2, b)) if *o1 == *o2 => Some(a.cmp(b)),
+            (a, b) if a == b => Some(Equal),
+            _ => None,
+        }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use std::cmp::Ordering;
+
+    use crate::conditions::{Risk::*, Turn::*};
+
+    #[test]
+    fn turn_ord() {
+        let a = VeryLarge;
+        let b = Moderate;
+        let c = Insubstantial;
+
+        assert_eq!(a.cmp(&b), Ordering::Less);
+        assert_eq!(a.cmp(&c), Ordering::Less);
+
+        assert_eq!(b.cmp(&a), Ordering::Greater);
+        assert_eq!(b.cmp(&c), Ordering::Less);
+
+        assert_eq!(c.cmp(&a), Ordering::Greater);
+        assert_eq!(c.cmp(&b), Ordering::Greater);
+    }
+
+    #[test]
+    fn risk_ord() {
+        let a = NoRisk;
+        let b = ShortClose;
+        let c = ImminentCritical;
+
+        assert_eq!(a.cmp(&b), Ordering::Less);
+        assert_eq!(a.cmp(&c), Ordering::Less);
+
+        assert_eq!(b.cmp(&a), Ordering::Greater);
+        assert_eq!(b.cmp(&c), Ordering::Less);
+
+        assert_eq!(c.cmp(&a), Ordering::Greater);
+        assert_eq!(c.cmp(&b), Ordering::Greater);
     }
 }
