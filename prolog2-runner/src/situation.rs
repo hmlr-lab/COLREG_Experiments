@@ -55,7 +55,6 @@ impl Situation {
     }
 
     pub fn from_yaml(yaml: &Value, id: String) -> Result<Self, String> {
-        println!("Parse {id}");
         let mapping = yaml.as_mapping().unwrap();
 
         let facts = parse_facts(mapping, &id)?;

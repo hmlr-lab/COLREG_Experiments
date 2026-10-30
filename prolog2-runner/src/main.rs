@@ -50,7 +50,6 @@ const BODY_PREDICATES: &[&str] = &[
 fn main() {
     let situations = Situation::load_situations();
     generate_prolog(situations);
-    panic!();
     let mut log_file = File::create("prolog2.log").unwrap();
     // learn_take_action(&mut log_file);
     learn_waypoint(&mut log_file);
