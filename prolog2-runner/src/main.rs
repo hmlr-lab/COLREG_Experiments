@@ -1,13 +1,17 @@
 mod conditions;
+mod examples;
 mod generate_prolog;
 mod situation;
 use std::fs::File;
 use std::io::Write;
 
-use prolog2::{Config, app::App};
+use prolog2::{Config, Examples, app::App};
 use situation::Situation;
 
-use crate::generate_prolog::generate_prolog;
+use crate::{examples::gen_examples, generate_prolog::generate_prolog};
+
+/// Largest max_clause the learner will try
+const MAX_CLAUSE: usize = 3;
 
 const BODY_PREDICATES: &[&str] = &[
     "sector/3",
@@ -49,20 +53,24 @@ const BODY_PREDICATES: &[&str] = &[
 
 fn main() {
     let situations = Situation::load_situations();
-    generate_prolog(situations);
+    generate_prolog(&situations);
     let mut log_file = File::create("prolog2.log").unwrap();
-    learn_take_action(&mut log_file);
-    learn_waypoint(&mut log_file);
+    let mut final_h = String::new();
+    learn_take_action(&mut final_h, &mut log_file);
+    learn_waypoint(&situations, &mut final_h, &mut log_file);
+
+    log_heading("Final Hypothesis", true, &mut log_file);
+    log(&final_h, &mut log_file);
 }
 
-fn learn_take_action(log_file: &mut File) {
+fn learn_take_action(final_h: &mut String, log_file: &mut File) {
     log_heading("Learn take_action", true, log_file);
 
     let mut app = App::from_setup_json(format!("setup/take_action.json"))
         .unwrap()
         .config(Config {
-            max_depth: 5,
-            max_clause: 4,
+            max_depth: 7,
+            max_clause: MAX_CLAUSE,
             debug: false,
             protect_h_preds: true,
         })
@@ -70,6 +78,7 @@ fn learn_take_action(log_file: &mut File) {
         .add_body_predicates(BODY_PREDICATES)
         .unwrap();
     if let Some(hypotheses) = app.run_parallel() {
+        *final_h += &hypotheses[0];
         for (i, h) in hypotheses.iter().enumerate() {
             writeln!(
                 log_file,
@@ -81,37 +90,86 @@ fn learn_take_action(log_file: &mut File) {
     }
 }
 
-fn learn_waypoint(log_file: &mut File) {
-    let mut hypothesis = String::new();
-    for target in ["turn", "cpa_side", "avoid", "resume"] {
-        // for target in ["cpa_side"] {
-        log_heading(&format!("Learn {target}"), true, log_file);
-        let mut app = App::from_setup_json(format!("setup/{target}.json"))
+fn learn_waypoint(situations: &[Situation], final_h: &mut String, log_file: &mut File) {
+    for pred in ["turn", "cpa_side", "avoid", "resume"] {
+        // for pred in ["cpa_side"] {
+        let examples = gen_examples(situations, pred);
+        log_heading(&format!("Learn {pred}"), true, log_file);
+
+        // Try with all negatives first, starting from small clause counts
+        let mut hypotheses = run_learner(pred, examples.clone(), 2);
+
+        // Otherwise build up the negatives one at a time, keeping each one only if a
+        // hypothesis can still be found with it, filtering out the bad negatives
+        if hypotheses.is_none() {
+            log(
+                "No valid Hypothesis with all negatives, building negative set incrementally",
+                log_file,
+            );
+            let mut reduced = examples.clone();
+            reduced.neg.clear();
+            hypotheses = run_learner(pred, reduced.clone(), MAX_CLAUSE);
+
+            if hypotheses.is_some() {
+                let mut filtered = Vec::new();
+                for neg in examples.neg.iter() {
+                    reduced.neg.push(neg.clone());
+                    match run_learner(pred, reduced.clone(), MAX_CLAUSE) {
+                        Some(h) => {
+                            log(&format!("Kept negative {neg}"), log_file);
+                            hypotheses = Some(h);
+                        }
+                        None => {
+                            log(&format!("Filtered negative {neg}"), log_file);
+                            filtered.push(reduced.neg.pop().unwrap());
+                        }
+                    }
+                }
+                log(
+                    &format!(
+                        "Kept {} of {} negatives, filtered {filtered:?}",
+                        reduced.neg.len(),
+                        examples.neg.len()
+                    ),
+                    log_file,
+                );
+            }
+        }
+
+        match hypotheses {
+            Some(hypotheses) => {
+                *final_h += &hypotheses[0];
+                for (i, h) in hypotheses.iter().enumerate() {
+                    log_heading(&format!("Hypothesis {i}"), false, log_file);
+                    log(h, log_file);
+                }
+            }
+            None => log(
+                "No valid Hypothesis Found, even with no negatives",
+                log_file,
+            ),
+        }
+    }
+}
+
+/// Run the learner with max_clause from `min_clause` up to MAX_CLAUSE, returning the
+/// first hypotheses found
+fn run_learner(pred: &str, examples: Examples, min_clause: usize) -> Option<Vec<String>> {
+    (min_clause..=MAX_CLAUSE).find_map(|max_clause| {
+        App::from_setup_json(format!("setup/{pred}.json"))
             .unwrap()
             .config(Config {
-                max_depth: 5,
-                max_clause: 3,
+                max_depth: 7,
+                max_clause,
                 debug: false,
                 protect_h_preds: true,
             })
             // .top_prog(TopProg::True(true))
             .add_body_predicates(BODY_PREDICATES)
-            .unwrap();
-
-        if let Some(hypotheses) = app.run_parallel() {
-            hypothesis += &hypotheses[0];
-
-            for (i, h) in hypotheses.iter().enumerate() {
-                log_heading(&format!("Hypothesis {i}"), false, log_file);
-                log(h, log_file);
-            }
-        } else {
-            log("No valid Hypothesis", log_file);
-        }
-    }
-
-    log_heading("Final Hypothesis", true, log_file);
-    log(&hypothesis, log_file);
+            .unwrap()
+            .examples(examples.clone())
+            .run_parallel()
+    })
 }
 
 fn log_heading(heading: &str, bold: bool, log_file: &mut File) {

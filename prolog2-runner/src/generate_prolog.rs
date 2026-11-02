@@ -8,7 +8,7 @@ use crate::situation::Situation;
 const BK_PATH: &str = "../prolog/BK.pl";
 const GENERATED_DIR: &str = "../prolog/generated/";
 
-pub fn generate_prolog(situations: Vec<Situation>) {
+pub fn generate_prolog(situations: &[Situation]) {
     create_dir_all(format!("{GENERATED_DIR}pos")).unwrap();
     create_dir_all(format!("{GENERATED_DIR}neg")).unwrap();
     combine_bk(&situations);
@@ -18,7 +18,7 @@ pub fn generate_prolog(situations: Vec<Situation>) {
 
 /// Take BK file and combine with facts from situations
 /// Write output to GENERATED_DIR + "bk.pl"
-fn combine_bk(situations: &Vec<Situation>) {
+fn combine_bk(situations: &[Situation]) {
     //Load BK.pl file and remove directives
     let mut bk: String = read_to_string(BK_PATH)
         .unwrap()
@@ -39,7 +39,7 @@ fn combine_bk(situations: &Vec<Situation>) {
 
 /// Generate positve and negative example files for take action predicate
 /// Write ouput to GENERATED_DIR + "pos/take_action.pl" or "neg/take_action.pl"
-fn gen_take_action(situations: &Vec<Situation>) {
+fn gen_take_action(situations: &[Situation]) {
     let mut pos = String::new();
     let mut neg = String::new();
 
@@ -61,7 +61,7 @@ fn gen_take_action(situations: &Vec<Situation>) {
 /// Generate examples for each target predicate of waypoint examples
 /// Write output to GENERATED_DIR + "pos" + "{target predicate}" or,
 /// GENERATED_DIR + "neg" + "{target predicate}.pl"
-fn gen_waypoint_examples(situations: &Vec<Situation>) {
+fn gen_waypoint_examples(situations: &[Situation]) {
     for pred in ["turn", "cpa_side", "avoid", "resume"] {
         let mut pos = String::new();
         let mut neg = String::new();
