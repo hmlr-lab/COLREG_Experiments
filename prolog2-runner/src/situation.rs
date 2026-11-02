@@ -1,6 +1,7 @@
 use crate::conditions::Condition;
 use core::panic;
 use indexmap::IndexMap;
+use prolog2::heap::SymbolDB;
 use rust_yaml::{Value, Yaml};
 use std::{
     cmp::Ordering::{Equal, Greater},
