@@ -45,9 +45,9 @@ fn gen_take_action(situations: &Vec<Situation>) {
 
     for sit in situations {
         if sit.take_action {
-            pos += &format!("take_action(agent{}).\n", sit.id);
+            pos += &format!("take_action(agent_{}).\n", sit.id);
         } else {
-            neg += &format!("take_action(agent{}).\n", sit.id);
+            neg += &format!("take_action(agent_{}).\n", sit.id);
         }
     }
 

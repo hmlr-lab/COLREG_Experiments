@@ -145,9 +145,9 @@ fn parse_facts(mapping: &IndexMap<Value, Value>, id: &str) -> Result<Vec<String>
         .iter()
         .map(|value| {
             let fact = value.as_str().unwrap().to_owned();
-            fact.replace("agent", &format!("agt_{id}"))
-                .replace("cruiseliner1", &format!("cl_{id}"))
-                .replace("vessel1", &format!("vsl_{id}"))
+            fact.replace("agent", &format!("agent_{id}"))
+                .replace("cruiseliner1", &format!("cruiseliner1_{id}"))
+                .replace("vessel1", &format!("vessel1_{id}"))
         })
         .collect())
 }
