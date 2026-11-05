@@ -14,7 +14,7 @@ use situation::Situation;
 use crate::{examples::gen_examples, generate_prolog::generate_prolog};
 
 /// Largest max_clause the learner will try
-const MAX_CLAUSE: usize = 4;
+const MAX_CLAUSE: usize = 3;
 
 const BODY_PREDICATES: &[&str] = &[
     "sector/3",
@@ -57,7 +57,11 @@ const BODY_PREDICATES: &[&str] = &[
 fn main() {
     let situations = Situation::load_situations();
     generate_prolog(&situations);
-    let mut log_file = File::create(format!("prolog2{}.log", Utc::now().to_string())).unwrap();
+    let mut log_file = File::create(format!(
+        "prolog2{}.log",
+        Utc::now().format("%d-%m-%Y,%H:%M:%S").to_string()
+    ))
+    .unwrap();
     let mut final_h = String::new();
     // Predicates defined in final_h, e.g. "turn/2" or "turn_0/1", usable as body predicates
     let mut learnt_preds = HashSet::new();
