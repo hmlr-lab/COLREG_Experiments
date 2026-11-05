@@ -1,0 +1,16 @@
+{
+    "config": {
+        "max_depth": 5,
+        "max_clause": 2,
+        "debug": false
+    },
+    "examples": {
+        "pos": "../prolog/generated/pos/take_action.pl",
+        "neg": "../prolog/generated/neg/take_action.pl"
+    },
+    "body_predicates": [],
+    "files": [
+        "../prolog/generated/combined_bk.pl",
+        "../prolog/meta.pl"
+    ]
+}

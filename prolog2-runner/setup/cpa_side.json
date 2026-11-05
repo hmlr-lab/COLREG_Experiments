@@ -1,0 +1,17 @@
+{
+    "config": {
+        "max_depth": 5,
+        "max_clause": 3,
+        "debug": false
+    },
+    "examples": {
+        "pos": "../prolog/generated/pos/cpa_side.pl",
+        "neg": "../prolog/generated/neg/cpa_side.pl"
+    },
+    "body_predicates": [],
+    "files": [
+        "../prolog/generated/combined_bk.pl",
+        "../prolog/meta.pl",
+        "../prolog/side_meta.pl"
+    ]
+}

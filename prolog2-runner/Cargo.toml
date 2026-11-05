@@ -4,6 +4,12 @@ version = "0.1.0"
 edition = "2024"
 
 [dependencies]
+chrono = "0.4.45"
 indexmap = "2.14.0"
-prolog-squared = "1.4.5"
+prolog-squared = "1.6.3"
 rust-yaml = "1.1.0"
+
+[profile.release]
+lto = "fat"
+codegen-units = 1
+panic = "abort"
