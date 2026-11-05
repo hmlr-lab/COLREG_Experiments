@@ -3,11 +3,12 @@ mod examples;
 mod generate_prolog;
 mod inline;
 mod situation;
+use chrono::Utc;
 use std::collections::HashSet;
 use std::fs::File;
 use std::io::Write;
 
-use prolog2::{Config, Examples, app::App, heap::SymbolDB};
+use prolog2::{Config, Examples, ParallelConfig, app::App, heap::SymbolDB};
 use situation::Situation;
 
 use crate::{examples::gen_examples, generate_prolog::generate_prolog};
@@ -56,7 +57,7 @@ const BODY_PREDICATES: &[&str] = &[
 fn main() {
     let situations = Situation::load_situations();
     generate_prolog(&situations);
-    let mut log_file = File::create("prolog2.log").unwrap();
+    let mut log_file = File::create(format!("prolog2{}.log", Utc::now().to_string())).unwrap();
     let mut final_h = String::new();
     // Predicates defined in final_h, e.g. "turn/2" or "turn_0/1", usable as body predicates
     let mut learnt_preds = HashSet::new();
@@ -175,7 +176,6 @@ fn run_learner(
 /// Build an app for `pred` with the previously learnt hypothesis loaded and its
 /// predicates available as body predicates
 fn build_app(pred: &str, max_clause: usize, final_h: &str, learnt_preds: &HashSet<String>) -> App {
-    SymbolDB::clear();
     let mut app = App::from_setup_json(format!("setup/{pred}.json"))
         .unwrap()
         .config(Config {
@@ -183,8 +183,12 @@ fn build_app(pred: &str, max_clause: usize, final_h: &str, learnt_preds: &HashSe
             max_clause,
             debug: false,
             protect_h_preds: true,
+        })
+        .parallel(ParallelConfig {
+            reduce: true,
+            sort_by_literals: true,
+            final_h_count: 5,
         });
-    // .top_prog(TopProg::True(true))
     if !final_h.is_empty() {
         app = app.load_code(final_h).unwrap();
     }
