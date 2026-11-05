@@ -110,3 +110,8 @@
       - avoid(agent,cruiseliner1,no_risk)
       - resume(agent,cruiseliner1,no_risk)
       - cpa_side(agent,cruiseliner1,port)
+      1:
+      - turn(agent,moderate)
+      - avoid(agent,cruiseliner1,imminent_close)
+      - resume(agent,cruiseliner1,no_risk)
+      - cpa_side(agent,cruiseliner1,port)

@@ -1,0 +1,29 @@
+- facts:
+  - sector(agent,vessel1,starboard_quarter_aft)
+  - arc_overtaking(vessel1,agent)
+  - range(agent,vessel1,near)
+  - dcpa(agent,vessel1,critical)
+  - tcpa(agent,vessel1,short)
+  - sector(vessel1,agent,ahead)
+  - range(vessel1,agent,near)
+  - dcpa(vessel1,agent,critical)
+  - tcpa(vessel1,agent,short)
+  take_action: pos
+  waypoints:
+    neg:
+      0:
+      - turn(agent,large)
+      - avoid(agent,vessel1,short_close)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,starboard)
+      1:
+      - turn(agent,insubstantial)
+      - avoid(agent,vessel1,short_veryclose)
+      - resume(agent,vessel1,imminent_veryclose)
+      - cpa_side(agent,vessel1,port)
+    pos:
+      0:
+      - turn(agent,large)
+      - avoid(agent,vessel1,no_risk)
+      - resume(agent,vessel1,no_risk)
+      - cpa_side(agent,vessel1,port)
