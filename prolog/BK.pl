@@ -213,14 +213,25 @@ tcpa_le(X,Y,A):-
 
 %  CONCEPTUAL GROUPINGS
 
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,critical).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,very_close).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,close).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
-dcpa_unacceptable(X,Y) :- not(dcpa_acceptable(X,Y)).
+% dcpa_unacceptable(X,Y) :- dcpa(X,Y,_),not(dcpa_acceptable(X,Y)).
 
-tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
+% tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
+tcpa_closing(X,Y) :- tcpa(X,Y,imminent).
+tcpa_closing(X,Y) :- tcpa(X,Y,short). 
+tcpa_closing(X,Y) :- tcpa(X,Y,medium). 
+tcpa_closing(X,Y) :- tcpa(X,Y,long). 
+tcpa_closing(X,Y) :- tcpa(X,Y,very_long).
 
-actionable_range(X,Y) :- not(range(X,Y,very_far)).
-
+% actionable_range(X,Y) :- not(range(X,Y,very_far)).
+actionable_range(X,Y) :- range(X,Y,far).
+actionable_range(X,Y) :- range(X,Y,middle).
+actionable_range(X,Y) :- range(X,Y,near).
+actionable_range(X,Y) :- range(X,Y,very_near).
 
 %  ample_time  (Rule 8(a))
 
