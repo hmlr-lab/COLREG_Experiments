@@ -8,13 +8,14 @@ use std::collections::HashSet;
 use std::fs::File;
 use std::io::Write;
 
-use prolog2::{Config, Examples, ParallelConfig, app::App, heap::SymbolDB};
+use prolog2::{Config, Examples, ParallelConfig, app::App};
 use situation::Situation;
 
 use crate::{examples::gen_examples, generate_prolog::generate_prolog};
 
 /// Largest max_clause the learner will try
-const MAX_CLAUSE: usize = 3;
+const MAX_CLAUSE: usize = 5;
+const MIN_CLAUSE: usize = 2;
 
 const BODY_PREDICATES: &[&str] = &[
     "sector/3",
@@ -80,7 +81,7 @@ fn learn_take_action(
 ) {
     log_heading("Learn take_action", true, log_file);
 
-    let mut app = build_app("take_action", MAX_CLAUSE, final_h, learnt_preds);
+    let mut app = build_app("take_action", 3, final_h, learnt_preds);
     if let Some(hypotheses) = app.run_parallel() {
         add_hypothesis(&hypotheses[0], "take_action", final_h, learnt_preds);
         for (i, h) in hypotheses.iter().enumerate() {
@@ -106,7 +107,7 @@ fn learn_waypoint(
         log_heading(&format!("Learn {pred}"), true, log_file);
 
         // Try with all negatives first, starting from small clause counts
-        let mut hypotheses = run_learner(pred, examples.clone(), 2, final_h, learnt_preds);
+        let mut hypotheses = run_learner(pred, examples.clone(), final_h, learnt_preds);
 
         // Otherwise build up the negatives one at a time, keeping each one only if a
         // hypothesis can still be found with it, filtering out the bad negatives
@@ -117,13 +118,13 @@ fn learn_waypoint(
             );
             let mut reduced = examples.clone();
             reduced.neg.clear();
-            hypotheses = run_learner(pred, reduced.clone(), MAX_CLAUSE, final_h, learnt_preds);
+            hypotheses = run_learner(pred, reduced.clone(), final_h, learnt_preds);
 
             if hypotheses.is_some() {
                 let mut filtered = Vec::new();
                 for neg in examples.neg.iter() {
                     reduced.neg.push(neg.clone());
-                    match run_learner(pred, reduced.clone(), MAX_CLAUSE, final_h, learnt_preds) {
+                    match run_learner(pred, reduced.clone(), final_h, learnt_preds) {
                         Some(h) => {
                             log(&format!("Kept negative {neg}"), log_file);
                             hypotheses = Some(h);
@@ -166,11 +167,10 @@ fn learn_waypoint(
 fn run_learner(
     pred: &str,
     examples: Examples,
-    min_clause: usize,
     final_h: &str,
     learnt_preds: &HashSet<String>,
 ) -> Option<Vec<String>> {
-    (min_clause..=MAX_CLAUSE).find_map(|max_clause| {
+    (MIN_CLAUSE..=MAX_CLAUSE).find_map(|max_clause| {
         build_app(pred, max_clause, final_h, learnt_preds)
             .examples(examples.clone())
             .run_parallel()
