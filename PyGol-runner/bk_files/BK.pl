@@ -152,57 +152,23 @@ less_and_adjacent(short_critical, imminent_close).
 less_and_adjacent(imminent_close, imminent_veryclose).
 less_and_adjacent(imminent_veryclose, imminent_critical).
 
-
-% ============================================================
-% DOMAIN OF ORDERED VALUES
-% ============================================================
-
-order_value(X) :-
-    less_and_adjacent(X,_).
-
-order_value(X) :-
-    less_and_adjacent(_,X).
-
-
-% ============================================================
-% STRICT ORDERING
-% ============================================================
-
-less_than(X,Y) :-
-    less_and_adjacent(X,Z),
+less_than(X,Y) :- 
+    less_and_adjacent(X,Z), 
     less_than(Z,Y).
-
 less_than(X,Y) :-
     less_and_adjacent(X,Y).
 
-
-greater_than(X,Y) :-
-    less_and_adjacent(Z,X),
+greater_than(X,Y) :- 
+    less_and_adjacent(Z,X), 
     greater_than(Z,Y).
-
 greater_than(X,Y) :-
     less_and_adjacent(Y,X).
 
+less_or_equal(X,X).
+less_or_equal(X,Y) :- less_than(X,Y).
 
-% ============================================================
-% NON-STRICT ORDERING
-% ============================================================
-
-less_or_equal(X,X) :-
-    order_value(X).
-
-less_or_equal(X,Y) :-
-    less_than(X,Y).
-
-
-greater_or_equal(X,X) :-
-    order_value(X).
-
-greater_or_equal(X,Y) :-
-    greater_than(X,Y).
-
-
-
+greater_or_equal(X,X).
+greater_or_equal(X,Y) :- greater_than(X,Y).
 
 range_gt(X,Y,A):-
     range(X,Y,B),
@@ -247,14 +213,25 @@ tcpa_le(X,Y,A):-
 
 %  CONCEPTUAL GROUPINGS
 
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,critical).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,very_close).
+dcpa_unacceptable(X,Y) :- dcpa(X,Y,close).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,marginal).
 dcpa_acceptable(X,Y) :- dcpa(X,Y,safe).
-dcpa_unacceptable(X,Y) :- not(dcpa_acceptable(X,Y)).
+% dcpa_unacceptable(X,Y) :- dcpa(X,Y,_),not(dcpa_acceptable(X,Y)).
 
-tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
+% tcpa_closing(X,Y) :- not(tcpa(X,Y,opening)).
+tcpa_closing(X,Y) :- tcpa(X,Y,imminent).
+tcpa_closing(X,Y) :- tcpa(X,Y,short). 
+tcpa_closing(X,Y) :- tcpa(X,Y,medium). 
+tcpa_closing(X,Y) :- tcpa(X,Y,long). 
+tcpa_closing(X,Y) :- tcpa(X,Y,very_long).
 
-actionable_range(X,Y) :- not(range(X,Y,very_far)).
-
+% actionable_range(X,Y) :- not(range(X,Y,very_far)).
+actionable_range(X,Y) :- range(X,Y,far).
+actionable_range(X,Y) :- range(X,Y,middle).
+actionable_range(X,Y) :- range(X,Y,near).
+actionable_range(X,Y) :- range(X,Y,very_near).
 
 %  ample_time  (Rule 8(a))
 
@@ -329,5 +306,3 @@ duty(X,Y,rule17_standon) :- encounter_and_conduct(X,Y,_,rule17_standon_must_act)
 
 rule2_extremis(X,Y) :- dcpa_unacceptable(X,Y), tcpa(X,Y,imminent).
 %might be a cleaner way to do this
-
-
