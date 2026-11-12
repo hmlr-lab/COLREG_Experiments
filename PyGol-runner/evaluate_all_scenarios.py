@@ -9,10 +9,10 @@ import janus_swi as janus
 # CONFIGURATION
 # ============================================================
 BASE_DIR = Path(__file__).resolve().parent
-bk_path = str(BASE_DIR / "bk_files" / "BK.pl")
+BK_FILE = BASE_DIR / "bk_files" / "BK.pl"
 
-BK_FILE = Path("BK.pl")
-HYPOTHESIS_FILE = Path("current_combined_rules.txt")
+#BK_FILE = Path("BK.pl")
+HYPOTHESIS_FILE = BASE_DIR / "rules" / "rules.txt" #Path("rules.txt")
 
 SCENARIO_DIR = Path("scenarios")
 REPORT_DIR = Path("reports")
