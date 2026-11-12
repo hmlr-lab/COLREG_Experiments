@@ -1,5 +1,14 @@
 turn(A,large):-close_quarters(A,B).
-turn(A,moderate):-dcpa_ge(A,B,critical),tcpa_gt(A,B,short),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
-turn(A,moderate):-port_forward(A,B),dcpa_ge(A,B,critical),tcpa_gt(A,B,medium).
-turn(A,moderate):-range_le(A,B,far),tcpa_gt(A,B,imminent).
+turn(A,moderate):-arc_overtaking(A,B),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+turn(A,moderate):-arc_overtaking(B,A),close_quarters(A,B),dcpa_ge(A,B,critical).
+turn(A,moderate):-arc_overtaking(B,A),close_quarters_developing(A,B),dcpa_ge(A,B,critical).
+turn(A,moderate):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-close_quarters(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+turn(A,moderate):-close_quarters(A,B),range(B,A,near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+turn(A,moderate):-close_quarters(A,B),range(B,A,very_near),encounter_and_conduct(A,B,rule13_overtaking,rule16_giveway).
+turn(A,moderate):-close_quarters_developing(A,B),dcpa_ge(A,B,critical),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-close_quarters_developing(A,B),range(B,A,far),encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+turn(A,moderate):-close_quarters_developing(A,B),range(B,A,middle),encounter_and_conduct(A,B,rule15_crossing,rule16_giveway).
+turn(A,moderate):-dcpa_ge(A,B,critical),range(A,B,very_far),encounter_and_conduct(A,B,rule14_head_on,rule16_giveway).
+turn(A,moderate):-port_forward(A,B).
 turn(A,small):-range_gt(A,B,far).

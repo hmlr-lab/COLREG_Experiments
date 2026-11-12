@@ -15,8 +15,14 @@ resume(agent_9,vessel_9,no_risk).
 resume(agent_10,vessel_10,no_risk).
 resume(agent_10,vessel_10,no_risk).
 resume(agent_11,vessel_11,no_risk).
-resume(agent_11,vessel_11,no_risk).
 resume(agent_12,vessel_12,no_risk).
 resume(agent_12,vessel_12,no_risk).
-resume(agent_14,vessel_14,no_risk).
+resume(agent_13,vessel_13,no_risk).
+resume(agent_13,vessel_13,no_risk).
 resume(agent_15,vessel_15,no_risk).
+resume(agent_16,vessel_16,no_risk).
+resume(agent_17,vessel_17,no_risk).
+resume(agent_19,vessel_19,no_risk).
+resume(agent_19,vessel_19,imminent_veryclose).
+resume(agent_20,vessel_20,no_risk).
+resume(agent_21,vessel_21,no_risk).

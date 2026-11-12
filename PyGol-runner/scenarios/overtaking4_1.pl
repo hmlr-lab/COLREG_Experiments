@@ -1,0 +1,9 @@
+sector(agent,vessel1,port_quarter_broad).
+arc_overtaking(vessel1,agent).
+range(agent,vessel1,near).
+dcpa(agent,vessel1,critical).
+tcpa(agent,vessel1,short).
+sector(vessel1,agent,starboard_bow_forward).
+range(vessel1,agent,near).
+dcpa(vessel1,agent,critical).
+tcpa(vessel1,agent,short).

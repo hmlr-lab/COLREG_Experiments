@@ -15,8 +15,14 @@ cpa_side(agent_9,vessel_9,port).
 cpa_side(agent_10,vessel_10,starboard).
 cpa_side(agent_10,vessel_10,port).
 cpa_side(agent_11,vessel_11,starboard).
-cpa_side(agent_11,vessel_11,starboard).
 cpa_side(agent_12,vessel_12,starboard).
-cpa_side(agent_12,vessel_12,port).
-cpa_side(agent_14,vessel_14,port).
+cpa_side(agent_12,vessel_12,starboard).
+cpa_side(agent_13,vessel_13,starboard).
+cpa_side(agent_13,vessel_13,port).
 cpa_side(agent_15,vessel_15,port).
+cpa_side(agent_16,vessel_16,starboard).
+cpa_side(agent_17,vessel_17,port).
+cpa_side(agent_19,vessel_19,starboard).
+cpa_side(agent_19,vessel_19,port).
+cpa_side(agent_20,vessel_20,port).
+cpa_side(agent_21,vessel_21,port).

@@ -1,2 +1,4 @@
+avoid(A,B,imminent_close):-close_quarters(A,B).
+avoid(A,B,imminent_veryclose):-arc_overtaking(B,A).
 avoid(A,B,no_risk):-dcpa_ge(A,B,critical).
 avoid(A,B,short_close):-port_forward(A,B).
