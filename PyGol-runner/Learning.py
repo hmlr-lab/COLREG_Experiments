@@ -128,6 +128,8 @@ H = learn_rules_muti_label(
     print_hs=False, print_h=False, seed_value=10
 )
 pygol.evaluate_theory_prolog(H, str(output_path), pos_example, neg_example)
+pygol.analysis_theory_examples(H, "bk_files/combined_BK.pl", pos_example, verbose=True)
+
 save_rules("rules_side.txt", H)
 combined_rules["side"] = H
 

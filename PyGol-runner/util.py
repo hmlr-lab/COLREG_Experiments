@@ -917,6 +917,31 @@ def learn_rules_muti_label(facts, pos_example,neg_example, bk_path, print_hs=Tru
     Train_P = {i:j for i,j in P1.items()}
     Train_N = {i:j for i,j in N1.items()}
 
+    #
+    found = any("cpa_side" in str(item) for item in Train_P.keys())
+    print("Found cpa_side in positive examples:", found)
+    if found:
+        list_1 = Train_P['cpa_side(agent_17,vessel_17,starboard).']
+        print("Train_P['cpa_side(agent_17,vessel_17,starboard).']:", list_1)
+        for i, j in Train_N.items():
+            if "starboard" in str(i):
+                result = all(item in j for item in list_1)
+
+                if result:
+                    print(f"All items from Train_P['cpa_side(agent_17,vessel_17,starboard).'] are present in Train_N[{i}]")
+                    print(len(list_1), len(j))
+                    print(j)
+                    difference = set(j) - set(list_1)
+                    print(difference)
+
+                    if sorted(list_1) == sorted(j):
+                        
+                        print(f"Train_P['cpa_side(agent_17,vessel_17,starboard).'] and Train_N[{i}] are identical.")
+                    else:
+                        print(f"Train_P['cpa_side(agent_17,vessel_17,starboard).'] and Train_N[{i}] are not identical.")
+    #
+
+
     # print(Train_P)
     # print(Train_N)
 
